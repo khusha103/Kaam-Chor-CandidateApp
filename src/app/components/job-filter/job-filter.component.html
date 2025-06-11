@@ -43,8 +43,8 @@
           <ion-label class="section-label">Job Category</ion-label>
           <ion-list>
             <ion-item *ngFor="let category of jobCategories | slice:0:(showMoreCategories ? jobCategories.length : 3)">
-              <ion-label>{{ category }}</ion-label>
-              <ion-checkbox slot="end" [checked]="filters.category.includes(category)" (ionChange)="toggleCategory(category)"></ion-checkbox>
+              <ion-label>{{ category.category_name }}</ion-label>
+              <ion-checkbox slot="end" [checked]="isCategoryChecked(category.category_name)" (ionChange)="toggleCategory(category.category_name)"></ion-checkbox>
             </ion-item>
             <ion-item *ngIf="jobCategories.length > 3" lines="none">
               <ion-label (click)="showMoreCategories = !showMoreCategories">{{ showMoreCategories ? 'Show Less' : 'Show More' }}</ion-label>
@@ -57,8 +57,8 @@
           <ion-label class="section-label">Location</ion-label>
           <ion-list>
             <ion-item *ngFor="let loc of locations | slice:0:(showMoreLocations ? locations.length : 3)">
-              <ion-label>{{ loc }}</ion-label>
-              <ion-checkbox slot="end" [checked]="filters.location.includes(loc)" (ionChange)="toggleLocation(loc)"></ion-checkbox>
+              <ion-label>{{ loc.name }}</ion-label>
+              <ion-checkbox slot="end" [checked]="isLocationChecked(loc.name)" (ionChange)="toggleLocation(loc.name)"></ion-checkbox>
             </ion-item>
             <ion-item *ngIf="locations.length > 3" lines="none">
               <ion-label (click)="showMoreLocations = !showMoreLocations">{{ showMoreLocations ? 'Show Less' : 'Show More' }}</ion-label>
@@ -71,8 +71,8 @@
           <ion-label class="section-label">Skills</ion-label>
           <ion-list>
             <ion-item *ngFor="let skill of skillList">
-              <ion-label>{{ skill }}</ion-label>
-              <ion-checkbox slot="end" [checked]="filters.skills.includes(skill)" (ionChange)="toggleSkill(skill)"></ion-checkbox>
+              <ion-label>{{ skill.value }}</ion-label>
+              <ion-checkbox slot="end" [checked]="isSkillChecked(skill.value)" (ionChange)="toggleSkill(skill.value)"></ion-checkbox>
             </ion-item>
           </ion-list>
         </div>

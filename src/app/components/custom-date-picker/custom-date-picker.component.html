@@ -1,0 +1,17 @@
+<!-- <ion-calendar
+  [options]="options"
+  [ngModel]="date"
+  (ngModelChange)="onDateSelect($event)"
+  [disabled]="disabled">
+</ion-calendar> -->
+
+<!-- the ion-calendar component is emitting an Event object rather than the expected date format.  -->
+<ion-calendar
+  [options]="options"
+  [(ngModel)]="date"
+  (onChange)="onDateSelect($event)"
+  [disabled]="disabled">
+</ion-calendar>
+
+<!-- 
+<ion-calendar></ion-calendar> -->

@@ -1,0 +1,124 @@
+ion-label.rws_label {
+  font-size: 14px;
+}
+
+ion-checkbox.rws_checkbox {
+  --size: 14px;
+}
+
+ion-button.addlang_btn, ion-button.removelang_btn {
+  --border-radius: 8px; 
+     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      height: 48px;
+     font-size: 14px; 
+     font-weight: 600; 
+    //  text-transform: lowercase;
+     text-transform: capitalize;
+}
+
+.icon-plus , .icon-minus{
+  padding-right: 8px; 
+  font-size: 20px; 
+}
+
+ion-radio {
+  --border-radius: 4px;
+  --inner-border-radius: 4px;
+
+  --color: #ddd;
+  --color-checked: #511168;
+}
+
+ion-radio.ios::part(container) {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.radio-checked.ios::part(container) {
+  border-color: #511168;
+}
+
+span.highlight {
+  color: #f00;
+}
+
+// file upload 
+.custom-input-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-upload-container {
+  display: flex;
+  align-items: center;
+}
+
+.file-name {
+  flex: 1;
+  padding-right: 10px;
+  font-size: 16px;
+  color: var(--ion-text-color);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.upload-icon {
+  margin-left: auto;
+  font-size: 24px;
+  color: var(--ion-color-primary);
+}
+
+.upload-icon ion-icon {
+  cursor: pointer;
+}
+
+
+
+.resume-container {
+  margin: 20px; 
+  // text-align: center; 
+}
+
+.resume-link {
+  display: inline-block; 
+  padding: 12px 24px; 
+  background-color: #511168;
+  color: white; 
+  border-radius: 5px; 
+  text-decoration: none; 
+  font-size: 16px; 
+  transition: background-color 0.3s ease; 
+}
+
+// .resume-icon {
+//   // font-size: 24px;
+//   // margin-right: 8px;
+// }
+
+
+.info-container {
+  text-align: left;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.position-label {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #511168;
+}
+
+.info-description {
+  font-size: 0.8rem;
+  color: #666;
+}
+

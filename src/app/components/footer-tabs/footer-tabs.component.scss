@@ -1,0 +1,36 @@
+p{
+    color: black;
+}
+img.homeicons {
+    border: 1px solid #2452cd;
+    // / height: 39px; /
+    background: radial-gradient(circle, rgba(38, 85, 217, 1) 0%, rgba(24, 64, 136, 1) 100%);
+    padding: 14px;
+    border-radius: 14px;
+}
+ion-grid {
+    text-align: center;
+    padding: 0px 10px 0px 10px;
+    margin-top: 68%;
+}
+.box.homeicontext {
+    font-size: 11PX;
+    padding-top: 10px;
+    letter-spacing: 0.5px;
+}
+ion-tab-bar.ios.hydrated {
+    --background: radial-gradient(circle, rgba(38, 85, 217, 1) 0%, rgba(24, 64, 136, 1) 100%);
+    padding: 6px 0px 20px 0px;
+}
+ion-tab-button {
+    background: transparent;
+    color: white;
+}
+
+ion-footer {
+    // position: fixed;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // z-index: 10; // Ensure it stays above other content
+  }

@@ -1,0 +1,187 @@
+<app-form-tabs [currentPage]="currentPage" [progress]="progress"></app-form-tabs>
+<ion-content class="ion-padding" *ngIf="userData">
+  <h2>Review Your Information</h2>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Personal Information</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Name: {{ userData.name }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Date of Birth: {{ userData.dob | date: 'MM/dd/yyyy' }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Gender: {{ userData.gender }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Email: {{ userData.email }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Phone: {{ userData.mobile_number }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Address: {{ userData.city }}, {{ userData.state }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Education</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Highest Qualification: {{ userData.highest_qualification }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Branch of Study: {{ userData.branch_of_study }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Title of Education: {{ userData.title_of_education }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Institution: {{ userData.university_name }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Year of Passing: {{ userData.passing_year | date: 'yyyy' }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Work Experience</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Current Job Title: {{ userData.currentpast_job_title }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Company: {{ userData.currentpast_company_name }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Duration (exp years): {{ userData.year_of_experience }} years</ion-label>
+        </ion-item>
+        <!-- <ion-item>
+          <ion-label class="ion-text-wrap">Key Responsibilities: {{ userData.key_responsibilities }}</ion-label>
+        </ion-item> -->
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-card>
+    <ion-card-header>
+      <ion-card-title>Skills & Languages</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label class="ion-text-wrap">Technical Skills: JavaScript, Angular, Node.js, SQL</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label class="ion-text-wrap">Languages: English (Fluent), Spanish (Intermediate)</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card> -->
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Skills and Employment Information</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Skills: {{ userData.skills }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Location (My City): {{ userData.loc_mycity }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Location (States): {{ userData.loc_states }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Location (Anywhere): {{ userData.loc_anywhere === '1' ? 'Yes' : 'No' }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Employment Type: {{ userData.employment_type }}</ion-label>
+        </ion-item>
+        
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Uploaded Documents</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <!-- <ion-item>
+          <ion-label>Resume.pdf</ion-label>
+        </ion-item> -->
+        <!-- <ion-item>
+          <a href="https://ek-reps.com/kaam-chor/uploads/app_resume/sample-1.pdf" target="_blank">Download JohnDoe_Resume.pdf</a>
+        </ion-item> -->
+        <ion-item>
+          <ion-label>Upload Resume:</ion-label>
+          <ion-label>
+            <a href="{{ userData.upload_resume }}" target="_blank">Uploaded Resume</a>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-card>
+    <ion-card-header>
+      <ion-card-title>Preferences</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Preferred Job: Full Stack Developer</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Expected Salary: $80,000 - $100,000</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Preferred Location: New York, NY</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card> -->
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Languages Known</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="language-container">
+        <div class="language-item" *ngFor="let skill of userData.languages">
+          <div class="language-icon">
+            <ion-icon name="language-outline"></ion-icon>
+          </div>
+          <div class="language-details">
+            <h3>{{ skill.language }}</h3>
+            <p>Proficiency: {{ skill.proficiency }}</p>
+            <p>Able: {{ skill.rws }}</p>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="ion-padding">
+    <ion-button expand="block" (click)="editInformation()">Edit Information</ion-button>
+    <ion-button expand="block" (click)="submitApplication()">Submit Application</ion-button>
+  </div>
+</ion-content>

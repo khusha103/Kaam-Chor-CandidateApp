@@ -1,0 +1,488 @@
+ion-header,
+ion-toolbar {
+    background-color: var(--ion-color-white);
+}
+
+img.banner_img{
+  // width:340px;
+  width: 337px;
+  height: 162px;
+}
+.avatar_img{
+  height: 50px !important;
+  width: 50px !important;
+  margin-top: 12px;
+}
+.highlight {
+    color: var(--ion-color-primary);
+}
+
+.toolbar-container {
+    // background-color: var(--ion-color-white);
+    background-color: #fff !important;
+
+}
+
+h2 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+.custom-size {
+  font-size: 634px !important; /* Adjust the size as needed */
+}
+
+
+
+
+
+.user-info {
+    display: flex;
+    align-items: center;
+
+    ion-avatar img  {
+        width: 40px !important;
+        height: 40px !important;
+        margin-right: 10px !important;
+        margin-top: 12px !important;
+    }
+
+    // img 
+
+    .user-greeting {
+        p {
+            // margin: 12px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 0px;
+            color: #888;
+            // color: #7b1a1a;
+            font-size: 13px;
+        }
+
+        .highlight {
+            color: var(--ion-color-primary);
+        }
+
+        // h2 {
+        //   margin-bottom: 16px;
+        //   font-size: 18px;
+        //   font-weight: bold;
+        // }
+    }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -12px;
+    padding: 0px;
+
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+
+        
+        // height: 64px;
+    
+    ion-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+        border: 1px solid #000;
+        border-radius: 13px;
+        padding: 13px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 8px;
+    }
+}
+
+.category-item:hover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+    
+
+        
+        // height: 64px;
+    
+    ion-icon {
+        font-size: 24px;
+        margin-bottom: 5px;
+        border: 1px solid #979595;
+        border-radius: 13px;
+        padding: 13px;
+        background-color: var(--ion-color-primary);//on click/hover change bg
+        color:var(--ion-color-white);
+    }
+
+    p {
+        margin: 0;
+        font-size: 8px;
+    }
+}
+
+.salary {
+    color: var(--ion-color-primary);
+    font-weight: bold;
+}
+
+// .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+//     position: relative !important;
+// }
+
+// .swiper-pagination-bullet {
+//     width: 10px;
+//     height: 10px;
+//     background-color: #ccc;
+//     opacity: 0.5;
+//   }
+  
+//   .swiper-pagination-bullet-active {
+//     background-color: #007bff;
+//     opacity: 1;
+//   }
+
+//   job-card css
+
+swiper-container {
+    padding: 16px 0;
+  }
+  
+  swiper-slide {
+    width: 70%; // Adjusted to show 1.5 slides
+  }
+  
+  // .job-card {
+  //   width: 100%;
+  //   margin: 0;
+  //   border: 2px solid #858181;
+  //   border-radius: 10px;
+  //   // box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  //   position: relative;
+  //   height: 100%; // Ensure full height
+  //   display: flex;
+  //   flex-direction: column;
+  
+  //   ion-card-header {
+  //     padding: 16px 16px 8px;
+  //   }
+  
+  //   ion-card-title {
+  //     font-size: 16px; // Slightly reduced for better fit
+  //     font-weight: bold;
+  //     color: var(--ion-color-primary);
+  //   }
+  
+  //   ion-card-content {
+  //     padding: 0 16px 16px;
+  //     flex-grow: 1; // Allow content to grow
+  //     display: flex;
+  //     flex-direction: column;
+  //     justify-content: space-between;
+  //   }
+  
+  //   .job-details {
+      
+
+  //     p {
+  //       margin: 4px 0;
+  //       color: #666;
+  //       font-size: 12px; // Reduced for better fit
+  //       display: flex;
+  //       align-items: center;
+  
+  //       ion-icon {
+  //         min-width: 16px; // Ensure consistent spacing
+  //         margin-right: 6px;
+  //         color: #999;
+  //         font-size: 14px; // Slightly reduced
+  //       }
+  //     }
+  //   }
+  
+  //   .salary {
+  //     margin-top: 8px;
+  //     color: var(--ion-color-primary);
+  //     font-weight: bold;
+  //     font-size: 14px; // Slightly reduced
+  //   }
+  
+  //   .forward-icon {
+  //     position: absolute;
+  //     right: 12px;
+  //     top: 50%;
+  //     transform: translateY(-50%);
+  //     color: #999;
+  //     font-size: 18px;
+  //   }
+  // }
+
+  .job-card {
+    width: 100%;
+    margin: 0;
+    border: 2px solid #858181;
+    border-radius: 10px;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  
+    ion-card-header {
+      padding: 16px 16px 8px;
+    }
+  
+    ion-card-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--ion-color-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+  
+    ion-card-content {
+      padding: 0 16px 16px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  
+    .job-details {
+      p {
+        margin: 4px 0;
+        color: #666;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+  
+        ion-icon {
+          min-width: 16px;
+          margin-right: 6px;
+          color: #999;
+          font-size: 14px;
+        }
+  
+        // Truncate location and company text
+        span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+        }
+      }
+    }
+  
+    .salary {
+      margin-top: 8px;
+      color: var(--ion-color-primary);
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+  
+    .forward-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 18px;
+    }
+  }
+  
+  
+  // Additional styles for better responsiveness
+  // @media (max-width: 768px) {
+  //   swiper-slide {
+  //     width: 80%; // Adjust for smaller screens
+  //   }
+  
+  //   .job-card {
+  //     ion-card-title {
+  //       font-size: 14px;
+  //     }
+  
+  //     .job-details p {
+  //       font-size: 11px;
+  //     }
+  
+  //     .salary {
+  //       font-size: 13px;
+  //     }
+  
+  //     .forward-icon {
+  //       font-size: 16px;
+  //     }
+  //   }
+  // }
+
+// .category-grid{
+// padding: 16px;
+// display: flex;
+// display: grid;
+//       grid-template-columns: repeat(2, 1fr);
+//       gap: 12px;
+// justify-content: space-between;
+
+// }
+
+
+
+//   filters css
+
+.filters-section {
+    // padding: 16px;
+  
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+  
+    ion-chip {
+      --background: #f4f4f4;
+      --color: #333;
+      width: 86%;
+      justify-content: flex-start;
+      padding: 12px;
+      border-radius: 8px;
+  
+      ion-icon {
+        margin-right: 8px;
+       
+        
+      }
+  
+      &.active {
+        --background: var(--ion-color-primary);
+        --color: #ffffff !important;
+
+        ion-icon {
+          margin-right: 8px;
+          color:#fff; 
+        }
+
+      }
+    }
+
+    ion-chip:hover{
+      --background: var(--ion-color-primary);
+      --color: var(--ion-color-white);
+      width: 86%;
+      justify-content: flex-start;
+      padding: 12px;
+      border-radius: 8px;
+  
+      ion-icon {
+        margin-right: 8px;
+        color:#fff; 
+      }
+  
+      
+    }
+  }
+
+
+  swiper-container {
+    --swiper-pagination-bullet-inactive-color: var(--ion-color-step-200, #cccccc);
+    --swiper-pagination-color: var(--ion-color-primary, #1f87cc);
+    --swiper-pagination-progressbar-bg-color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.25);
+    --swiper-scrollbar-bg-color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.1);
+    --swiper-scrollbar-drag-bg-color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.5);
+  }
+
+
+  // swiper-slide {
+  //   display: flex;
+  //   position: relative;
+  
+  //   flex-direction: column;
+  //   flex-shrink: 0;
+  //   align-items: center;
+  //   justify-content: center;
+  
+  //   width: 100%;
+  //   height: 100%;
+  
+  //   font-size: 18px;
+  
+  //   text-align: center;
+  //   box-sizing: border-box;
+  // }
+  
+  // swiper-slide img {
+  //   width: auto;
+  //   max-width: 100%;
+  //   height: auto;
+  //   max-height: 100%;
+  // }
+
+//   .mySwiper .swiper-pagination {
+//     position: unset !important;
+// }
+
+// ::ng-deep .mySwiper .swiper-pagination {
+//   position: unset !important;
+// }
+
+//   .swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+//     // bottom: var(--swiper-pagination-bottom, -21px);
+//     bottom:-21px !important;
+
+//     top: var(--swiper-pagination-top, auto);
+//     left: 0;
+//     width: 100%;
+// }
+
+swiper-container::part(pagination) {
+  // position: absolute;
+  // bottom: -344px; /* Adjust this value to move the pagination down */
+  // left: 0;
+  // width: 100%;
+  --color: #ff0;
+  position: absolute;
+  top:149px;
+}
+
+
+// .swiper-pagination-bullet {
+//   width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 8px));
+//   height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 8px));
+//   display: inline-block;
+//   border-radius: var(--swiper-pagination-bullet-border-radius, 50%);
+//   background: var(--swiper-pagination-bullet-inactive-color, #000);
+//   opacity: var(--swiper-pagination-bullet-inactive-opacity, .2);
+// }
+  // .swiper-pagination-bullet-active {
+  //   opacity: var(--swiper-pagination-bullet-opacity, 1);
+  //   background: var(--swiper-pagination-color, #511168);
+  // }
+  
+  // .swiper-pagination-bullet {
+  //   width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 8px));
+  //   height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 8px));
+  //   display: inline-block;
+  //   border-radius: var(--swiper-pagination-bullet-border-radius, 50%);
+  //   background: var(--swiper-pagination-bullet-inactive-color, #83638f);
+  //   opacity: var(--swiper-pagination-bullet-inactive-opacity, .2);
+  // }
+
+  

@@ -1,0 +1,65 @@
+{
+    "theme_color": "#8E44AD",
+    "background_color": "#ffffff",
+    "display": "fullscreen",
+    "scope": "/",
+    "start_url": "/",
+    "app_name": "Kaam Chor",
+    "short_name": "Kaam Chor",
+    "description": "Connecting Talent with Opportunity",
+    "icons": [
+        {
+            "src": "/kaamchor-icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/kaamchor-icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/kaamchor-icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/kaamchor-icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "splash_screen": {
+        "image": "/kaamchor-logo.svg",
+        "background_color": "#ffffff",
+        "animation": {
+            "type": "blurout",
+            "duration": 1000,
+            "timing_function": "ease-out"
+        }
+    },
+    "content": {
+        "job_title": {
+            "text": "JOB",
+            "color": "#8E44AD",
+            "font_size": "48px",
+            "position": "center",
+            "animation": {
+                "type": "fade-in",
+                "duration": 500,
+                "delay": 300
+            }
+        },
+        "call_to_action": {
+            "text": "Call HR\nGet A jobs",
+            "color": "#333333",
+            "font_size": "24px",
+            "position": "bottom",
+            "animation": {
+                "type": "slide-up",
+                "duration": 500,
+                "delay": 600
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>testpage_1</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- job-experience.component.html -->
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <ion-item>
+      <ion-label>Do you have any work experience?</ion-label>
+    </ion-item>
+    <ion-radio-group >
+      <ion-item>
+        <ion-label>Yes</ion-label>
+        <ion-radio slot="start" value="true"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>No</ion-label>
+        <ion-radio slot="start" value="false"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <ion-item>
+      <ion-label position="floating">Total years of experience</ion-label>
+      <ion-input type="number"></ion-input>
+    </ion-item>
+
+    <div class="section-title">Latest Job Details</div>
+
+    <ion-item>
+      <ion-label position="floating">Job Title</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Company Name</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-checkbox>Currently Working Here</ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Current Monthly Salary</ion-label>
+      <ion-input type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Industry (Optional)</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+    <!-- <ion-list> -->
+      <ion-item class="custom-input-item">
+        <ion-label position="stacked" class="labels">First Name</ion-label>
+        <ion-input placeholder="First Name" type="text" class="" ></ion-input>
+      </ion-item>
+<!-- </ion-list> -->
+
+    <div class="button-container">
+      <ion-button fill="outline">BACK</ion-button>
+      <ion-button>NEXT</ion-button>
+    </div>
+  </div>
+</ion-content>

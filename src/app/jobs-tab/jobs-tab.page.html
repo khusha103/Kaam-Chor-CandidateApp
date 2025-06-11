@@ -1,0 +1,104 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Jobs</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="openFilterMenu()">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Jobs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+ 
+
+  <ion-searchbar placeholder="type software, developer" [(ngModel)]="searchTerm" showCancelButton="focus" animated>
+  </ion-searchbar>
+
+  <ion-button fill="clear" color="dark" (click)="performSearch()" class="search-btn">
+    <ion-icon name="search-outline" class="search-icon"></ion-icon>
+    <span class="search-text">Search</span>
+  </ion-button>
+  
+
+  <ion-list>
+    <ion-list-header>Jobs for you</ion-list-header>
+    <div class="job-count">{{jobs_count}} jobs available</div>
+    <!-- <ion-list *ngFor="let employer of filteredJobListings"> -->
+    <ion-card *ngFor="let job of filteredJobListings" class="job-card">
+      <ion-item lines="none">
+        <ion-label class="job-container">
+          <!-- First Row: Image (1/4) + Job Title & Company (3/4) -->
+          <div class="job-header">
+            <ion-avatar slot="start">
+              <img [src]="job.company_logo" alt="Company Logo" class="company-logo">
+            </ion-avatar>
+            <div class="job-info">
+              <h2 class="job-title">{{ job.job_title }}</h2>
+              <p class="company-name">{{ job.company_name }}</p>
+            </div>
+          </div>
+      
+          <div class="job-details">
+            <p class="location">
+              <ion-icon name="location-outline"></ion-icon> {{ job.city }}, {{ job.state }}
+            </p>
+            <p class="salary">
+              <ion-icon name="cash-outline"></ion-icon> {{ job.salary }}
+            </p>
+          </div>
+          
+        </ion-label>
+      
+        <!-- <ion-button fill="clear" color="dark" slot="end" class="custom-chevron-button">
+          <div class="icon-container">
+            <ion-icon name="bookmark-outline" class="save-icon"></ion-icon>
+            <ion-icon name="chevron-forward-outline" class="custom-chevron-icon"></ion-icon>
+          </div>
+        </ion-button> -->
+
+        <ion-button fill="clear" color="dark" slot="end" class="custom-chevron-button">
+          <div class="icon-container" style="display: flex; gap: 10px; align-items: center;">
+            <!-- Bookmark Button -->
+            <ion-button fill="clear" size="small" (click)="bookmarkJob(job.job_id)">
+              <ion-icon name="bookmark-outline" class="save-icon"></ion-icon>
+            </ion-button>
+        
+            <!-- Chevron (Navigate to Job Detail) -->
+            <ion-button fill="clear" size="small" (click)="goToJobDetail(job.job_id)">
+              <ion-icon name="chevron-forward-outline" class="custom-chevron-icon"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-button>
+        
+      </ion-item>
+      
+      <ion-card-content>
+        
+        <!-- <div class="tags">
+          <span class="tag new"><ion-icon name="star-outline"></ion-icon> New</span>
+          <span class="tag experience"><ion-icon name="briefcase-outline"></ion-icon> 01</span>
+          <span class="tag remote"><ion-icon name="home-outline"></ion-icon> Work From Home</span>
+        </div> -->
+        <div class="tags">
+          <span class="tag new"><ion-icon name="star-outline"></ion-icon> New</span>
+          <span class="tag experience"><ion-icon name="briefcase-outline"></ion-icon> 01</span>
+          <span class="tag remote">
+            <ion-icon name="{{ job.is_wfh === 'yes' ? 'home-outline' : 'business-outline' }}"></ion-icon> 
+            {{ job.is_wfh === 'yes' ? 'Remote/WFH' : 'Onsite' }}
+          </span>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <!-- </ion-list> -->
+</ion-content>

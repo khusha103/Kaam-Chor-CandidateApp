@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>upload</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label position="stacked">Select File</ion-label>
+      <input type="file" (change)="onFileChange($event)" />
+    </ion-item>
+    <!-- <ion-button type="submit" [disabled]="uploadForm.invalid">Upload</ion-button> -->
+    <ion-button type="submit">Upload</ion-button>
+
+  </form>
+</ion-content>

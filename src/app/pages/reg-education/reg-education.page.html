@@ -1,0 +1,208 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Education</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<app-form-tabs [currentPage]="currentPage" [progress]="progress"></app-form-tabs>
+
+<!-- <ion-content class="ion-padding">
+  <div class="page-content">
+    <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-select label="Qualification" label-placement="stacked" formControlName="highest_qualification" required (ionChange)="onselect_quali($event)">
+          <ion-select-option value="" disabled>Select Qualification</ion-select-option>
+          <ion-select-option *ngFor="let qual of qualifications" [value]="qual.id">{{ qual.value }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="educationForm.get('highest_qualification')?.invalid && (educationForm.get('highest_qualification')?.touched || educationForm.get('highest_qualification')?.dirty)">
+        <ion-text color="danger">Qualification is required.</ion-text>
+      </div>
+
+      <ion-item *ngIf="show_edu_title">
+        <ion-select label="Education Title" label-placement="stacked" formControlName="title_of_education" required (ionChange)="onselect_edu_title($event)">
+          <ion-select-option value="" disabled>Select Education Title</ion-select-option>
+          <ion-select-option *ngFor="let title of educationTitles" [value]="title.id">{{ title.Education_title_name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="educationForm.get('title_of_education')?.invalid && (educationForm.get('title_of_education')?.touched || educationForm.get('title_of_education')?.dirty)">
+        <ion-text color="danger">Education Title is required.</ion-text>
+      </div>
+
+      <ion-item *ngIf="show_branch">
+        <ion-select label="Branch of Study" label-placement="stacked" formControlName="branch_of_study" required (ionChange)="onselect_branch($event)">
+          <ion-select-option value="" disabled>Select Branch</ion-select-option>
+          <ion-select-option *ngFor="let branch of branches" [value]="branch.id">{{ branch.value }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="educationForm.get('branch_of_study')?.invalid && (educationForm.get('branch_of_study')?.touched || educationForm.get('branch_of_study')?.dirty)">
+        <ion-text color="danger">Branch of Study is required.</ion-text>
+      </div>
+
+      <ion-item *ngIf="show_univ_name">
+        <ion-select label="Name of the University/Institute" label-placement="stacked" formControlName="university_name" required (ionChange)="onselect_univ($event)">
+          <ion-select-option value="" disabled>Select University</ion-select-option>
+          <ion-select-option *ngFor="let uni of universities" [value]="uni.id">{{ uni.value }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="educationForm.get('university_name')?.invalid && (educationForm.get('university_name')?.touched || educationForm.get('university_name')?.dirty)">
+        <ion-text color="danger">University/Institute name is required.</ion-text>
+      </div>
+
+      <ion-list *ngIf="show_passing_yr">
+        <ion-accordion-group>
+          <ion-accordion value="start">
+            <ion-item slot="header">
+              <ion-label>Passing Year</ion-label>
+              <ion-note slot="end" id="datetimeValue"></ion-note>
+            </ion-item>
+            <ion-datetime
+              formControlName="passing_year"
+              slot="content"
+              displayFormat="YYYY-MM"
+              presentation="month-year"
+              (ionChange)="onDateChange($event)"
+            ></ion-datetime>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-list>
+      <div *ngIf="educationForm.get('passing_year')?.invalid && (educationForm.get('passing_year')?.touched || educationForm.get('passing_year')?.dirty)">
+        <ion-text color="danger">Passing Year is required.</ion-text>
+      </div>
+
+      <div class="button-group">
+        <ion-button (click)="previousPage()">Back</ion-button>
+        <ion-button *ngIf="!dataExists" type="submit" [disabled]="educationForm.invalid">Save and Continue</ion-button>
+        <ion-button *ngIf="dataExists" (click)="updateForm()">Next</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content> -->
+
+
+<ion-content class="ion-padding">
+  <div class="page-content">
+    <form [formGroup]="educationForm" (ngSubmit)="onSubmit()">
+      <ion-item lines="none">
+        <ion-label class="ion-text-wrap">What Is Your Highest Qualification?</ion-label>
+      </ion-item>
+      <ion-radio-group formControlName="highest_qualification" (ionChange)="onselect_quali($event)">
+        <!-- <ion-list lines="none"> -->
+        <ion-item lines="none">
+          <ion-row class="radio-row">
+            <ion-col size="6" *ngFor="let qual of qualifications">
+              <ion-item lines="none">
+                <ion-radio slot="start" [value]="qual.id"></ion-radio>
+                <ion-label class="cust_label" style="
+                  margin-bottom: 0px;
+                  margin-top: 0px;
+              ">{{ qual.value }}</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+        <!-- </ion-list> -->
+      </ion-radio-group>
+      <div
+        *ngIf="educationForm.get('highest_qualification')?.invalid && (educationForm.get('highest_qualification')?.touched || educationForm.get('highest_qualification')?.dirty)">
+        <ion-text color="danger">Qualification is required.</ion-text>
+      </div>
+
+
+      <ion-item *ngIf="show_edu_title" class="custom-input-item" lines="none">
+        <ion-label position="stacked">Education Title</ion-label>
+        <ion-select formControlName="title_of_education"
+          toggleIcon="assets/dropdown_toggle.svg" required (ionChange)="onselect_edu_title($event)" class="custom-select">
+          <ion-select-option value="" disabled>Select Education Title</ion-select-option>
+          <ion-select-option *ngFor="let title of educationTitles" [value]="title.id">{{ title.Education_title_name
+            }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div
+        *ngIf="educationForm.get('title_of_education')?.invalid && (educationForm.get('title_of_education')?.touched || educationForm.get('title_of_education')?.dirty)">
+        <ion-text color="danger">Education Title is required.</ion-text>
+      </div>
+
+      <ion-item *ngIf="show_branch" class="custom-input-item" lines="none">
+        <ion-label position="stacked">Branch of Study</ion-label>
+        <!-- <ion-label color="primary">Branch of Study</ion-label><br> -->
+        <ion-select formControlName="branch_of_study"
+          toggleIcon="assets/dropdown_toggle.svg" required (ionChange)="onselect_branch($event)" class="custom-select">
+          <ion-select-option value="" disabled>Select Branch</ion-select-option>
+          <ion-select-option *ngFor="let branch of branches" [value]="branch.id">{{ branch.value }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div
+        *ngIf="educationForm.get('branch_of_study')?.invalid && (educationForm.get('branch_of_study')?.touched || educationForm.get('branch_of_study')?.dirty)">
+        <ion-text color="danger">Branch of Study is required.</ion-text>
+      </div>
+
+      <ion-item *ngIf="show_univ_name" class="custom-input-item" lines="none">
+        <!-- <ion-label color="primary">Name of the University/Institute</ion-label><br> -->
+         <ion-label position="stacked">Name of the University/Institute</ion-label>
+        <ion-select formControlName="university_name"
+          toggleIcon="assets/dropdown_toggle.svg" required (ionChange)="onselect_univ($event)" class="custom-select">
+          <ion-select-option value="" disabled>Select University</ion-select-option>
+          <ion-select-option *ngFor="let uni of universities" [value]="uni.id">{{ uni.value }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div
+        *ngIf="educationForm.get('university_name')?.invalid && (educationForm.get('university_name')?.touched || educationForm.get('university_name')?.dirty)">
+        <ion-text color="danger">University/Institute name is required.</ion-text>
+      </div>
+
+      <ion-list *ngIf="show_passing_yr">
+        <!-- <ion-accordion-group>
+          <ion-accordion value="start">
+            <ion-item slot="header">
+              <ion-label>Passing Year</ion-label>
+              <ion-note slot="end" id="datetimeValue"></ion-note>
+            </ion-item>
+            <ion-datetime formControlName="passing_year" slot="content" displayFormat="YYYY-MM"
+              presentation="month-year" (ionChange)="onDateChange($event)"></ion-datetime>
+          </ion-accordion>
+        </ion-accordion-group> -->
+
+        <ion-accordion-group >
+          <ion-accordion value="first" toggleIcon="calendar" toggleIconSlot="end" color="primary">
+            <ion-item slot="header">
+              <ion-label>Passing Year</ion-label>
+              <ion-note slot="end" id="datetimeValue"></ion-note>
+            </ion-item>
+            <div slot="content">
+              <ion-datetime formControlName="passing_year" slot="content" displayFormat="YYYY-MM"
+                presentation="month-year" (ionChange)="onDateChange($event)"></ion-datetime>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-list>
+      <div
+        *ngIf="educationForm.get('passing_year')?.invalid && (educationForm.get('passing_year')?.touched || educationForm.get('passing_year')?.dirty)">
+        <ion-text color="danger">Passing Year is required.</ion-text>
+      </div>
+
+      
+
+
+      <div class="button-container">
+        <ion-row>
+          <ion-col size="6"><ion-button (click)="previousPage()" expand="block"
+              class="back_btn">Back</ion-button></ion-col>
+          <ion-col size="6"><ion-button *ngIf="!dataExists" type="submit" expand="block" class="next_btn"
+              [disabled]="educationForm.invalid">
+              Save and Continue
+            </ion-button>
+            <ion-button *ngIf="dataExists" (click)="updateForm()" expand="block" class="next_btn">
+              Next
+            </ion-button></ion-col>
+        </ion-row>
+      </div>
+    </form>
+  </div>
+</ion-content>
+
+<style>
+  /* .page-content {
+    padding: 20px;
+  } */
+</style>

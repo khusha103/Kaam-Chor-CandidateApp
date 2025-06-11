@@ -1,0 +1,68 @@
+.cust_label{
+    font-size: 12px;
+}
+
+.radio-row {
+    --ion-padding-start: 0;
+    --ion-padding-end: 0;
+    margin: 0;
+    justify-content: space-between; /* Align radio buttons to the left and labels to the right */
+  }
+  
+  .radio-row ion-col {
+    padding: 0;
+    // display: flex;
+    // align-items: center;
+  }
+  
+//   .cust_label {
+//     // margin-left: 18px;
+//   }
+
+
+  
+:host ::ng-deep ion-accordion .ion-accordion-toggle-icon {
+    color: #511168; 
+  }
+
+  .button-container {
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+  
+  ion-button {
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* Optional: Add a hover effect */
+  ion-button:hover {
+    opacity: 0.9;
+  }
+  
+  /* Optional: Style for disabled button */
+  ion-button[disabled] {
+    opacity: 0.6;
+  }
+
+//   .back_btn{
+//   --background: #ffffff;
+//   --background-hover: #511168; 
+//   --color: #511168;
+//   --border-radius: 5px;
+//   --border-color: #511168;
+//   --border-style: solid;
+//   --border-width: 1px;
+//   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+//   }
+
+//   .next_btn{
+//   --background: #511168;
+//   --color: #ffffff;
+//   --border-radius: 5px;
+//   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+//   }

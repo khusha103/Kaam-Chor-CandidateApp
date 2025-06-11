@@ -1,0 +1,335 @@
+// job-list.page.scss (Styling)
+.job-count {
+    padding: 10px;
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .job-card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 10px;
+  }
+  
+  .job-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #511168;
+  }
+  
+
+  
+  .company-name {
+    color: gray;
+    font-size: 0.9em;
+  }
+  
+  .location, .salary {
+    font-size: 0.9em;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+//   .tags {
+//     display: flex;
+//     gap: 10px;
+//     margin-top: 10px;
+//   }
+  
+//   .tag {
+//     display: flex;
+//     align-items: center;
+//     gap: 5px;
+//     background: #e0e0e0;
+//     padding: 5px 10px;
+//     border-radius: 15px;
+//     font-size: 12px;
+//     font-weight: 500;
+//   }
+  
+//   .new {
+//     background: #ffd700;
+//   }
+  
+//   .experience {
+//     background: #dcdcdc;
+//   }
+  
+//   .remote {
+//     background: #b19cd9;
+//   }
+
+// .tags {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 8px;
+//   }
+  
+//   .tag {
+//     padding: 4px 8px;
+//     border-radius: 12px;
+//     font-size: 12px;
+//     display: flex;
+//     align-items: center;
+//     gap: 4px;
+//   }
+  
+//   .tag.new {
+//     border: 1px solid #ac8507; // Pink border for new jobs
+//     color: #ac8507;
+//   }
+  
+//   .tag.experience {
+//     border: 1px solid #474947; // Green border for experience
+//     color: #474947;
+//   }
+  
+//   .tag.remote {
+//     border: 1px solid #511168; // Blue border for remote jobs
+//     color: #511168;
+//   }
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a soft shadow */
+  transition: all 0.3s ease-in-out;
+}
+
+.tag:hover {
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3); /* Enhances shadow on hover */
+}
+
+.tag.new {
+  border: 1px solid #ac8507;
+  color: #ac8507;
+  background-color: rgba(172, 133, 7, 0.1);
+}
+
+.tag.experience {
+  border: 1px solid #474947;
+  color: #474947;
+  background-color: rgba(71, 73, 71, 0.1);
+}
+
+.tag.remote {
+  border: 1px solid #511168;
+  color: #511168;
+  background-color: rgba(81, 17, 104, 0.1);
+}
+
+  .custom-searchbar {
+    --background: #f7f7f7; // Background color
+    --placeholder-color: #666; // Placeholder color
+    --border-radius: 10px; // Border radius
+    width: 100%; // Full width
+    padding: 10px; // Additional padding
+  }
+  
+  /* Adjust font size and color for better readability */
+  .custom-searchbar input {
+    font-size: 16px;
+    color: #333;
+  }
+
+//   .custom-chevron-button {
+//     padding: 2px 2px;
+//     font-size: 3px;
+//     background: #511168; /* Purple background */
+//     border-radius: 28px; /* Rounded corners */
+//     color: #fff !important; /* White text color */
+//   }
+  
+  /* Optionally, adjust the icon size and color */
+  .custom-chevron-icon {
+    font-size: 24px; /* Adjust icon size */
+    color: #fff; /* White icon color */
+  }
+
+
+  .company-logo {
+    width: 40px; /* Set width */
+    height: 40px; /* Set height to make it square */
+    object-fit: cover; /* Ensure image fits within the square */
+    border: 1px solid #5e5c5c; /* Add a light gray border */
+    border-radius: 7px; /* Make corners square */
+  }
+
+
+  .icon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ 
+
+
+  .search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    padding: 0px 0px; 
+    margin: 13px;
+    border: 2px solid #511168;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .search-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2); 
+    transform: translateY(-2px); 
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .search-icon {
+    font-size: 22px; 
+    color: #511168; 
+    margin-right: 8px; 
+    transition: transform 0.3s ease;
+  }
+  
+  .search-text {
+    font-size: 14px;
+    color: #511168;
+    font-weight: bold;
+  }
+  
+  .search-btn:hover .search-icon {
+    transform: rotate(360deg); 
+  }
+  
+
+
+  .custom-chevron-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+  
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+  }
+  
+  .save-icon {
+    font-size: 20px;
+    color: #666; 
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .custom-chevron-icon {
+    font-size: 22px; 
+    
+    background: #511168; 
+    border-radius: 28px; /* Rounded corners */
+    color: #fff !important; /* White text color */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Hover Effects */
+  .custom-chevron-button:hover .save-icon {
+    // color: #ff9800; /* Changes color on hover */
+  }
+  
+  .custom-chevron-button:hover .custom-chevron-icon {
+    // transform: translateX(4px); /* Moves chevron slightly to the right */
+  }
+  
+  
+  
+  // .job-details {
+  //   display: flex;
+  //   flex-direction: row;
+  //   gap: 16px; /* Adds space between location and salary */
+  //   flex-wrap: wrap; /* Ensures it moves to the next row on smaller screens */
+  //   margin-top: 4px; /* Adds some spacing */
+  // }
+
+
+  .job-container {
+    width: 100%;
+  }
+  
+  .job-header {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Adds spacing between image and text */
+  }
+  
+  .company-logo {
+    width: 60px; /* Adjust the image size */
+    height: 44px;
+    flex: 1; /* Takes 1 part of 4 */
+    object-fit: cover;
+    border-radius: 8px; /* Optional: Adds rounded corners */
+  }
+  
+  .job-info {
+    flex: 3; /* Takes 3 parts of 4 */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .job-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .company-name {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+  
+  // .job-details {
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   gap: 16px;
+  //   margin-top: 4px;
+  // }
+
+  .job-details {
+    display: flex;
+    flex-direction: column; /* Stacks items vertically */
+  }
+  
+  .location {
+    margin-bottom: -3px; /* Adds spacing between location and salary */
+    color: #666;
+  }
+  
+
+  
+  .card-content-ios {
+    -webkit-padding-start: 20px;
+    padding-inline-start: 20px;
+    -webkit-padding-end: 20px;
+    padding-inline-end: 20px;
+    padding-top: 0px;
+    padding-bottom: 20px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+  
+  
+  
+  
+  

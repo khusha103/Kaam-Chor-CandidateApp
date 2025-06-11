@@ -1,0 +1,51 @@
+// /* job-experience.component.scss */
+// .form-container {
+//   max-width: 500px;
+//   margin: 0 auto;
+// }
+
+// .section-title {
+//   font-size: 18px;
+//   font-weight: bold;
+//   margin: 20px 0 10px;
+//   color: var(--ion-color-primary);
+// }
+
+// .button-container {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-top: 20px;
+// }
+
+// ion-radio-group ion-item {
+//   --padding-start: 0;
+// }
+
+// ion-checkbox {
+//   margin-right: 10px;
+// }
+
+
+
+ion-label {
+  font-weight: 500; 
+}
+
+ion-input {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.custom-input-item ion-input {
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  padding: 8px; 
+  margin-top: 8px; 
+}
+.fieldss {
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  color: #919191;
+  padding: 0px 0px 0px 6px;
+  margin-top: 8px;
+}

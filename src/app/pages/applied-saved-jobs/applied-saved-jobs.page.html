@@ -1,0 +1,76 @@
+<ion-header translucent>
+  <ion-toolbar color="primary">
+    <ion-title class="text-white text-base font-semibold">
+      My Jobs
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding bg-[#f3f4f6]">
+
+  <!-- Segment Tabs -->
+  <ion-segment [(ngModel)]="selectedTab" color="primary" class="rounded-lg mt-2">
+    <ion-segment-button value="applied">
+      <ion-label class="font-medium text-sm">Applied</ion-label>
+      <ion-badge color="tertiary" *ngIf="appliedJobs.length">{{ appliedJobs.length }}</ion-badge>
+    </ion-segment-button>
+    <ion-segment-button value="saved">
+      <ion-label class="font-medium text-sm">Saved</ion-label>
+      <ion-badge color="warning" *ngIf="savedJobs.length">{{ savedJobs.length }}</ion-badge>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Applied Jobs -->
+  <div *ngIf="selectedTab === 'applied'" class="mt-4">
+    <ion-card 
+      *ngFor="let job of appliedJobs"
+      (click)="goToJobDetail(job.job_id)"
+      class="rounded-xl shadow-lg border border-gray-200 bg-white relative overflow-hidden cursor-pointer">
+      <div class="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-primary to-tertiary"></div>
+      <ion-card-header class="pb-0">
+        <ion-card-title class="text-sm font-medium text-[#2c2c2c] flex items-center">
+          <ion-icon name="briefcase-outline" class="mr-2 text-primary text-base"></ion-icon>
+          {{ job.job_title }}
+        </ion-card-title>
+        <ion-card-subtitle class="text-xs text-gray-500 mt-1">
+          {{ job.applied_company_name }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content class="text-xs text-gray-700">
+        <p class="mb-2">{{ job.job_description | slice:0:100 }}...</p>
+        <div class="flex justify-between items-center mt-2">
+          <ion-chip color="success" *ngIf="job.application_status == 1" class="text-xs px-2">
+            <ion-label>Applied</ion-label>
+          </ion-chip>
+          <ion-note class="text-gray-400 text-xs">Applied on: {{ job.applied_on | date }}</ion-note>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Saved Jobs -->
+  <div *ngIf="selectedTab === 'saved'" class="mt-4">
+    <ion-card 
+      *ngFor="let job of savedJobs"
+      (click)="goToJobDetail(job.job_id)"
+      class="rounded-xl shadow-lg border border-gray-200 bg-white relative overflow-hidden cursor-pointer">
+      <div class="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-yellow-400 to-yellow-200"></div>
+      <ion-card-header class="pb-0">
+        <ion-card-title class="text-sm font-medium text-[#2c2c2c] flex items-center">
+          <ion-icon name="bookmark-outline" class="mr-2 text-warning text-base"></ion-icon>
+          {{ job.job_title }}
+        </ion-card-title>
+        <ion-card-subtitle class="text-xs text-gray-500 mt-1">
+          {{ job.saved_company_name }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content class="text-xs text-gray-700">
+        <p class="mb-2">{{ job.job_description | slice:0:100 }}...</p>
+        <div class="flex justify-between items-center mt-2">
+          <ion-note class="text-gray-400 text-xs">Saved on: {{ job.saved_on | date }}</ion-note>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

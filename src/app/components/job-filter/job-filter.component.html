@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Filters {{ filterCount ? '(' + filterCount + ')' : '' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <!-- Sidebar -->
+      <ion-col size="4" class="sidebar">
+        <ion-list lines="none">
+          <ion-item [class.active]="selectedMenu === 'category'" (click)="selectMenu('category')">
+            <ion-label>Category</ion-label>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'location'" (click)="selectMenu('location')">
+            <ion-label>Location</ion-label>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'skills'" (click)="selectMenu('skills')">
+            <ion-label>Skills</ion-label>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'jobType'" (click)="selectMenu('jobType')">
+            <ion-label>Job Type</ion-label>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'salary'" (click)="selectMenu('salary')">
+            <ion-label>Salary</ion-label>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'experience'" (click)="selectMenu('experience')">
+            <ion-label>Experience</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <!-- Content -->
+      <ion-col size="8" class="content">
+        <!-- Category -->
+        <div *ngIf="selectedMenu === 'category'">
+          <ion-label class="section-label">Job Category</ion-label>
+          <ion-list>
+            <ion-item *ngFor="let category of jobCategories | slice:0:(showMoreCategories ? jobCategories.length : 3)">
+              <ion-label>{{ category }}</ion-label>
+              <ion-checkbox slot="end" [checked]="filters.category.includes(category)" (ionChange)="toggleCategory(category)"></ion-checkbox>
+            </ion-item>
+            <ion-item *ngIf="jobCategories.length > 3" lines="none">
+              <ion-label (click)="showMoreCategories = !showMoreCategories">{{ showMoreCategories ? 'Show Less' : 'Show More' }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Location -->
+        <div *ngIf="selectedMenu === 'location'">
+          <ion-label class="section-label">Location</ion-label>
+          <ion-list>
+            <ion-item *ngFor="let loc of locations | slice:0:(showMoreLocations ? locations.length : 3)">
+              <ion-label>{{ loc }}</ion-label>
+              <ion-checkbox slot="end" [checked]="filters.location.includes(loc)" (ionChange)="toggleLocation(loc)"></ion-checkbox>
+            </ion-item>
+            <ion-item *ngIf="locations.length > 3" lines="none">
+              <ion-label (click)="showMoreLocations = !showMoreLocations">{{ showMoreLocations ? 'Show Less' : 'Show More' }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Skills -->
+        <div *ngIf="selectedMenu === 'skills'">
+          <ion-label class="section-label">Skills</ion-label>
+          <ion-list>
+            <ion-item *ngFor="let skill of skillList">
+              <ion-label>{{ skill }}</ion-label>
+              <ion-checkbox slot="end" [checked]="filters.skills.includes(skill)" (ionChange)="toggleSkill(skill)"></ion-checkbox>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Job Type -->
+        <div *ngIf="selectedMenu === 'jobType'">
+          <ion-label class="section-label">Job Type</ion-label>
+          <ion-radio-group [(ngModel)]="filters.jobType" (ionChange)="updateFilterCount()">
+            <ion-item>
+              <ion-label>Full-time</ion-label>
+              <ion-radio slot="start" value="full-time"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Part-time</ion-label>
+              <ion-radio slot="start" value="part-time"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+          <ion-item>
+            <ion-label>Remote</ion-label>
+            <ion-toggle [(ngModel)]="filters.remote" (ionChange)="updateFilterCount()"></ion-toggle>
+          </ion-item>
+        </div>
+
+        <!-- Salary -->
+        <div *ngIf="selectedMenu === 'salary'">
+          <ion-label class="section-label">Salary: {{ formatSalary(filters.salary) }}</ion-label>
+          <ion-range [(ngModel)]="filters.salary" min="0" max="150000" step="1000" (ionChange)="updateFilterCount()">
+            <ion-label slot="start">$0</ion-label>
+            <ion-label slot="end">$150k</ion-label>
+          </ion-range>
+        </div>
+
+        <!-- Experience -->
+        <div *ngIf="selectedMenu === 'experience'">
+          <ion-label class="section-label">Experience (Years)</ion-label>
+          <ion-range dual-knobs="true" [(ngModel)]="filters.experience" [min]="0" [max]="10" step="1" (ionChange)="updateFilterCount(); validateFilters()">
+            <ion-label slot="start">0</ion-label>
+            <ion-label slot="end">10</ion-label>
+          </ion-range>
+          <ion-item *ngIf="experienceError" color="danger">
+            <ion-label>{{ experienceError }}</ion-label>
+          </ion-item>
+        </div>
+
+        <!-- Buttons -->
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" size="small" fill="outline" (click)="resetFilters()">Reset</ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button expand="block" size="small" color="primary" [disabled]="filterCount === 0" (click)="applyFilters()">Apply ({{ filterCount }})</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

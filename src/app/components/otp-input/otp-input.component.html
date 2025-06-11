@@ -1,0 +1,16 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="3" *ngFor="let _ of [1,2,3,4]; let i = index">
+      <ion-input 
+        type="tel"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="1" 
+        class="otp-input" 
+        [id]="'otp-' + i"
+        (ionInput)="onOtpChange($event, i)"
+        (keydown)="onKeyDown($event, i)"
+      ></ion-input>
+    </ion-col>
+  </ion-row>
+</ion-grid>

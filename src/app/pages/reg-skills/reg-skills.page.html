@@ -1,0 +1,217 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Skills and Preferences</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<app-form-tabs [currentPage]="currentPage" [progress]="progress"></app-form-tabs>
+
+
+<ion-content class="ion-padding">
+  <!-- <app-form-tabs [currentPage]="currentPage" [progress]="progress"></app-form-tabs> -->
+  <div class="info-container">
+    <h2>Provide more information about your position.</h2>
+    <ion-label class="position-label">Developer</ion-label>
+    <p class="info-description">
+      This enables us to present you with more accurate job recommendations.
+    </p>
+  </div>
+
+  <form [formGroup]="skillsForm" (ngSubmit)="onSubmit()">
+    <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">Your Skills</ion-label>
+      <ion-select formControlName="skills" placeholder="Select a skill" multiple="true" class="custom-select"
+        toggleIcon="assets/dropdown_toggle.svg">
+        <ion-select-option value="" disabled>Select Skills</ion-select-option>
+        <ion-select-option *ngFor="let skill of skills" [value]="skill.id">{{ skill.value }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Or outside the select, if you want to display selected skills separately -->
+    <!-- <div *ngFor="let skill of skills">
+  <span [class.highlight]="isSkillSelected(skill.id)">{{ skill.value }}</span>
+</div> -->
+
+
+
+    <ion-item lines="none">
+      <ion-label>Preferred Work Location:</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-checkbox slot="start" [checked]="skillsForm.get('workLocation')?.value?.includes('withinCity')"
+        (ionChange)="onLocationChange('withinCity')"
+        [disabled]="skillsForm.get('workLocation')?.value?.includes('anywhereInIndia')">
+      </ion-checkbox>
+      <ion-label>Within my city</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-checkbox slot="start" [checked]="skillsForm.get('workLocation')?.value?.includes('anywhereInIndia')"
+        (ionChange)="onLocationChange('anywhereInIndia')"
+        [disabled]="skillsForm.get('workLocation')?.value?.includes('otherState')">
+      </ion-checkbox>
+      <ion-label>Anywhere in India</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-checkbox slot="start" [checked]="skillsForm.get('workLocation')?.value?.includes('otherState')"
+        (ionChange)="onLocationChange('otherState')"
+        [disabled]="skillsForm.get('workLocation')?.value?.includes('anywhereInIndia')">
+      </ion-checkbox>
+      <ion-label>Other state</ion-label>
+    </ion-item>
+
+    <!-- Add this for state selection -->
+    <ion-item *ngIf="showOtherState" class="custom-input-item" lines="none">
+      <ion-label position="stacked">Select States (Max 5)</ion-label>
+      <ion-select multiple formControlName="job_states" class="custom-select" toggleIcon="assets/dropdown_toggle.svg">
+        <ion-select-option value="" disabled>Select State</ion-select-option>
+        <ion-select-option *ngFor="let state of states" [value]="state.id"
+          [disabled]="isStateSelectionDisabled() && !skillsForm.get('job_states')?.value?.includes(state.id)">
+          {{ state.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+
+
+
+    <ion-radio-group formControlName="employment_type" lines="none">
+      <ion-list-header>
+        <ion-label>Employment Type</ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-label>Full Time</ion-label>
+        <ion-radio value="fulltime"></ion-radio>
+
+        <ion-label>Part Time</ion-label>
+        <ion-radio value="parttime"></ion-radio>
+
+      </ion-item>
+    </ion-radio-group>
+
+    <ion-item class="custom-input-item" lines="none" *ngIf="!dataExists">
+      <ion-label position="stacked">Resume(Optional)</ion-label>
+      <ion-input type="file" (change)="onFileChange($event)" accept=".pdf,.doc,.docx"
+        formControlName="upload_resume"></ion-input>
+    </ion-item>
+
+    <div class="resume-container" *ngIf="dataExists">
+      <a href="https://ek-reps.com/kaam-chor/uploads/app_resume/sample-1.pdf" class="resume-link" target="_blank">
+        <ion-icon name="document-attach-outline" class="resume-icon"></ion-icon>
+        View Resume
+      </a>
+    </div>
+
+
+
+    <!-- <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">Resume (Optional)</ion-label>
+      <div class="file-upload-container">
+        <div class="file-name" >File nae </div>
+        <ion-button fill="clear" class="upload-icon" (click)="fileInput.click()">
+          <ion-icon name="document-attach-outline"></ion-icon>
+        </ion-button>
+        <input 
+          type="file" 
+          #fileInput 
+          (change)="onFileChange($event)" 
+          accept=".pdf,.doc,.docx" 
+          hidden 
+          formControlName="upload_resume"
+        />
+      </div>
+    </ion-item> -->
+
+
+    <div class="divider">
+      <span class="divider-text">Add Languages</span>
+    </div>
+
+    <!-- <h2>Languages (Max 5)</h2> -->
+    <div formArrayName="languages">
+      <div *ngFor="let lang of languages.controls; let i = index" [formGroupName]="i">
+        <ion-grid>
+          <ion-text color="dark">Language {{ i + 1 }}</ion-text>
+          <ion-row>
+            <ion-col size="12" class="custom-input-item" lines="none">
+              <ion-label position="stacked">Language</ion-label>
+              <ion-select formControlName="language" class="custom-select" toggleIcon="assets/dropdown_toggle.svg">
+                <ion-select-option *ngFor="let language of languageOptions" [value]="language.id">{{ language.value
+                  }}</ion-select-option>
+              </ion-select>
+
+            </ion-col>
+            <ion-col size="12" class="custom-input-item" lines="none">
+              <ion-label position="stacked">Proficiency</ion-label>
+              <ion-select formControlName="proficiency" class="custom-select" toggleIcon="assets/dropdown_toggle.svg">
+                <ion-select-option *ngFor="let proficiency of proficiencies" [value]="proficiency.value">{{
+                  proficiency.value }}</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="4">
+              <ion-item lines="none">
+                <ion-checkbox slot="start" (ionChange)="onRwsChange($event, i, 'Read')"
+                  [checked]="lang.get('rws')?.value.includes('Read')" class="rws_checkbox">
+                </ion-checkbox>
+                <ion-label class="rws_label">Read</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item lines="none">
+                <ion-checkbox slot="start" (ionChange)="onRwsChange($event, i, 'Write')"
+                  [checked]="lang.get('rws')?.value.includes('Write')" class="rws_checkbox">
+                </ion-checkbox>
+                <ion-label class="rws_label">Write</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item lines="none">
+                <ion-checkbox slot="start" (ionChange)="onRwsChange($event, i, 'Speak')"
+                  [checked]="lang.get('rws')?.value.includes('Speak')" class="rws_checkbox">
+                </ion-checkbox>
+                <ion-label class="rws_label">Speak</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <!-- <ion-button (click)="removeLanguage(i)" expand="full" [disabled]="languages.length <= 1">Remove Language</ion-button> -->
+      </div>
+    </div>
+    <div class="button-container">
+      <ion-row>
+        <ion-col size="6">
+          <!-- <ion-button size="small">Small</ion-button> -->
+          <ion-button size="small" (click)="addLanguage()" [disabled]="languages.length >= 5" class="addlang_btn">
+            <ion-icon name="add-circle-outline" class="icon-plus"></ion-icon>Add
+            more</ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button *ngIf="isdeleteLoading" size="small" (click)="removeLanguage()" [disabled]="languages.length <= 1"
+            class="removelang_btn"><ion-spinner name="crescent"></ion-spinner>
+
+          </ion-button>
+
+          <ion-button *ngIf="!isdeleteLoading" size="small" (click)="removeLanguage()"
+            [disabled]="languages.length <= 1" class="removelang_btn"><ion-icon name="remove-circle-outline"
+              class="icon-minus"></ion-icon>Remove
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="button-container">
+      <ion-row>
+        <ion-col size="6"><ion-button (click)="previousPage()" expand="block"
+            class="back_btn">Back</ion-button></ion-col>
+        <ion-col size="6"><ion-button *ngIf="!dataExists" type="submit" expand="block" class="next_btn"
+            [disabled]="skillsForm.invalid">
+            Save and Continue
+          </ion-button>
+          <ion-button *ngIf="dataExists" (click)="updateForm()" expand="block" class="next_btn">
+            Next
+          </ion-button></ion-col>
+      </ion-row>
+    </div>
+  </form>
+</ion-content>

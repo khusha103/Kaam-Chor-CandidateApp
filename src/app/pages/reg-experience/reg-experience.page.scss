@@ -1,0 +1,84 @@
+// ion-radio {
+//     --border-radius: 4px;
+//     --inner-border-radius: 4px;
+  
+//     --color: #ddd;
+//     --color-checked: #511168;
+//   }
+  
+//   ion-radio.ios::part(container) {
+//     width: 20px;
+//     height: 20px;
+  
+//     border: 2px solid #ddd;
+//     border-radius: 4px;
+//   }
+  
+//   .radio-checked.ios::part(container) {
+//     border-color: #511168;
+//   }
+
+
+.cust_label{
+  font-size: 11px;
+
+}
+
+.radio-row {
+  --ion-padding-start: 0;
+  --ion-padding-end: 0;
+  margin: 0;
+  justify-content: space-between; /* Align radio buttons to the left and labels to the right */
+}
+
+.radio-row ion-col {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+
+ion-label {
+  font-weight: 500; 
+}
+
+ion-input {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.custom-input-item ion-input{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  padding: 8px; 
+  margin-top: 8px; 
+}
+.fieldss {
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  color: #919191;
+  padding: 0px 0px 0px 6px;
+  margin-top: 8px;
+}
+
+.custom-input-item ion-select{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  // padding: 8px; 
+  // margin-top: 8px; 
+}
+
+.custom-select::part(icon) {
+  position: absolute;
+  right: 16px; 
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-select {
+  padding-left: 12px; /* Ensure text doesn't overlap with the icon */
+}
+
+
+
+

@@ -1,0 +1,40 @@
+<!-- <ion-content> -->
+
+  <!-- <ion-progress-bar [value]="getProgress() / 100"></ion-progress-bar>
+  <p color="primary">Progress: {{ getProgress() | number:'1.0-0' }}%</p> -->
+
+  <!-- <ion-text>
+    <h2>{{ formPages[currentPage] }}</h2>
+    <p>Progress: {{ getProgress() | number:'1.0-0' }}%</p>
+  </ion-text> -->
+
+  <!-- <ion-button (click)="previousPage()" [disabled]="currentPage === 0">Previous</ion-button>
+  <ion-button (click)="nextPage()" [disabled]="currentPage === formPages.length - 1">Next</ion-button> -->
+<!-- </ion-content> -->
+
+<div class="step-progress">
+  <div class="step" *ngFor="let step of steps; let i = index">
+    <div class="circle" *ngIf="currentPage !== i" [class.active]="currentPage >= i">
+      <span >{{ i + 1 }}</span>
+      <!-- <span>{{ currentPage === i  ? step : i + 1 }}</span> -->
+    </div>
+    <span  *ngIf="currentPage === i ">     
+      <span class="active_text"><span class="active_circle">{{ i + 1 }}</span><span style="padding: 5px;">{{step}}</span></span>
+    </span>
+    <div *ngIf="i < steps.length - 1" class="line"></div>
+  </div>
+</div>
+
+<!-- <div class="step-progress">
+  <div class="step" *ngFor="let step of steps; let i = index">
+    <div class="circle" [class.active]="currentPage >= i + 1">
+      <span>{{ currentPage === i + 1 ? step : i + 1 }}</span>
+    </div>
+    <div *ngIf="currentPage === i + 1" class="step-name">{{ step }}</div>
+    <div *ngIf="i < steps.length - 1" class="line"></div>
+  </div>
+</div> -->
+
+
+
+

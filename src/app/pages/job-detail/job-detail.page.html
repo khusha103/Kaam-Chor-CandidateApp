@@ -1,0 +1,156 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/jobs"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="share-social-outline"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="heart-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ... your header section remains unchanged ... -->
+
+<ion-content class="ion-padding">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-title class="ion-text-center">
+        <ion-text color="primary" style="font-size: 15px;">JOB DETAIL</ion-text>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="job-title" *ngIf="jobDetail">
+    <h5>{{ jobDetail.job_title }}</h5>
+    <p>{{ jobDetail.company_name }}</p>
+    <ion-row class="flex-row" style="font-size: 12px; justify-content:center;">
+      <ion-col size="auto">
+        <ion-icon name="location" color="primary"></ion-icon>
+        <ion-text color="dark">{{ jobDetail.city }}, {{ jobDetail.state }}</ion-text>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-icon name="briefcase" color="primary"></ion-icon>
+        <ion-text color="dark">{{ jobDetail.is_wfh === 'yes' ? 'Remote/WFH' : 'Onsite' }}</ion-text>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-text color="primary">{{ jobDetail.job_type }}</ion-text>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-grid *ngIf="jobDetail">
+    <ion-row>
+      <ion-col size="4" class="ion-text-center">
+        <ion-icon name="document" color="dark" size="large"></ion-icon>
+        <br><small>Applicants</small>
+        <h6>{{ jobDetail.job_applicants_count }}</h6>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <ion-icon name="briefcase" color="dark" size="large"></ion-icon>
+        <br><small>Job Type</small>
+        <h6>{{ jobDetail.job_type }}</h6>
+      </ion-col>
+      <ion-col size="4" class="ion-text-center">
+        <ion-icon name="cash" color="dark" size="large"></ion-icon>
+        <br><small>Salary</small>
+        <h6>₹ {{ jobDetail.salary_per_annum }}</h6>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="scrollable-buttons">
+    <ion-buttons>
+      <ion-button [class.active]="activeButton === 'description'" (click)="setActiveButton('description')">Description</ion-button>
+      <ion-button [class.active]="activeButton === 'company'" (click)="setActiveButton('company')">Company Details</ion-button>
+      <ion-button [class.active]="activeButton === 'requirements'" (click)="setActiveButton('requirements')">Candidate Requirements</ion-button>
+      <ion-button [class.active]="activeButton === 'additionalInfo'" (click)="setActiveButton('additionalInfo')">Additional Information</ion-button>
+    </ion-buttons>
+  </div>
+
+  <!-- Description Tab -->
+  <div *ngIf="activeButton === 'description' && jobDetail" class="job_cutom_div">
+    <ion-text color="primary">About this Job</ion-text>
+    <p>{{ jobDetail.job_description }}</p>
+
+    <ion-card class="job-highlights-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="ribbon" color="primary" style="padding: 0px 16px;"></ion-icon> Job Highlights
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Skills Required</h2>
+              <p>{{ jobDetail.skills_required }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Languages</h2>
+              <p>{{ getLanguageList() }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Job Timings</h2>
+              <p>{{ jobDetail.job_start_time }} - {{ jobDetail.job_end_time }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <h2>Role</h2>
+              <p>{{ jobDetail.job_title }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Company Details -->
+  <div *ngIf="activeButton === 'company'" class="job_cutom_div">
+    <ion-text color="primary">Company Details</ion-text>
+    <p>
+      <strong>Company Name:</strong> {{ jobDetail.company_name }}<br>
+      <strong>Founded:</strong> {{ jobDetail.year_of_establishment }}<br>
+      <strong>Organization Size:</strong> {{ jobDetail.comp_size }}<br>
+      <strong>Industry Type:</strong> {{ jobDetail.industry_type }}<br>
+    </p>
+    <ion-text color="primary">About the Company</ion-text>
+    <p>{{ jobDetail.full_address }}</p>
+  </div>
+
+  <!-- Candidate Requirements -->
+  <div *ngIf="activeButton === 'requirements'" class="job_cutom_div">
+    <ion-text color="primary">Candidate Requirements</ion-text>
+    <p>
+      <strong>Education:</strong> {{ jobDetail.min_qual }}<br>
+      <strong>Experience:</strong> {{ jobDetail.min_exp }}<br>
+      <strong>Gender Preference:</strong> {{ jobDetail.gender_req }}<br>
+      <strong>Languages:</strong> {{ getLanguageList() }}<br>
+    </p>
+  </div>
+
+  <!-- Additional Info -->
+  <div *ngIf="activeButton === 'additionalInfo'" class="job_cutom_div">
+    <ion-text color="primary">Additional Information</ion-text>
+    <p>
+      <strong>Interview Days:</strong> {{ jobDetail.interview_days }}<br>
+      <strong>Interview Timings:</strong> {{ jobDetail.interview_timmings }}<br>
+      <strong>Work from Home:</strong> {{ jobDetail.is_wfh === 'yes' ? 'Yes' : 'No' }}<br>
+      <strong>Location Preference:</strong> {{ jobDetail.cand_loc_req }}<br>
+    </p>
+  </div>
+
+  <ion-button expand="block" color="primary" class="ion-margin-top">
+    Apply Now
+  </ion-button>
+</ion-content>

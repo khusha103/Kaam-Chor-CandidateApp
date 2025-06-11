@@ -1,0 +1,173 @@
+<ion-content [fullscreen]="true">
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <!-- Header -->
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <!-- <ion-avatar slot="start" class="avatar">
+          <img src="assets/avatar.png" alt="User avatar" class="avatar_img">
+        </ion-avatar> -->
+        
+          <ion-avatar slot="start">
+            <img alt="Silhouette of a person's head" src="assets/avatar.png" />
+          </ion-avatar>
+          
+        <ion-title class="ion-padding-top" slot="start">
+          <div class="user-info">
+            <div class="user-greeting">
+              <p>Good morning<br><span class="highlight">Andrew Ainsley</span></p>
+              <!-- <h6>Andrew Ainsley</h6> -->
+            </div>
+          </div>
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon name="notifications-circle-outline" size="large" color="primary"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <!-- Search Bar -->
+    <ion-searchbar placeholder="Search For A Job Or Company"></ion-searchbar>
+
+    <!-- Banner Slider -->
+    <swiper-container class="mySwiper" pagination="true" pagination-type="bullets" pagination-clickable="true"
+      loop="true" autoplay="true" autoplay-delay="30000" autoplay-disable-on-interaction="false">
+      <swiper-slide><img src="assets/banner_img.svg" alt="Find a job quickly" class="banner_img"></swiper-slide>
+      <swiper-slide><img src="assets/banner_img.svg" alt="Find a job quickly" class="banner_img"></swiper-slide>
+      <swiper-slide><img src="assets/banner_img.svg" alt="Find a job quickly" class="banner_img"></swiper-slide>
+      <swiper-slide><img src="assets/banner_img.svg" alt="Find a job quickly" class="banner_img"></swiper-slide>
+      <swiper-slide><img src="assets/banner_img.svg" alt="Find a job quickly" class="banner_img"></swiper-slide>
+    </swiper-container>
+
+
+    <!-- Jobs Slider -->
+     <div class="section-header">
+      <p class="highlight">Recent jobs</p>
+      <ion-button fill="clear" color="primary">See All</ion-button>
+    </div>
+    <!-- <swiper-container class="mySwiper" 
+      loop="true" autoplay="true" autoplay-delay="3000" autoplay-disable-on-interaction="false" slides-per-view="1.5"
+      space-between="16">
+      <swiper-slide *ngFor="let _ of [1,2,3,4]">
+        <ion-card class="job-card">
+          <ion-card-header>
+            <ion-card-title>Car Driver</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="job-details">
+              <p>
+                <ion-icon name="location-outline"></ion-icon>
+                Chandigarh, 50.7 Kms away
+              </p>
+              <p>
+                <ion-icon name="business-outline"></ion-icon>
+                Xyz Pvt Ltd
+              </p>
+            </div>
+            <p class="salary">Rs.15000 - Rs.25000</p>
+          </ion-card-content>
+          <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+        </ion-card>
+      </swiper-slide>
+    </swiper-container> -->
+
+    <swiper-container class="mySwiper"
+  loop="true"
+  autoplay="true"
+  autoplay-delay="3000"
+  autoplay-disable-on-interaction="false"
+  slides-per-view="1.5"
+  space-between="16">
+
+  <swiper-slide *ngFor="let job of jobs" (click)="goToJobDetail(job.job_id)">
+    <ion-card class="job-card">
+      <ion-card-header>
+        <ion-card-title>{{ job.job_title }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="job-details">
+          <p>
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ job.city }}, {{ job.state }}</span>
+          </p>
+          <p>
+            <ion-icon name="business-outline"></ion-icon>
+            <span>{{ job.company_name }}</span>
+          </p>
+          
+        </div>
+        <p class="salary">{{ job.salary }}</p>
+      </ion-card-content>
+      <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+    </ion-card>
+  </swiper-slide>
+
+</swiper-container>
+
+
+    <!-- Categories -->
+    <div class="section-header">
+      <p class="highlight">Categories</p>
+      <ion-button fill="clear" color="primary">See All</ion-button>
+    </div>
+    
+    <!-- <ion-grid class="category-grid"> -->
+      <!-- <ion-row>
+        <ion-col size="3" *ngFor="let category of categories">
+          <div class="category-item">
+            <ion-icon [name]="category.icon"></ion-icon>
+            <p>{{ category.title }}</p>
+          </div>
+        </ion-col>
+      </ion-row> -->
+      <ion-row *ngIf="categories?.length">
+        <ion-col size="3" *ngFor="let category of categories">
+          <div class="category-item">
+            <ion-icon [name]="category.icon"></ion-icon>
+            <p>{{ category.title }}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+      
+    <!-- </ion-grid> -->
+
+    <!-- Filters -->
+    <div class="filters-section">
+      <!-- <h2>Filters</h2> -->
+      <p class="highlight">Filters</p>
+      <div class="filter-grid">
+        <ion-chip>
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label>Chandigarh</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="briefcase-outline"></ion-icon>
+          <ion-label>New Jobs</ion-label>
+        </ion-chip>
+        
+        <ion-chip class="active">
+          <ion-icon name="location-outline"></ion-icon>
+          <ion-label>Nearby jobs</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="cash-outline"></ion-icon>
+          <ion-label>High Salary</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="time-outline"></ion-icon>
+          <ion-label>Part Time</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>WFH Jobs</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-content>

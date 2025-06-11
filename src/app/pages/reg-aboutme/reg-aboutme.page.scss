@@ -1,0 +1,178 @@
+ion-input[readonly] {
+    opacity: 0.4; /* Adjust opacity */
+    pointer-events: none; /* Prevent interaction */
+  }
+
+  .icon-inner{
+    display: none !important;
+  }
+
+  // .radio-container {
+  //   display: flex;
+  //   justify-content: space-between; /* Adjusts spacing between items */
+  //   align-items: center; /* Aligns items vertically */
+  // }
+  
+  // .radio-item {
+  //   display: flex;
+  //   align-items: center; /* Aligns radio button and label vertically */
+  //   margin-right: 16px; /* Adds space between radio items */
+  // }
+
+  // .radio-container ion-radio-group {
+  //   display: flex;
+  //   flex-direction: row;
+  //   justify-content: space-between;
+  // }
+  
+  // .radio-container ion-item {
+  //   --padding-start: 0;
+  //   --inner-padding-end: 0;
+  //   --min-height: 35px;
+  // }
+
+
+  // .page-content {
+    // max-width: 600px;
+    // margin: 0 auto;
+  // }
+  
+  // ion-list {
+  //   background: transparent;
+  // }
+  
+  // ion-item {
+  //   --background: transparent;
+  //   --padding-start: 0;
+  //   --inner-padding-end: 0;
+  // }
+  
+  // ion-accordion-group {
+  //   margin-bottom: 16px;
+  // }
+  
+  // .gender-section {
+    // margin-top: 16px;
+  // }
+  
+  .gender-section ion-list-header {
+    padding-left: 0;
+ 
+  }
+  
+  .gender-section ion-radio-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 0;
+    // font-size: 12px;
+  }
+  
+  .gender-section ion-item {
+    --min-height: 35px;
+    font-size: 12px;
+  }
+
+  
+  
+  ion-datetime {
+    margin-top: 8px;
+  }
+
+  .button-container {
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+  
+  ion-button {
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* Optional: Add a hover effect */
+  ion-button:hover {
+    opacity: 0.9;
+  }
+  
+  /* Optional: Style for disabled button */
+  ion-button[disabled] {
+    opacity: 0.6;
+  }
+
+  // .custom-loc-header{
+  //   --background: var(--ion-color-primary);
+  //   --color: var(--ion-color-white);
+  //   --padding-start: 0;
+  //   --padding-end: 0;
+  //   --padding-top: 0;
+  //   --padding-bottom: 0;
+  //   margin: 0;
+  //   --inner-padding-end: 0;
+  //   --inner-padding-start: 0;
+  // }
+
+  .bold-text {
+    font-weight: bolder !important; /* Makes the text bold */
+  }
+
+  .ion-text-center {
+    text-align: center; /* Centers the text horizontally */
+  }
+
+
+  :host ::ng-deep ion-accordion .ion-accordion-toggle-icon {
+    color: #511168; 
+  }
+
+//   .custom-divider {
+//   position: relative; /* Set position to relative */
+//   width: 100%;       /* Set width to 100% */
+//   --background: #f00; /* Optional: make background transparent if needed */
+// }
+
+
+// added from experience page
+ion-label {
+  font-weight: 500; 
+}
+
+ion-input {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.custom-input-item ion-input{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  padding: 8px; 
+  margin-top: 8px; 
+}
+.fieldss {
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  color: #919191;
+  padding: 0px 0px 0px 6px;
+  margin-top: 8px;
+}
+
+.custom-input-item ion-select{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  // padding: 8px; 
+  margin-top: 8px; 
+}
+
+.custom-select::part(icon) {
+  position: absolute;
+  right: 16px; 
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-select {
+  padding-left: 12px; /* Ensure text doesn't overlap with the icon */
+}

@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+    </ion-buttons>
+    <!-- <ion-title >savedJobs</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-title class="ion-text-center" >
+        <ion-text color="primary">Saved Jobs</ion-text>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="search-bar">
+    <ion-searchbar placeholder="Search saved jobs" animated></ion-searchbar>
+  </div>
+
+  <div class="category-chips">
+    <ion-chip color="primary" outline>
+      <ion-label>All</ion-label>
+    </ion-chip>
+    <ion-chip outline>
+      <ion-label>Design</ion-label>
+    </ion-chip>
+    <ion-chip outline>
+      <ion-label>Development</ion-label>
+    </ion-chip>
+    <ion-chip outline>
+      <ion-label>Marketing</ion-label>
+    </ion-chip>
+  </div>
+
+  <div class="job-grid">
+    <ion-card *ngFor="let job of savedJobs" class="job-card">
+      <ion-card-header>
+        <ion-avatar>
+          <img [src]="job.companyLogo" />
+        </ion-avatar>
+        <ion-card-subtitle>{{job.company}}</ion-card-subtitle>
+        <ion-card-title>{{job.title}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><ion-icon name="location-outline"></ion-icon> {{job.location}}</p>
+        <p><ion-icon name="cash-outline"></ion-icon> {{job.salary}}</p>
+        <p><ion-icon name="time-outline"></ion-icon> {{job.type}}</p>
+      </ion-card-content>
+      <ion-button expand="block" fill="clear">Apply Now</ion-button>
+      <ion-button fill="clear" slot="end" (click)="unsaveJob(job)">
+        <ion-icon name="bookmark" slot="icon-only" color="primary"></ion-icon>
+      </ion-button>
+    </ion-card>
+  </div>
+
+  <ion-infinite-scroll>
+    <ion-infinite-scroll-content loadingText="Loading more jobs..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

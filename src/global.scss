@@ -1,0 +1,179 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+@font-face {
+    font-family: 'Gordita';
+    src: url('../assets/fonts/Gordita-Regular.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  ion-radio {
+    --border-radius: 9px;
+    --inner-border-radius: 4px;
+  
+    --color: #ddd;
+    --color-checked: #511168;
+  }
+  
+  ion-radio.ios::part(container) {
+      width: 15px;
+      height: 15px;
+      border: 2px solid #ddd;
+      border-radius: 13px;
+  }
+  
+  .radio-checked.ios::part(container) {
+    border-color: #511168;
+    --margin-right: 2px;
+  }
+
+
+  :host ::ng-deep ion-accordion .ion-accordion-toggle-icon {
+    color: #511168; 
+  }
+
+  //form module btns
+
+  
+  .button-container {
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+  
+  // ion-button {
+  //   --border-radius: 8px;
+  //   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  //   height: 48px;
+  //   font-size: 16px;
+  //   font-weight: 600;
+  //   text-transform: uppercase;
+  // }
+  
+  // /* Optional: Add a hover effect */
+  // ion-button:hover {
+  //   opacity: 0.9;
+  // }
+  
+  // /* Optional: Style for disabled button */
+  // ion-button[disabled] {
+  //   opacity: 0.6;
+  // }
+
+  .back_btn{
+    --background: #ffffff;
+    --background-hover: #511168; 
+    --color: #511168;
+    --border-radius: 5px;
+    --border-color: #511168;
+    --border-style: solid;
+    --border-width: 1px;
+    --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+    }
+  
+    .next_btn{
+    --background: #511168;
+    --color: #ffffff;
+    --border-radius: 5px;
+    --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+    }
+
+    // Divider code
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      margin: 20px 0;
+      background-color: #511168;
+      padding: 13px;
+      position: relative;
+      left: -16px;
+      width: 100vw;
+  }
+  
+  .divider-text {
+    padding: 0 20px;
+    color: #fff;
+    // text-align: left;
+    font-weight: bold;
+  }
+
+
+  // comman in aboutme edu and experience page
+  // added from experience page
+ion-label {
+  font-weight: 500; 
+}
+
+ion-input {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.custom-input-item ion-input{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  padding: 8px; 
+  margin-top: 8px; 
+}
+.fieldss {
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  color: #919191;
+  padding: 0px 0px 0px 6px;
+  margin-top: 8px;
+}
+
+.custom-input-item ion-select{
+  border: 1px solid #d1d1d1; 
+  border-radius: 4px; 
+  // padding: 8px; 
+  margin-top: 8px; 
+}
+
+.custom-select::part(icon) {
+  position: absolute;
+  right: 16px; 
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-select {
+  padding-left: 12px; /* Ensure text doesn't overlap with the icon */
+}

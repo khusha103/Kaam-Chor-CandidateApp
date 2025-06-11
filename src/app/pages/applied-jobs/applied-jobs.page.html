@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+    </ion-buttons>
+    <!-- <ion-title>appliedJobs</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+ <!-- Segment Tabs -->
+ <ion-segment [(ngModel)]="selectedTab" color="secondary">
+  <ion-segment-button value="applied">
+    <ion-label>Applied Jobs</ion-label>
+    <ion-badge color="tertiary" *ngIf="appliedJobs.length">{{ appliedJobs.length }}</ion-badge>
+  </ion-segment-button>
+  <ion-segment-button value="saved">
+    <ion-label>Saved Jobs</ion-label>
+    <ion-badge color="warning" *ngIf="savedJobs.length">{{ savedJobs.length }}</ion-badge>
+  </ion-segment-button>
+</ion-segment>
+
+<!-- Applied Jobs List -->
+<div *ngIf="selectedTab === 'applied'">
+  <ion-card *ngFor="let job of appliedJobs" class="rounded-2xl shadow-md my-3">
+    <ion-card-header>
+      <ion-card-title class="text-lg font-bold">{{ job.job_title }}</ion-card-title>
+      <ion-card-subtitle>{{ job.applied_company_name }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ job.job_description | slice:0:100 }}...</p>
+      <ion-chip color="success" *ngIf="job.application_status == 1">Applied</ion-chip>
+      <ion-note>Applied on: {{ job.applied_on | date }}</ion-note>
+    </ion-card-content>
+  </ion-card>
+</div>
+
+<!-- Saved Jobs List -->
+<div *ngIf="selectedTab === 'saved'">
+  <ion-card *ngFor="let job of savedJobs" class="rounded-2xl shadow-md my-3">
+    <ion-card-header>
+      <ion-card-title class="text-lg font-bold">{{ job.job_title }}</ion-card-title>
+      <ion-card-subtitle>{{ job.saved_company_name }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ job.job_description | slice:0:100 }}...</p>
+      <ion-note>Saved on: {{ job.saved_on | date }}</ion-note>
+    </ion-card-content>
+  </ion-card>
+</div>
+</ion-content>

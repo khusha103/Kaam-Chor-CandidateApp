@@ -1,0 +1,5 @@
+<div *ngIf="isLoading$ | async" class="loader-container">
+  <div class="slider">
+    <img [src]="images[currentIndex]" alt="Loading..." class="slide" />
+  </div>
+</div>

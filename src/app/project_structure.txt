@@ -1,0 +1,88 @@
+Folder PATH listing
+Volume serial number is 126B-50E3
+C:.
+|   app-routing.module.ts
+|   app.component.html
+|   app.component.scss
+|   app.component.spec.ts
+|   app.component.ts
+|   app.module.ts
+|   project_structure.txt
+|   
++---components
+|   +---otp-input
+|   |       otp-input.component.html
+|   |       otp-input.component.scss
+|   |       otp-input.component.spec.ts
+|   |       otp-input.component.ts
+|   |       
+|   \---splash-screen
+|           splash-screen.component.html
+|           splash-screen.component.scss
+|           splash-screen.component.spec.ts
+|           splash-screen.component.ts
+|           
++---explore-container
+|       explore-container.component.html
+|       explore-container.component.scss
+|       explore-container.component.spec.ts
+|       explore-container.component.ts
+|       explore-container.module.ts
+|       
++---explore-tab
+|       explore-tab-routing.module.ts
+|       explore-tab.module.ts
+|       explore-tab.page.html
+|       explore-tab.page.scss
+|       explore-tab.page.spec.ts
+|       explore-tab.page.ts
+|       
++---home-tab
+|       home-tab-routing.module.ts
+|       home-tab.module.ts
+|       home-tab.page.html
+|       home-tab.page.scss
+|       home-tab.page.spec.ts
+|       home-tab.page.ts
+|       
++---jobs-tab
+|       jobs-tab-routing.module.ts
+|       jobs-tab.module.ts
+|       jobs-tab.page.html
+|       jobs-tab.page.scss
+|       jobs-tab.page.spec.ts
+|       jobs-tab.page.ts
+|       
++---pages
+|   +---login
+|   |       login-routing.module.ts
+|   |       login.module.ts
+|   |       login.page.html
+|   |       login.page.scss
+|   |       login.page.spec.ts
+|   |       login.page.ts
+|   |       
+|   \---otp-verf
+|           otp-verf-routing.module.ts
+|           otp-verf.module.ts
+|           otp-verf.page.html
+|           otp-verf.page.scss
+|           otp-verf.page.spec.ts
+|           otp-verf.page.ts
+|           
++---profile-tab
+|       profile-tab-routing.module.ts
+|       profile-tab.module.ts
+|       profile-tab.page.html
+|       profile-tab.page.scss
+|       profile-tab.page.spec.ts
+|       profile-tab.page.ts
+|       
+\---tabs
+        tabs-routing.module.ts
+        tabs.module.ts
+        tabs.page.html
+        tabs.page.scss
+        tabs.page.spec.ts
+        tabs.page.ts
+        

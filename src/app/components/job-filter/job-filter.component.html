@@ -17,38 +17,63 @@
         <ion-list lines="none">
           <ion-item [class.active]="selectedMenu === 'category'" (click)="selectMenu('category')">
             <ion-label>Category</ion-label>
+            <ion-badge *ngIf="getCategoryFilterCount() > 0" color="primary" slot="end">{{ getCategoryFilterCount()
+              }}</ion-badge>
           </ion-item>
           <ion-item [class.active]="selectedMenu === 'location'" (click)="selectMenu('location')">
             <ion-label>Location</ion-label>
+            <ion-badge *ngIf="getLocationFilterCount() > 0" color="primary" slot="end">{{ getLocationFilterCount()
+              }}</ion-badge>
           </ion-item>
           <ion-item [class.active]="selectedMenu === 'skills'" (click)="selectMenu('skills')">
             <ion-label>Skills</ion-label>
+            <ion-badge *ngIf="getSkillsFilterCount() > 0" color="primary" slot="end">{{ getSkillsFilterCount()
+              }}</ion-badge>
           </ion-item>
           <ion-item [class.active]="selectedMenu === 'jobType'" (click)="selectMenu('jobType')">
             <ion-label>Job Type</ion-label>
+            <ion-badge *ngIf="getJobTypeFilterCount() > 0" color="primary" slot="end">{{ getJobTypeFilterCount()
+              }}</ion-badge>
           </ion-item>
           <ion-item [class.active]="selectedMenu === 'salary'" (click)="selectMenu('salary')">
             <ion-label>Salary</ion-label>
+            <ion-badge *ngIf="getSalaryFilterCount() > 0" color="primary" slot="end">{{ getSalaryFilterCount()
+              }}</ion-badge>
           </ion-item>
           <ion-item [class.active]="selectedMenu === 'experience'" (click)="selectMenu('experience')">
             <ion-label>Experience</ion-label>
+            <ion-badge *ngIf="getExperienceFilterCount() > 0" color="primary" slot="end">{{ getExperienceFilterCount()
+              }}</ion-badge>
+          </ion-item>
+          <ion-item [class.active]="selectedMenu === 'keyword'" (click)="selectMenu('keyword')">
+            <ion-label>Keyword</ion-label>
+            <ion-badge *ngIf="getKeywordFilterCount() > 0" color="primary" slot="end">{{ getKeywordFilterCount()
+              }}</ion-badge>
           </ion-item>
         </ion-list>
       </ion-col>
 
       <!-- Content -->
       <ion-col size="8" class="content">
+        <!-- Keyword Search -->
+        <div *ngIf="selectedMenu === 'keyword'">
+          <ion-label class="section-label">Search by Job Title</ion-label>
+          <ion-item>
+            <ion-input [(ngModel)]="filters.keyword" placeholder="Enter job title keyword"
+              (ionChange)="onKeywordChange($event)"></ion-input>
+          </ion-item>
+        </div>
+
         <!-- Category -->
         <div *ngIf="selectedMenu === 'category'">
           <ion-label class="section-label">Job Category</ion-label>
           <ion-list>
             <ion-item *ngFor="let category of jobCategories | slice:0:(showMoreCategories ? jobCategories.length : 3)">
               <ion-label>{{ category.category_name }}</ion-label>
-              <ion-checkbox slot="end" [checked]="isCategoryChecked(category.category_name)" (ionChange)="toggleCategory(category.category_name)"></ion-checkbox>
+              <ion-checkbox slot="end" [checked]="isCategoryChecked(category.category_name)"
+                (ionChange)="toggleCategory(category.category_name)"></ion-checkbox>
             </ion-item>
-            <ion-item *ngIf="jobCategories.length > 3" lines="none">
-              <ion-label (click)="showMoreCategories = !showMoreCategories">{{ showMoreCategories ? 'Show Less' : 'Show More' }}</ion-label>
-            </ion-item>
+            <!-- ... Show More/Show Less ... -->
           </ion-list>
         </div>
 
@@ -58,11 +83,10 @@
           <ion-list>
             <ion-item *ngFor="let loc of locations | slice:0:(showMoreLocations ? locations.length : 3)">
               <ion-label>{{ loc.name }}</ion-label>
-              <ion-checkbox slot="end" [checked]="isLocationChecked(loc.name)" (ionChange)="toggleLocation(loc.name)"></ion-checkbox>
+              <ion-checkbox slot="end" [checked]="isLocationChecked(loc.name)"
+                (ionChange)="toggleLocation(loc.name)"></ion-checkbox>
             </ion-item>
-            <ion-item *ngIf="locations.length > 3" lines="none">
-              <ion-label (click)="showMoreLocations = !showMoreLocations">{{ showMoreLocations ? 'Show Less' : 'Show More' }}</ion-label>
-            </ion-item>
+            <!-- ... Show More/Show Less ... -->
           </ion-list>
         </div>
 
@@ -72,7 +96,8 @@
           <ion-list>
             <ion-item *ngFor="let skill of skillList">
               <ion-label>{{ skill.value }}</ion-label>
-              <ion-checkbox slot="end" [checked]="isSkillChecked(skill.value)" (ionChange)="toggleSkill(skill.value)"></ion-checkbox>
+              <ion-checkbox slot="end" [checked]="isSkillChecked(skill.value)"
+                (ionChange)="toggleSkill(skill.value)"></ion-checkbox>
             </ion-item>
           </ion-list>
         </div>
@@ -80,7 +105,7 @@
         <!-- Job Type -->
         <div *ngIf="selectedMenu === 'jobType'">
           <ion-label class="section-label">Job Type</ion-label>
-          <ion-radio-group [(ngModel)]="filters.jobType" (ionChange)="updateFilterCount()">
+          <ion-radio-group [(ngModel)]="filters.jobType" (ionChange)="updateFilterCount(); applyFiltersLogic()">
             <ion-item>
               <ion-label>Full-time</ion-label>
               <ion-radio slot="start" value="full-time"></ion-radio>
@@ -92,39 +117,58 @@
           </ion-radio-group>
           <ion-item>
             <ion-label>Remote</ion-label>
-            <ion-toggle [(ngModel)]="filters.remote" (ionChange)="updateFilterCount()"></ion-toggle>
+            <ion-toggle [(ngModel)]="filters.remote"
+              (ionChange)="updateFilterCount(); applyFiltersLogic()"></ion-toggle>
           </ion-item>
         </div>
 
         <!-- Salary -->
         <div *ngIf="selectedMenu === 'salary'">
           <ion-label class="section-label">Salary: {{ formatSalary(filters.salary) }}</ion-label>
-          <ion-range [(ngModel)]="filters.salary" min="0" max="150000" step="1000" (ionChange)="updateFilterCount()">
-            <ion-label slot="start">$0</ion-label>
-            <ion-label slot="end">$150k</ion-label>
+          <ion-range [(ngModel)]="filters.salary" name="salary" [ngModelOptions]="{standalone: true}"
+            (ionChange)="onSalaryChange($event)" min="0" max="15000000" step="100000">
+            <ion-label slot="start">₹0</ion-label>
+            <ion-label slot="end">₹1.5Cr</ion-label>
           </ion-range>
         </div>
 
         <!-- Experience -->
         <div *ngIf="selectedMenu === 'experience'">
           <ion-label class="section-label">Experience (Years)</ion-label>
-          <ion-range dual-knobs="true" [(ngModel)]="filters.experience" [min]="0" [max]="10" step="1" (ionChange)="updateFilterCount(); validateFilters()">
-            <ion-label slot="start">0</ion-label>
-            <ion-label slot="end">10</ion-label>
-          </ion-range>
+          <ion-item>
+            <ion-label>Minimum Experience</ion-label>
+            <ion-select [(ngModel)]="filters.experience.min" name="minExperience" [ngModelOptions]="{standalone: true}"
+              (ionChange)="onExperienceChange('min', $event)" placeholder="Select Min Experience">
+              <ion-select-option value="0">Fresher</ion-select-option>
+              <ion-select-option *ngFor="let i of [].constructor(29); let n = index" [value]="(n + 1).toString()">{{ n +
+                1 }}</ion-select-option>
+              <ion-select-option value="30">30+</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Maximum Experience</ion-label>
+            <ion-select [(ngModel)]="filters.experience.max" name="maxExperience" [ngModelOptions]="{standalone: true}"
+              (ionChange)="onExperienceChange('max', $event)" placeholder="Select Max Experience">
+              <ion-select-option *ngFor="let i of [].constructor(29); let n = index" [value]="(n + 1).toString()">{{ n +
+                1 }}</ion-select-option>
+              <ion-select-option value="30">30+</ion-select-option>
+            </ion-select>
+          </ion-item>
           <ion-item *ngIf="experienceError" color="danger">
             <ion-label>{{ experienceError }}</ion-label>
           </ion-item>
         </div>
 
-        <!-- Buttons -->
+
+
         <ion-grid>
           <ion-row>
             <ion-col>
               <ion-button expand="block" size="small" fill="outline" (click)="resetFilters()">Reset</ion-button>
             </ion-col>
             <ion-col>
-              <ion-button expand="block" size="small" color="primary" [disabled]="filterCount === 0" (click)="applyFilters()">Apply ({{ filterCount }})</ion-button>
+              <ion-button expand="block" size="small" color="primary" [disabled]="filterCount === 0"
+                (click)="applyFilters()">Apply ({{ filterCount }})</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

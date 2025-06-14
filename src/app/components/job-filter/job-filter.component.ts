@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ChangeDetectorRef } from '@angular/core';
+import { debounceTime, forkJoin } from 'rxjs';
+import { JobFilterService } from 'src/app/services/job-filter.service';
 
 interface CategoryItem {
   id: number | string;
@@ -19,6 +20,32 @@ interface StateItem {
   name: string;
 }
 
+interface Job {
+  id: string;
+  job_title: string;
+  job_category: string | number;
+  state_id: string | number;
+  skills: string;
+  experience: string;
+  salary: string;
+  remote: boolean;
+}
+
+interface Filters {
+  category: (string | number)[];
+  location: (string | number)[];
+  skills: (string | number)[];
+  jobType: string;
+  remote: boolean;
+  salary: number;
+  experience: { min: string | null; max: string | null };
+  keyword: string;
+}
+
+// In JobFilterComponent
+// @Input() jobListings: Job[] = [];
+// filters: Filters = { ... };
+
 @Component({
   selector: 'app-job-filter',
   templateUrl: './job-filter.component.html',
@@ -32,14 +59,25 @@ export class JobFilterComponent implements OnInit {
     jobType: '',
     remote: false,
     salary: 0,
-    experience: { min: null as number | null, max: null as number | null }
+    experience: { min: null as string | null, max: null as string | null },
+    keyword: '',
   };
+
+  @Input() jobListings: any[] = [];
+
+  filteredJobListings: any[] = [];
+  jobs_count: number = 0;
 
   initialFilters: typeof this.filters;
   jobCategories: CategoryItem[] = [];
   locations: StateItem[] = [];
   skillList: SkillItem[] = [];
-  experienceYears = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  categorySearch: string = '';
+  locationSearch: string = '';
+  skillSearch: string = '';
+  filteredCategories: CategoryItem[] = [];
+  filteredLocations: StateItem[] = [];
+  filteredSkills: SkillItem[] = [];
   selectedMenu: string = 'category';
   showMoreCategories = false;
   showMoreLocations = false;
@@ -48,7 +86,10 @@ export class JobFilterComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef,
+    private jobFilterService: JobFilterService,
+    private alertController: AlertController
   ) {
     this.initialFilters = JSON.parse(JSON.stringify(this.filters));
   }
@@ -58,111 +99,236 @@ export class JobFilterComponent implements OnInit {
       if (event.key === 'Escape') this.dismiss();
     });
 
+    const savedFilters = this.jobFilterService.getFilters();
+    if (savedFilters && Object.keys(savedFilters).length > 0) {
+      this.filters = JSON.parse(JSON.stringify(savedFilters));
+      this.initialFilters = JSON.parse(JSON.stringify(savedFilters));
+      this.updateFilterCount();
+      this.applyFiltersLogic();
+    }
+
     this.loadFilterData();
+
+    console.log('Received jobListings in JobFilterComponent:', this.jobListings);
+    this.filteredJobListings = [...this.jobListings];
+    this.jobs_count = this.filteredJobListings.length;
+
+    this.jobFilterService.filters$.pipe(debounceTime(300)).subscribe((filters) => {
+      this.applyFiltersLogic();
+    });
   }
+
+
+
 
   loadFilterData() {
     forkJoin({
       categories: this.apiService.getJobCategory(),
       skills: this.apiService.getSkills(),
-      states: this.apiService.getStates()
+      states: this.apiService.getStates(),
     }).subscribe({
       next: ({ categories, skills, states }) => {
         this.jobCategories = categories.map((item: any) => ({
           id: item.id,
-          category_name: item.category_name || item.name || String(item.id)
+          category_name: item.category_name || item.name || String(item.id),
         }));
         this.skillList = skills.map((item: any) => ({
           id: item.id,
-          value: item.value || item.name || String(item.id)
+          value: item.value || item.name || String(item.id),
         }));
         this.locations = states.map((item: any) => ({
           id: item.id,
-          name: item.name || String(item.id)
+          name: item.name || String(item.id),
         }));
+        this.filteredCategories = [...this.jobCategories];
+        this.filteredLocations = [...this.locations];
+        this.filteredSkills = [...this.skillList];
+        this.applyFiltersLogic();
+        this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: async (err) => {
         console.error('Error loading filter data:', err);
-        this.jobCategories = [
-          { id: 1, category_name: 'Software Engineer' },
-          { id: 2, category_name: 'Designer' }
-        ];
-        this.skillList = [
-          { id: 1, value: 'JavaScript' },
-          { id: 2, value: 'Python' }
-        ];
-        this.locations = [
-          { id: 1, name: 'NY' },
-          { id: 2, name: 'CA' }
-        ];
-      }
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'Failed to load filter options. Please try again later.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+        this.jobCategories = [];
+        this.skillList = [];
+        this.locations = [];
+        this.filteredCategories = [];
+        this.filteredLocations = [];
+        this.filteredSkills = [];
+        this.cdr.detectChanges();
+      },
     });
+  }
+
+  filterCategories(event: any) {
+    const query = event.detail.value?.toLowerCase() || '';
+    this.filteredCategories = this.jobCategories.filter((category) =>
+      category.category_name.toLowerCase().includes(query)
+    );
+    this.cdr.detectChanges();
+  }
+
+  filterLocations(event: any) {
+    const query = event.detail.value?.toLowerCase() || '';
+    this.filteredLocations = this.locations.filter((loc) =>
+      loc.name.toLowerCase().includes(query)
+    );
+    this.cdr.detectChanges();
+  }
+
+  filterSkills(event: any) {
+    const query = event.detail.value?.toLowerCase() || '';
+    this.filteredSkills = this.skillList.filter((skill) =>
+      skill.value.toLowerCase().includes(query)
+    );
+    this.cdr.detectChanges();
   }
 
   selectMenu(menu: string) {
     this.selectedMenu = menu;
+    this.cdr.detectChanges();
   }
 
   dismiss() {
     this.modalCtrl.dismiss();
   }
 
-  resetFilters() {
-    this.filters = JSON.parse(JSON.stringify(this.initialFilters));
+  // resetFilters() {
+  //   this.filters = JSON.parse(JSON.stringify(this.initialFilters));
+  //   this.showMoreCategories = false;
+  //   this.showMoreLocations = false;
+  //   this.experienceError = '';
+  //   this.categorySearch = '';
+  //   this.locationSearch = '';
+  //   this.skillSearch = '';
+  //   this.filteredCategories = [...this.jobCategories];
+  //   this.filteredLocations = [...this.locations];
+  //   this.filteredSkills = [...this.skillList];
+  //   this.updateFilterCount();
+  //   this.applyFiltersLogic();
+  //   this.cdr.detectChanges();
+  // }
+
+ resetFilters() {
+    // Reset filters to default empty state
+    this.filters = {
+      category: [],
+      location: [],
+      skills: [],
+      jobType: '',
+      remote: false,
+      salary: 0,
+      experience: { min: null, max: null },
+      keyword: '',
+    };
+    
+    // Clear persisted filters in JobFilterService
+    this.jobFilterService.clearFilters();
+    
+    // Reset UI-related states
     this.showMoreCategories = false;
     this.showMoreLocations = false;
     this.experienceError = '';
+    this.categorySearch = '';
+    this.locationSearch = '';
+    this.skillSearch = '';
+    
+    // Reset filtered lists
+    this.filteredCategories = [...this.jobCategories];
+    this.filteredLocations = [...this.locations];
+    this.filteredSkills = [...this.skillList];
+    
+    // Update filter count and apply filters
     this.updateFilterCount();
+    this.applyFiltersLogic();
+    
+    // Force change detection
+    this.cdr.detectChanges();
+    
+    // Ensure checkboxes update
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 0);
   }
-
-  applyFilters() {
-    if (this.validateFilters()) {
-      this.initialFilters = JSON.parse(JSON.stringify(this.filters));
-      this.modalCtrl.dismiss(this.filters);
-    }
-  }
-
+  
   toggleSkill(skillValue: string) {
-    const skill = this.skillList.find(s => s.value === skillValue);
+    const skill = this.skillList.find((s) => s.value === skillValue);
     if (skill) {
       if (this.filters.skills.includes(skill.id)) {
-        this.filters.skills = this.filters.skills.filter(s => s !== skill.id);
+        this.filters.skills = this.filters.skills.filter((s) => s !== skill.id);
       } else {
         this.filters.skills.push(skill.id);
       }
       this.updateFilterCount();
+      this.applyFiltersLogic();
     }
   }
 
   toggleCategory(categoryName: string) {
-    const category = this.jobCategories.find(c => c.category_name === categoryName);
+    const category = this.jobCategories.find((c) => c.category_name === categoryName);
     if (category) {
       if (this.filters.category.includes(category.id)) {
-        this.filters.category = this.filters.category.filter(c => c !== category.id);
+        this.filters.category = this.filters.category.filter((c) => c !== category.id);
       } else {
         this.filters.category.push(category.id);
       }
       this.updateFilterCount();
+      this.applyFiltersLogic();
     }
   }
 
   toggleLocation(stateName: string) {
-    const state = this.locations.find(l => l.name === stateName);
+    const state = this.locations.find((l) => l.name === stateName);
     if (state) {
       if (this.filters.location.includes(state.id)) {
-        this.filters.location = this.filters.location.filter(l => l !== state.id);
+        this.filters.location = this.filters.location.filter((l) => l !== state.id);
       } else {
         this.filters.location.push(state.id);
       }
       this.updateFilterCount();
+      this.applyFiltersLogic();
     }
+  }
+
+  onSalaryChange(event: any) {
+    const value = Number(event.detail.value);
+    console.log('Salary changed to:', value, 'Type:', typeof value);
+    this.filters.salary = value;
+    console.log('Updated filters.salary:', this.filters.salary);
+    this.updateFilterCount();
+    this.applyFiltersLogic();
+    this.cdr.detectChanges();
+  }
+
+  onExperienceChange(type: 'min' | 'max', event: any) {
+    const value = event.detail.value;
+    console.log(`Experience ${type} changed to:`, value, 'Type:', typeof value);
+    if (type === 'min') {
+      this.filters.experience.min = value === '' ? null : value;
+    } else {
+      this.filters.experience.max = value === '' ? null : value;
+    }
+    console.log('Updated filters.experience:', this.filters.experience);
+    this.updateFilterCount();
+    this.validateFilters();
+    this.applyFiltersLogic();
+    this.cdr.detectChanges();
   }
 
   validateFilters(): boolean {
     this.experienceError = '';
-    if (this.filters.experience.min !== null && this.filters.experience.max !== null && this.filters.experience.min > this.filters.experience.max) {
-      this.experienceError = 'Min cannot exceed max';
-      return false;
+    if (this.filters.experience.min !== null && this.filters.experience.max !== null) {
+      const min = this.filters.experience.min === '0' ? 0 : this.filters.experience.min === '30' ? 30 : parseInt(this.filters.experience.min, 10);
+      const max = this.filters.experience.max === '30' ? 30 : parseInt(this.filters.experience.max, 10);
+      if (min > max) {
+        this.experienceError = 'Minimum experience cannot exceed maximum experience';
+        return false;
+      }
     }
     return true;
   }
@@ -177,24 +343,169 @@ export class JobFilterComponent implements OnInit {
     if (this.filters.salary > 0) this.filterCount++;
     if (this.filters.experience.min !== null) this.filterCount++;
     if (this.filters.experience.max !== null) this.filterCount++;
+    if (this.filters.keyword.trim() !== '') this.filterCount++;
+    console.log('Updated filterCount:', this.filterCount, 'Filters:', JSON.stringify(this.filters, null, 2));
+    this.cdr.detectChanges();
   }
 
   formatSalary(salary: number): string {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(salary);
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(salary);
+  }
+
+  onKeywordChange(event: any) {
+    this.filters.keyword = event.detail.value || '';
+    this.updateFilterCount();
+    this.applyFiltersLogic();
+    this.cdr.detectChanges();
+  }
+
+  // applyFiltersLogic() {
+  //   let filteredJobs = [...this.jobListings];
+
+  //   console.log('Original Jobs:', this.jobListings);
+  //   console.log('Applied Filters:', this.filters);
+
+  //   // Filter by category (job_category)
+  //   if (this.filters.category && this.filters.category.length > 0) {
+  //     filteredJobs = filteredJobs.filter((job) => this.filters.category.includes(String(job.job_category)));
+  //   }
+
+  //   // Filter by location (state_id)
+  //   if (this.filters.location && this.filters.location.length > 0) {
+  //     filteredJobs = filteredJobs.filter((job) => this.filters.location.includes(String(job.state_id)));
+  //   }
+
+  //   // Filter by skills (handle comma-separated skills)
+  //   if (this.filters.skills && this.filters.skills.length > 0) {
+  //     filteredJobs = filteredJobs.filter((job) => {
+  //       const jobSkills = job.skills?.toString().split(',').map((s: string) => s.trim());
+  //       return jobSkills?.some((skill: any) => this.filters.skills.includes(skill));
+  //     });
+  //   }
+
+  //   // Filter by experience range (if both min and max provided and not null)
+  //   if (this.filters.experience?.min !== null && this.filters.experience?.max !== null) {
+  //     filteredJobs = filteredJobs.filter((job) => {
+  //       const jobExpMatches = job.experience?.match(/(\d+)/g); // ['1', '3'] from '1 - 3 Years'
+  //       if (!jobExpMatches || jobExpMatches.length < 2) return false;
+  //       const jobMinExp = parseInt(jobExpMatches[0], 10);
+  //       const jobMaxExp = parseInt(jobExpMatches[1], 10);
+
+  //       // Safely parse filter min and max experience
+  //       const minExp = this.filters.experience.min!;
+  //       const maxExp = this.filters.experience.max!;
+  //       const filterMinExp = minExp === '0' ? 0 : minExp === '30' ? 30 : parseInt(minExp, 10);
+  //       const filterMaxExp = maxExp === '30' ? 30 : parseInt(maxExp, 10);
+
+  //       return jobMinExp >= filterMinExp && jobMaxExp <= filterMaxExp;
+  //     });
+  //   }
+
+  //   // Filter by minSalary if provided
+  //   if (this.filters.salary && this.filters.salary > 0) {
+  //     filteredJobs = filteredJobs.filter((job) => {
+  //       const numericSalary = Number(job.salary.replace(/[₹,]/g, '').trim());
+  //       return numericSalary >= this.filters.salary;
+  //     });
+  //   }
+
+  //   // Filter by keyword in job_title
+  //   if (this.filters.keyword && this.filters.keyword.trim() !== '') {
+  //     filteredJobs = filteredJobs.filter((job) =>
+  //       job.job_title.toLowerCase().includes(this.filters.keyword.toLowerCase())
+  //     );
+  //   }
+
+  //   // Filter by remote (if applicable)
+  //   if (this.filters.remote === true) {
+  //     filteredJobs = filteredJobs.filter((job) => job.remote === true);
+  //   }
+
+  //   // FINAL assignment + logs
+  //   this.filteredJobListings = filteredJobs;
+  //   this.jobs_count = filteredJobs.length;
+
+  //   console.log('Filtered Jobs:', this.filteredJobListings);
+  //   console.log('Jobs Count:', this.jobs_count);
+  //   this.cdr.detectChanges();
+  // }
+
+
+
+  applyFiltersLogic() {
+    this.filteredJobListings = this.jobFilterService.filterJobs(this.jobListings, this.filters);
+    this.jobs_count = this.filteredJobListings.length;
+    this.cdr.detectChanges();
+  }
+
+  applyFilters() {
+    console.log('Applying filters:', JSON.stringify(this.filters, null, 2));
+    if (this.validateFilters()) {
+      this.initialFilters = JSON.parse(JSON.stringify(this.filters));
+      this.jobFilterService.setFilters(this.filters);
+      this.applyFiltersLogic();
+      this.modalCtrl.dismiss({ filters: this.filters, filteredJobs: this.filteredJobListings });
+    }
   }
 
   isCategoryChecked(categoryName: string): boolean {
-    const category = this.jobCategories.find(c => c.category_name === categoryName);
+    const category = this.jobCategories.find((c) => c.category_name === categoryName);
     return category ? this.filters.category.includes(category.id) : false;
   }
 
   isSkillChecked(skillValue: string): boolean {
-    const skill = this.skillList.find(s => s.value === skillValue);
+    const skill = this.skillList.find((s) => s.value === skillValue);
     return skill ? this.filters.skills.includes(skill.id) : false;
   }
 
   isLocationChecked(stateName: string): boolean {
-    const state = this.locations.find(l => l.name === stateName);
+    const state = this.locations.find((l) => l.name === stateName);
     return state ? this.filters.location.includes(state.id) : false;
+  }
+
+
+  // Add these methods to your component class
+
+  getCategoryFilterCount(): number {
+    return this.filters.category ? this.filters.category.length : 0;
+  }
+
+  getLocationFilterCount(): number {
+    return this.filters.location ? this.filters.location.length : 0;
+  }
+
+  getSkillsFilterCount(): number {
+    return this.filters.skills ? this.filters.skills.length : 0;
+  }
+
+  getJobTypeFilterCount(): number {
+    let count = 0;
+    if (this.filters.jobType && this.filters.jobType !== '') {
+      count++;
+    }
+    if (this.filters.remote) {
+      count++;
+    }
+    return count;
+  }
+
+  getSalaryFilterCount(): number {
+    // Assuming salary filter is active if it's not at the minimum value (0)
+    return this.filters.salary && this.filters.salary > 0 ? 1 : 0;
+  }
+
+  getExperienceFilterCount(): number {
+    let count = 0;
+    if (this.filters.experience.min && this.filters.experience.min !== '') {
+      count++;
+    }
+    if (this.filters.experience.max && this.filters.experience.max !== '') {
+      count++;
+    }
+    return count;
+  }
+
+  getKeywordFilterCount(): number {
+    return this.filters.keyword && this.filters.keyword.trim() !== '' ? 1 : 0;
   }
 }

@@ -200,6 +200,17 @@ uploadResume(formData: FormData): Observable<any> {
     return this.http.get<any>(`${this.formapiUrl}/getSavedJobs/${userId}`);
   }
   
+
+  //----------------Apply job apis--------------------------
+
+  // New method to apply for a job
+  applyForJob(data: { userId: string; jobId: string }): Observable<any> {
+    return this.http.post(`${this.formapiUrl}/applyjob`, data);
+  }
+
+   saveForJob(data: { userId: string; jobId: string }): Observable<any> {
+    return this.http.post(`${this.formapiUrl}/savejob`, data);
+  }
   
   
 }

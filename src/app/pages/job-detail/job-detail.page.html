@@ -150,7 +150,24 @@
     </p>
   </div>
 
-  <ion-button expand="block" color="primary" class="ion-margin-top">
+  <!-- <ion-button expand="block" color="primary" class="ion-margin-top">
+    Apply Now
+  </ion-button> -->
+
+  <ion-button expand="block" color="primary"  (click)="applyForJob()">
+  Apply Now
+</ion-button>
+
+ <ion-button expand="block" color="primary"  (click)="saveForJob()">
+  Save Now
+</ion-button>
+
+<!-- <ion-buttons class="ion-margin-top">
+  <ion-button expand="block" color="primary" (click)="applyForJob()" style="flex: 1; margin-right: 8px;">
     Apply Now
   </ion-button>
+  <ion-button expand="block" color="primary" (click)="saveForJob()" style="flex: 1;">
+    Save Now
+  </ion-button>
+</ion-buttons> -->
 </ion-content>

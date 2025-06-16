@@ -75,6 +75,17 @@ export class JobFilterService {
     if (filters.remote === true) {
       filteredJobs = filteredJobs.filter((job) => job.remote === true);
     }
+
+    console.log("filters.jobType",filters.jobType);
+     // Filter by job type (new)
+   if (filters.jobType && filters.jobType !== '') {
+  filteredJobs = filteredJobs.filter((job) => {
+    const normalizedJobType = job.job_type
+      .toLowerCase()
+      .replace(/\s+/g, ''); // Remove spaces, e.g., "full time" -> "fulltime"
+    return normalizedJobType === filters.jobType.toLowerCase();
+  });
+}
     return filteredJobs;
   }
 }

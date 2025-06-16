@@ -42,10 +42,6 @@ interface Filters {
   keyword: string;
 }
 
-// In JobFilterComponent
-// @Input() jobListings: Job[] = [];
-// filters: Filters = { ... };
-
 @Component({
   selector: 'app-job-filter',
   templateUrl: './job-filter.component.html',
@@ -81,6 +77,7 @@ export class JobFilterComponent implements OnInit {
   selectedMenu: string = 'category';
   showMoreCategories = false;
   showMoreLocations = false;
+  showMoreSkills = false;
   filterCount = 0;
   experienceError = '';
 
@@ -117,9 +114,6 @@ export class JobFilterComponent implements OnInit {
       this.applyFiltersLogic();
     });
   }
-
-
-
 
   loadFilterData() {
     forkJoin({
@@ -198,24 +192,7 @@ export class JobFilterComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  // resetFilters() {
-  //   this.filters = JSON.parse(JSON.stringify(this.initialFilters));
-  //   this.showMoreCategories = false;
-  //   this.showMoreLocations = false;
-  //   this.experienceError = '';
-  //   this.categorySearch = '';
-  //   this.locationSearch = '';
-  //   this.skillSearch = '';
-  //   this.filteredCategories = [...this.jobCategories];
-  //   this.filteredLocations = [...this.locations];
-  //   this.filteredSkills = [...this.skillList];
-  //   this.updateFilterCount();
-  //   this.applyFiltersLogic();
-  //   this.cdr.detectChanges();
-  // }
-
- resetFilters() {
-    // Reset filters to default empty state
+  resetFilters() {
     this.filters = {
       category: [],
       location: [],
@@ -227,35 +204,30 @@ export class JobFilterComponent implements OnInit {
       keyword: '',
     };
     
-    // Clear persisted filters in JobFilterService
     this.jobFilterService.clearFilters();
     
-    // Reset UI-related states
     this.showMoreCategories = false;
     this.showMoreLocations = false;
+    this.showMoreSkills = false;
     this.experienceError = '';
     this.categorySearch = '';
     this.locationSearch = '';
     this.skillSearch = '';
     
-    // Reset filtered lists
     this.filteredCategories = [...this.jobCategories];
     this.filteredLocations = [...this.locations];
     this.filteredSkills = [...this.skillList];
     
-    // Update filter count and apply filters
     this.updateFilterCount();
     this.applyFiltersLogic();
     
-    // Force change detection
     this.cdr.detectChanges();
     
-    // Ensure checkboxes update
     setTimeout(() => {
       this.cdr.detectChanges();
     }, 0);
   }
-  
+
   toggleSkill(skillValue: string) {
     const skill = this.skillList.find((s) => s.value === skillValue);
     if (skill) {
@@ -320,6 +292,13 @@ export class JobFilterComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  onRemoteChange(event: any) {
+    console.log('Remote selected:', this.filters.remote);
+    this.updateFilterCount();
+    this.applyFiltersLogic();
+    this.cdr.detectChanges();
+  }
+
   validateFilters(): boolean {
     this.experienceError = '';
     if (this.filters.experience.min !== null && this.filters.experience.max !== null) {
@@ -335,16 +314,14 @@ export class JobFilterComponent implements OnInit {
 
   updateFilterCount() {
     this.filterCount = 0;
-    this.filterCount += this.filters.category.length;
-    this.filterCount += this.filters.location.length;
-    this.filterCount += this.filters.skills.length;
-    if (this.filters.jobType) this.filterCount++;
-    if (this.filters.remote) this.filterCount++;
-    if (this.filters.salary > 0) this.filterCount++;
-    if (this.filters.experience.min !== null) this.filterCount++;
-    if (this.filters.experience.max !== null) this.filterCount++;
-    if (this.filters.keyword.trim() !== '') this.filterCount++;
-    console.log('Updated filterCount:', this.filterCount, 'Filters:', JSON.stringify(this.filters, null, 2));
+    this.filterCount += this.getCategoryFilterCount();
+    this.filterCount += this.getLocationFilterCount();
+    this.filterCount += this.getSkillsFilterCount();
+    this.filterCount += this.getJobTypeFilterCount();
+    this.filterCount += this.getSalaryFilterCount();
+    this.filterCount += this.getExperienceFilterCount();
+    this.filterCount += this.getKeywordFilterCount();
+    console.log('Filter Count:', this.filterCount, 'JobType:', this.filters.jobType);
     this.cdr.detectChanges();
   }
 
@@ -359,78 +336,15 @@ export class JobFilterComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // applyFiltersLogic() {
-  //   let filteredJobs = [...this.jobListings];
-
-  //   console.log('Original Jobs:', this.jobListings);
-  //   console.log('Applied Filters:', this.filters);
-
-  //   // Filter by category (job_category)
-  //   if (this.filters.category && this.filters.category.length > 0) {
-  //     filteredJobs = filteredJobs.filter((job) => this.filters.category.includes(String(job.job_category)));
-  //   }
-
-  //   // Filter by location (state_id)
-  //   if (this.filters.location && this.filters.location.length > 0) {
-  //     filteredJobs = filteredJobs.filter((job) => this.filters.location.includes(String(job.state_id)));
-  //   }
-
-  //   // Filter by skills (handle comma-separated skills)
-  //   if (this.filters.skills && this.filters.skills.length > 0) {
-  //     filteredJobs = filteredJobs.filter((job) => {
-  //       const jobSkills = job.skills?.toString().split(',').map((s: string) => s.trim());
-  //       return jobSkills?.some((skill: any) => this.filters.skills.includes(skill));
-  //     });
-  //   }
-
-  //   // Filter by experience range (if both min and max provided and not null)
-  //   if (this.filters.experience?.min !== null && this.filters.experience?.max !== null) {
-  //     filteredJobs = filteredJobs.filter((job) => {
-  //       const jobExpMatches = job.experience?.match(/(\d+)/g); // ['1', '3'] from '1 - 3 Years'
-  //       if (!jobExpMatches || jobExpMatches.length < 2) return false;
-  //       const jobMinExp = parseInt(jobExpMatches[0], 10);
-  //       const jobMaxExp = parseInt(jobExpMatches[1], 10);
-
-  //       // Safely parse filter min and max experience
-  //       const minExp = this.filters.experience.min!;
-  //       const maxExp = this.filters.experience.max!;
-  //       const filterMinExp = minExp === '0' ? 0 : minExp === '30' ? 30 : parseInt(minExp, 10);
-  //       const filterMaxExp = maxExp === '30' ? 30 : parseInt(maxExp, 10);
-
-  //       return jobMinExp >= filterMinExp && jobMaxExp <= filterMaxExp;
-  //     });
-  //   }
-
-  //   // Filter by minSalary if provided
-  //   if (this.filters.salary && this.filters.salary > 0) {
-  //     filteredJobs = filteredJobs.filter((job) => {
-  //       const numericSalary = Number(job.salary.replace(/[₹,]/g, '').trim());
-  //       return numericSalary >= this.filters.salary;
-  //     });
-  //   }
-
-  //   // Filter by keyword in job_title
-  //   if (this.filters.keyword && this.filters.keyword.trim() !== '') {
-  //     filteredJobs = filteredJobs.filter((job) =>
-  //       job.job_title.toLowerCase().includes(this.filters.keyword.toLowerCase())
-  //     );
-  //   }
-
-  //   // Filter by remote (if applicable)
-  //   if (this.filters.remote === true) {
-  //     filteredJobs = filteredJobs.filter((job) => job.remote === true);
-  //   }
-
-  //   // FINAL assignment + logs
-  //   this.filteredJobListings = filteredJobs;
-  //   this.jobs_count = filteredJobs.length;
-
-  //   console.log('Filtered Jobs:', this.filteredJobListings);
-  //   console.log('Jobs Count:', this.jobs_count);
-  //   this.cdr.detectChanges();
-  // }
-
-
+  onJobTypeChange(event: any) {
+    const selectedJobType = event.detail.value;
+    this.filters.jobType = selectedJobType;
+    console.log('EVENT VALUE:', selectedJobType);
+    console.log('Job Type selected:', this.filters.jobType);
+    this.updateFilterCount();
+    this.applyFiltersLogic();
+    this.cdr.detectChanges();
+  }
 
   applyFiltersLogic() {
     this.filteredJobListings = this.jobFilterService.filterJobs(this.jobListings, this.filters);
@@ -463,9 +377,6 @@ export class JobFilterComponent implements OnInit {
     return state ? this.filters.location.includes(state.id) : false;
   }
 
-
-  // Add these methods to your component class
-
   getCategoryFilterCount(): number {
     return this.filters.category ? this.filters.category.length : 0;
   }
@@ -490,7 +401,6 @@ export class JobFilterComponent implements OnInit {
   }
 
   getSalaryFilterCount(): number {
-    // Assuming salary filter is active if it's not at the minimum value (0)
     return this.filters.salary && this.filters.salary > 0 ? 1 : 0;
   }
 

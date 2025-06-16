@@ -56,3 +56,20 @@
   .content {
     padding-left: 8px;
   }
+
+
+  ion-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .filter-count {
+    color: var(--ion-color-primary);
+    font-weight: 500;
+  }
+
+  .job-count {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+}

@@ -245,7 +245,9 @@ loadStates() {
         (response) => {
           // console.log('Form updated successfully:', response);
           // Handle success response, e.g., show a success message or navigate
-          this.router.navigate(['/reg-education']); 
+          // this.router.navigate(['/reg-education']); 
+          // Navigate to next page and replace the current one in history
+          this.router.navigate(['/reg-education'], { replaceUrl: true });
         },
         (error) => {
           console.error('Error updating form:', error);

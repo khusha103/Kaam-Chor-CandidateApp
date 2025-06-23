@@ -409,7 +409,9 @@ export class RegEducationPage {
       this.apiService.updateFormData(formKey, userId, this.educationForm.value).subscribe(
         (response) => {
           // console.log('Form updated successfully:', response);
-          this.router.navigate(['/reg-experience']);
+          // this.router.navigate(['/reg-experience']);
+          // Navigate to next page and replace the current one in history
+          this.router.navigate(['/reg-experience'], { replaceUrl: true });
         },
         (error) => {
           console.error('Error updating form:', error);

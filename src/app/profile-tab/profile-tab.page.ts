@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatusBar, Style as StatusBarStyle} from '@capacitor/status-bar';
+import { ApiService } from '../services/api.service';
+import { finalize, Observable } from 'rxjs';
+import { HttpEventType } from '@angular/common/http';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile-tab',
@@ -9,12 +13,38 @@ import { StatusBar, Style as StatusBarStyle} from '@capacitor/status-bar';
 })
 export class ProfileTabPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private apiService:ApiService,private toastCtrl:ToastController) { }
 
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
       // Set the status bar style to dark (black text/icons)
       // StatusBar.setStyle({ style: StatusBarStyle.Dark });
+      this.getResume();
+  }
+
+  openResume() {
+  if (this.uploadedResumeUrl) {
+    window.open(this.uploadedResumeUrl, '_blank');
+  } else {
+    // Optional: Show a toast or alert if URL is missing
+    this.showToast('No resume available to view.');
+  }
+}
+
+
+   getResume() {
+    this.apiService.getResume(this.userId).subscribe({
+      next: (res) => {
+        if (res.status && res.resume_url) {
+          this.uploadedResumeUrl = res.resume_url;
+        } else {
+          this.uploadedResumeUrl = null;
+        }
+      },
+      error: () => {
+        this.uploadedResumeUrl = null;
+      }
+    });
   }
 
 
@@ -55,32 +85,81 @@ triggerFileUpload() {
   }
 }
 
+// onFileSelected(event: Event) {
+//   const input = event.target as HTMLInputElement;
+//   if (input.files && input.files[0]) {
+//     const file = input.files[0];
+
+//     // Check if it is a PDF
+//     if (file.type !== 'application/pdf') {
+//       console.error('Only PDF files are allowed.');
+//       return;
+//     }
+
+//     // Save file name
+//     this.uploadedResumeName = file.name;
+
+//     // Save a temporary URL to view the PDF
+//     this.uploadedResumeUrl = URL.createObjectURL(file);
+
+//     console.log('Selected file:', file);
+//   }
+// }
+uploadProgress: number | null = null;
+userId: any = localStorage.getItem('userId'); // or get dynamically from service/auth
+
 onFileSelected(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
-    const file = input.files[0];
+    this.uploadResume(input.files[0]).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.uploadProgress = Math.round((100 * event.loaded) / (event.total || 1));
+          this.getResume();
 
-    // Check if it is a PDF
-    if (file.type !== 'application/pdf') {
-      console.error('Only PDF files are allowed.');
-      return;
-    }
-
-    // Save file name
-    this.uploadedResumeName = file.name;
-
-    // Save a temporary URL to view the PDF
-    this.uploadedResumeUrl = URL.createObjectURL(file);
-
-    console.log('Selected file:', file);
+        } else if (event.type === HttpEventType.Response) {
+          this.showToast(event.body?.message || 'Upload completed', 'success');
+        }
+      },
+      error: () => this.showToast('Upload failed', 'danger'),
+    });
   }
 }
 
-openResume() {
-  if (this.uploadedResumeUrl) {
-    window.open(this.uploadedResumeUrl, '_blank');
-  }
+uploadResume(file: File): Observable<any> {
+  return this.apiService.updateResume(this.userId, file).pipe(
+    finalize(() => (this.uploadProgress = null))
+    
+  );
+
 }
+
+ionViewWillEnter() {
+          this.getResume();
+
+
+}
+
+
+async showToast(message: string, color: string = 'primary') {
+  const toast = await this.toastCtrl.create({
+    message,
+    duration: 3000,
+    position: 'bottom',
+    color,
+  });
+  toast.present();
+}
+
+
+
+
+
+// openResume() {
+//   if (this.uploadedResumeUrl) {
+//     window.open(this.uploadedResumeUrl, '_blank');
+//   }
+// }
 
 
 goToAppliedSavedJobs() {

@@ -94,8 +94,15 @@
         formControlName="upload_resume"></ion-input>
     </ion-item>
 
-    <div class="resume-container" *ngIf="dataExists">
+    <!-- <div class="resume-container" *ngIf="dataExists">
       <a href="https://ek-reps.com/kaam-chor/uploads/app_resume/sample-1.pdf" class="resume-link" target="_blank">
+        <ion-icon name="document-attach-outline" class="resume-icon"></ion-icon>
+        View Resume
+      </a>
+    </div> -->
+
+    <div *ngIf="uploadedResumeUrl" class="resume-section">
+      <a [href]="uploadedResumeUrl" target="_blank" class="resume-link">
         <ion-icon name="document-attach-outline" class="resume-icon"></ion-icon>
         View Resume
       </a>

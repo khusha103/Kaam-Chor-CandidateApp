@@ -335,7 +335,9 @@ export class RegExperiencePage implements OnInit {
       this.apiService.updateFormData(formKey, userId, this.experienceForm.value).subscribe(
         (response) => {
           // console.log('Form updated successfully:', response);
-          this.router.navigate(['/reg-skills']);
+          // this.router.navigate(['/reg-skills']);
+          // Navigate to next page and replace the current one in history
+          this.router.navigate(['/reg-skills'], { replaceUrl: true });
         },
         (error) => {
           console.error('Error updating form:', error);

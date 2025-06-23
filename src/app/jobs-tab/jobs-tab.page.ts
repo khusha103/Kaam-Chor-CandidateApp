@@ -135,6 +135,10 @@ export class JobsTabPage implements OnInit {
   const filters = { ...this.jobFilterService.getFilters(), keyword: searchTerm };
   this.filteredJobListings = this.jobFilterService.filterJobs(this.jobListings, filters);
   this.jobs_count = this.filteredJobListings.length;
+
+  console.log( filters);
+  console.log( this.filteredJobListings);
+
 }
 
   async showAlert() {

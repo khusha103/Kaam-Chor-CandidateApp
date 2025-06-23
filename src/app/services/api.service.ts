@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -211,6 +211,24 @@ uploadResume(formData: FormData): Observable<any> {
    saveForJob(data: { userId: string; jobId: string }): Observable<any> {
     return this.http.post(`${this.formapiUrl}/savejob`, data);
   }
+
+
+updateResume(userId: number, file: File): Observable<HttpEvent<any>> {
+  const formData = new FormData();
+  formData.append('user_id', userId.toString());
+  formData.append('resume', file);
+
+  const req = new HttpRequest('POST', `${this.formapiUrl}/upload_resume`, formData, {
+    reportProgress: true,
+  });
+
+  return this.http.request(req);
+}
+
+getResume(userId: number) {
+  return this.http.get<any>(`${this.formapiUrl}/get_resume/${userId}`);
+}
+
   
   
 }

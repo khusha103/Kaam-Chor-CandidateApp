@@ -16,7 +16,7 @@ export class RegSkillsPage implements OnInit {
   skillsForm!: FormGroup;
   languageForm!: FormGroup;
   showOtherState: boolean = false;
-  isdeleteLoading : boolean = false;
+  isdeleteLoading: boolean = false;
   maxStates: number = 5;
   // formPages: string[] = ['Aboutme', 'Education', 'Experience', 'Skills', 'Review'];
   formPages: string[] = ['Education', 'Experience', 'Skills', 'Review'];
@@ -35,65 +35,49 @@ export class RegSkillsPage implements OnInit {
   cities: any[] = [];
   skills: any[] = [];
   selectedFile: File | null = null;
+  uploadedResumeName: string | null = null;
+  uploadedResumeUrl: string | null = null;
 
 
   ionViewWillEnter() {
-     // StatusBar.setBackgroundColor({ color: '#511168' }); // match form tab color
+    // StatusBar.setBackgroundColor({ color: '#511168' }); // match form tab color
     //  this.initialize_nextvisit();
 
-     this.loadskills();
-     this.loadStates();
-     this.loadlang();
-     this.loadlangprof();
- 
- 
-     this.currentPage = 2;
-     this.progress = 75;
- 
-     console.log(this.currentPage);
-     console.log(this.progress);
- 
-     //  this.addLanguage(); // Add initial language form
- 
- 
-     this.skillsForm.get('anywhereInIndia')?.valueChanges.subscribe(value => {
-       if (value) {
-         this.skillsForm.patchValue({
-           withinCity: false,
-           otherState: false,
-           job_states: []
-         });
-       }
-     });
- 
-     this.skillsForm.get('otherState')?.valueChanges.subscribe(value => {
-       if (!value) {
-         this.skillsForm.patchValue({
-           job_states: []
-         });
-       }
-     });
- 
-     // Log form value changes
-    //  this.skillsForm.valueChanges.subscribe(val => {
-    //    this.logFormValidity();
-    //    console.log('Form value changed:', val);
-    //    console.log('Form valid:', this.skillsForm.valid);
-    //    // this.logFormValidity();
-    //  });
- 
- 
- // Filter out any empty entries of languages array 
-//  const languagesArray = this.skillsForm.get('languages') as FormArray;
-//  languagesArray.controls = languagesArray.controls.filter(control => {
-//    const langGroup = control.value;
-//    console.log("lang group",  ((langGroup.rws && langGroup.rws.length > 0))); // Log the entire langGroup for debugging
- 
-//    // Check if language is a non-empty string, proficiency is non-empty, or rws has elements
-//    return (typeof langGroup.language === 'string' && langGroup.language.trim() !== '') || 
-//           (typeof langGroup.proficiency === 'string' && langGroup.proficiency.trim() !== '') || 
-//           (langGroup.rws && langGroup.rws.length > 0);
-//  });
+    this.loadskills();
+    this.loadStates();
+    this.loadlang();
+    this.loadlangprof();
+    this.getResume();
+
+
+    this.currentPage = 2;
+    this.progress = 75;
+
+    console.log(this.currentPage);
+    console.log(this.progress);
+
+    //  this.addLanguage(); // Add initial language form
+
+
+    this.skillsForm.get('anywhereInIndia')?.valueChanges.subscribe(value => {
+      if (value) {
+        this.skillsForm.patchValue({
+          withinCity: false,
+          otherState: false,
+          job_states: []
+        });
+      }
+    });
+
+    this.skillsForm.get('otherState')?.valueChanges.subscribe(value => {
+      if (!value) {
+        this.skillsForm.patchValue({
+          job_states: []
+        });
+      }
+    });
+
+
   }
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#511168' }); // match form tab color
@@ -140,25 +124,26 @@ export class RegSkillsPage implements OnInit {
       // this.logFormValidity();
     });
 
-    
 
 
-// Filter out any empty entries of languages array 
-const languagesArray = this.skillsForm.get('languages') as FormArray;
-languagesArray.controls = languagesArray.controls.filter(control => {
-  const langGroup = control.value;
-  console.log("lang group",  ((langGroup.rws && langGroup.rws.length > 0))); // Log the entire langGroup for debugging
 
-  // Check if language is a non-empty string, proficiency is non-empty, or rws has elements
-  return (typeof langGroup.language === 'string' && langGroup.language.trim() !== '') || 
-         (typeof langGroup.proficiency === 'string' && langGroup.proficiency.trim() !== '') || 
-         (langGroup.rws && langGroup.rws.length > 0);
-});
+    // Filter out any empty entries of languages array 
+    const languagesArray = this.skillsForm.get('languages') as FormArray;
+    languagesArray.controls = languagesArray.controls.filter(control => {
+      const langGroup = control.value;
+      console.log("lang group", ((langGroup.rws && langGroup.rws.length > 0))); // Log the entire langGroup for debugging
+
+      // Check if language is a non-empty string, proficiency is non-empty, or rws has elements
+      return (typeof langGroup.language === 'string' && langGroup.language.trim() !== '') ||
+        (typeof langGroup.proficiency === 'string' && langGroup.proficiency.trim() !== '') ||
+        (langGroup.rws && langGroup.rws.length > 0);
+    });
   }
 
-  
 
-  initialize_nextvisit(){
+
+
+  initialize_nextvisit() {
     const userId = localStorage.getItem('userId');
     if (userId) {
       this.apiService.getFormData('skillsForm', userId).subscribe(
@@ -166,10 +151,29 @@ languagesArray.controls = languagesArray.controls.filter(control => {
           // console.log('Fetched data:', response);
 
           if (response && response.status) {
-    this.dataExists = true;}
+            this.dataExists = true;
           }
-        );
-      }
+        }
+      );
+    }
+  }
+
+  getResume() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.apiService.getResume(+userId).subscribe({
+        next: (res) => {
+          if (res.status && res.resume_url) {
+            this.uploadedResumeUrl = res.resume_url;
+          } else {
+            this.uploadedResumeUrl = null;
+          }
+        },
+        error: () => {
+          this.uploadedResumeUrl = null;
+        }
+      });
+    }
   }
 
   initializeForm() {
@@ -246,13 +250,13 @@ languagesArray.controls = languagesArray.controls.filter(control => {
             // Patch languages if they exist
             if (data.languages && data.languages.length) {
               const languagesArray = this.skillsForm.get('languages') as FormArray;
-            
+
               data.languages.forEach((lang: { language: any; proficiency: any; rws: any; }) => {
                 // Check if language entry has valid properties
                 if (lang.language && lang.proficiency) {
                   // Convert rws to an array if it's a string
                   const rwsArray = typeof lang.rws === 'string' ? lang.rws.split(',').map(item => item.trim()) : lang.rws;
-            
+
                   languagesArray.push(this.formBuilder.group({
                     language: [lang.language || ''],
                     proficiency: [lang.proficiency || ''],
@@ -261,11 +265,11 @@ languagesArray.controls = languagesArray.controls.filter(control => {
                 }
               });
 
-    // console.log('Form patched with lang data if exist:', this.skillsForm.value);
-    this.dataExists = true; // Set flag to true if data exists
-    // console.log('languagesArray', data.languages);
+              // console.log('Form patched with lang data if exist:', this.skillsForm.value);
+              this.dataExists = true; // Set flag to true if data exists
+              // console.log('languagesArray', data.languages);
             }
-            
+
           }
         },
         (error) => {
@@ -291,7 +295,7 @@ languagesArray.controls = languagesArray.controls.filter(control => {
   }
 
 
-// Method to remove empty language entries
+  // Method to remove empty language entries
   removeEmptyLanguages() {
     const languagesArray = this.skillsForm.get('languages') as FormArray;
     // Filter out any empty entries
@@ -386,7 +390,7 @@ languagesArray.controls = languagesArray.controls.filter(control => {
       try {
         // Fetch mobile number from the database using the user ID
         const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-        const user_id_intryblock : string = userId.toString();;
+        const user_id_intryblock: string = userId.toString();;
         const mobileNumber = mobileResponse.mobile_number; // Extract mobile number from response
         const form_key = "skillsForm";
 
@@ -400,31 +404,31 @@ languagesArray.controls = languagesArray.controls.filter(control => {
         // };
 
         const formData = new FormData();
-      formData.append('file', this.skillsForm.get('upload_resume')?.value); // Use optional chaining
+        formData.append('file', this.skillsForm.get('upload_resume')?.value); // Use optional chaining
 
-      // Adding a constant value
-      const additionalValue = 'someConstantValue';
-      formData.append('user_id', user_id_intryblock);
-      formData.append('mobile_number', mobileNumber);
-      formData.append('form_key', form_key);
-      // formData.append('skillsformData', this.skillsForm.value);
-      // Append form values to FormData
-     // Append form values to FormData
-    Object.keys(this.skillsForm.value).forEach(key => {
-      const value = this.skillsForm.get(key)?.value;
-      if (key === 'languages') {
-        // Convert the languages array to a JSON string
-        formData.append(key, JSON.stringify(value)); // Append as JSON string
-      } else {
-        formData.append(key, value); // Append other values normally
-      }
-    });
-// console.log(formData);
+        // Adding a constant value
+        const additionalValue = 'someConstantValue';
+        formData.append('user_id', user_id_intryblock);
+        formData.append('mobile_number', mobileNumber);
+        formData.append('form_key', form_key);
+        // formData.append('skillsformData', this.skillsForm.value);
+        // Append form values to FormData
+        // Append form values to FormData
+        Object.keys(this.skillsForm.value).forEach(key => {
+          const value = this.skillsForm.get(key)?.value;
+          if (key === 'languages') {
+            // Convert the languages array to a JSON string
+            formData.append(key, JSON.stringify(value)); // Append as JSON string
+          } else {
+            formData.append(key, value); // Append other values normally
+          }
+        });
+        // console.log(formData);
 
 
-        
-      // const formData = new FormData();
-      // skillsData.append('file', this.skillsForm.get('file')?.value); // Use optional chaining
+
+        // const formData = new FormData();
+        // skillsData.append('file', this.skillsForm.get('file')?.value); // Use optional chaining
 
         // skillsData.append('this.selectedFile', this.skillsForm.get('upload_resume').value);
 
@@ -516,35 +520,35 @@ languagesArray.controls = languagesArray.controls.filter(control => {
 
     if (this.languages.length > 1) {
       const userId = localStorage.getItem('userId');
-      if(userId){
-      const languageToRemove = this.languages.at(this.languages.length - 1).value;
-      const language_id = this.languages.length;
-      console.log("languageToRemove",languageToRemove);
-      console.log("language id",language_id);
-      this.apiService.deleteLanguage(language_id,userId).subscribe(
-        response => {
-          console.log('Language deleted successfully', response);
-          this.languages.removeAt(this.languages.length - 1);
-          this.isdeleteLoading = false;
+      if (userId) {
+        const languageToRemove = this.languages.at(this.languages.length - 1).value;
+        const language_id = this.languages.length;
+        console.log("languageToRemove", languageToRemove);
+        console.log("language id", language_id);
+        this.apiService.deleteLanguage(language_id, userId).subscribe(
+          response => {
+            console.log('Language deleted successfully', response);
+            this.languages.removeAt(this.languages.length - 1);
+            this.isdeleteLoading = false;
 
-        },
-        error => {
-          console.error('Error deleting language', error);
-        }
-      );
-    }
+          },
+          error => {
+            console.error('Error deleting language', error);
+          }
+        );
+      }
     }
 
   }
 
   onRwsChange(event: CustomEvent, index: number, skill: string) {
-    
+
     try {
       const languageForm = this.languages.at(index) as FormGroup;
       const rwsControl = languageForm.get('rws') as FormArray;
 
       console.log(typeof rwsControl, rwsControl instanceof FormArray);
-  
+
       if (event.detail.checked) {
         rwsControl.push(this.formBuilder.control(skill));
       } else {
@@ -563,7 +567,7 @@ languagesArray.controls = languagesArray.controls.filter(control => {
   // onRwsChange(event: any, index: number, rws: string) {
   //   const languageForm = this.skillsForm.get('languages')['controls'][index] as FormGroup;
   //   const rwsControl = languageForm.get('rws') as FormArray;
-  
+
   //   if (event.detail.checked) {
   //     rwsControl.push(new FormControl(rws));
   //   } else {
@@ -641,16 +645,18 @@ languagesArray.controls = languagesArray.controls.filter(control => {
   updateForm() {
 
     // console.log("skill update is pending");
-    console.log("updating value of fommmm",this.skillsForm.value);
+    console.log("updating value of fommmm", this.skillsForm.value);
     // Logic to update the existing form data
-      if (this.skillsForm.valid) {
-        const userId = localStorage.getItem('userId');
-        const formKey = 'skillsForm'; // The key for the form
-      if(userId){
+    if (this.skillsForm.valid) {
+      const userId = localStorage.getItem('userId');
+      const formKey = 'skillsForm'; // The key for the form
+      if (userId) {
         this.apiService.updateFormData(formKey, userId, this.skillsForm.value).subscribe(
           (response) => {
             // console.log('Form updated successfully:', response);
-            this.router.navigate(['/reg-review']);
+            // this.router.navigate(['/reg-review']);
+            // Navigate to next page and replace the current one in history
+            this.router.navigate(['/reg-review'], { replaceUrl: true });
           },
           (error) => {
             console.error('Error updating form:', error);
@@ -660,7 +666,7 @@ languagesArray.controls = languagesArray.controls.filter(control => {
       } else {
         console.error('Form is invalid');
       }
-    }else{
+    } else {
       console.log("userid not found");
     }
   }

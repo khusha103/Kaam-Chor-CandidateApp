@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card class="custom-card">
+    <ion-card-header color="primary">
+      <ion-card-title color="light">Your Notifications</ion-card-title>
+      <ion-card-subtitle color="light">Stay updated with Kaam Chor</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>
+            <h3>New Job Match</h3>
+            <p>Graphic Designer position at Creative Studio</p>
+            <p class="ion-text-wrap"><small>2 hours ago</small></p>
+          </ion-label>
+          <ion-button slot="end" fill="outline" color="primary" size="small">View</ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <h3>Application Update</h3>
+            <p>Your application has been viewed</p>
+            <p class="ion-text-wrap"><small>Yesterday</small></p>
+          </ion-label>
+          <ion-button slot="end" fill="outline" color="primary" size="small">View</ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <h3>Profile Tip</h3>
+            <p>Update your skills to improve visibility</p>
+            <p class="ion-text-wrap"><small>3 days ago</small></p>
+          </ion-label>
+          <ion-button slot="end" fill="outline" color="primary" size="small">View</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="custom-card">
+    <ion-card-header color="primary">
+      <ion-card-title color="light">Notification Preferences</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Job Recommendations</ion-label>
+          <ion-toggle slot="end" checked></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Application Updates</ion-label>
+          <ion-toggle slot="end" checked></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Messages</ion-label>
+          <ion-toggle slot="end" checked></ion-toggle>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

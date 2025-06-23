@@ -16,9 +16,9 @@
 
 
   <div style="text-align: center;">
-    <ion-text color="primary">Neelima Ansley</ion-text><br>
+    <ion-text color="primary">{{username}}</ion-text><br>
     <ion-text color="medium" class="ion-text-wrap">
-      <small>4.8 graphic.neliascom</small>
+      <small>kaam-chor.com</small>
     </ion-text>
   </div>
 
@@ -77,8 +77,10 @@
       <ion-item-group class="ion-margin-top">
         <ion-item lines="none">
           <ion-label color="primary">
-            <h2>Graphic Designer</h2>
-            <p color="primary">Updated: January 08, 2023</p>
+            <!-- <h2>Graphic Designer</h2> -->
+            <h2>{{user_email}}</h2>
+
+            <p color="primary">Updated: {{ last_updated_on }}</p>
           </ion-label>
         </ion-item>
 
@@ -111,7 +113,7 @@
   </ion-card>
 
   <ion-card class="custom-card">
-    <ion-card-content>
+    <!-- <ion-card-content>
       <ion-list>
         <ion-item>
           <ion-label>Country</ion-label>
@@ -134,7 +136,31 @@
           <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
       </ion-list>
-    </ion-card-content>
+    </ion-card-content> -->
+    <ion-card-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Country</ion-label>
+      <ion-note slot="end">India</ion-note>
+    </ion-item>
+    <ion-item routerLink="/notification">
+      <ion-label>Notifications</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item routerLink="/settings">
+      <ion-label>Settings</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item routerLink="/help-desk">
+      <ion-label>Help</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item routerLink="/privacy">
+      <ion-label>Privacy</ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-card-content>
   </ion-card>
   <div class="divider-container">
     <ion-item-divider>

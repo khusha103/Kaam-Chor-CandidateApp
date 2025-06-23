@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card class="custom-card">
+    <ion-card-header color="primary">
+      <ion-card-title color="light">Account Settings</ion-card-title>
+      <ion-card-subtitle color="light">Manage your Kaam Chor account</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Username</ion-label>
+          <ion-note slot="end">username</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Email</ion-label>
+          <ion-note slot="end">userkaam-chor.com</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Change Password</ion-label>
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item>
+          <ion-label>Language</ion-label>
+          <ion-select placeholder="English" slot="end">
+            <ion-select-option value="en">English</ion-select-option>
+            <ion-select-option value="hi">Hindi</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="custom-card">
+    <ion-card-header color="primary">
+      <ion-card-title color="light">App Settings</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Dark Mode</ion-label>
+          <ion-toggle slot="end"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Push Notifications</ion-label>
+          <ion-toggle slot="end" checked></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>App Version</ion-label>
+          <ion-note slot="end">1.0.0</ion-note>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

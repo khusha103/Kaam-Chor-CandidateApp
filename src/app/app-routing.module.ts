@@ -99,6 +99,22 @@ const routes: Routes = [
     path: 'test',
     loadChildren: () => import('./sampletest/test/test.module').then( m => m.TestPageModule)
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
+  },
+  {
+    path: 'notification',
+    loadChildren: () => import('./pages/notification/notification.module').then( m => m.NotificationPageModule)
+  },
+  {
+    path: 'help',
+    loadChildren: () => import('./pages/help/help.module').then( m => m.HelpPageModule)
+  },
+  {
+    path: 'privacy',
+    loadChildren: () => import('./pages/privacy/privacy.module').then( m => m.PrivacyPageModule)
+  },
 ];
 @NgModule({
   imports: [

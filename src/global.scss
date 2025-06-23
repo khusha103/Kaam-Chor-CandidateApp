@@ -32,9 +32,18 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// @import "@ionic/angular/css/palettes/dark.always.css"; 
+//  @import "@ionic/angular/css/palettes/dark.class.css"; 
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     --ion-color-scheme: light;
+//   }
+// }
+
+
+
 
 @font-face {
     font-family: 'Gordita';

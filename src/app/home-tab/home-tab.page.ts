@@ -13,6 +13,9 @@ export class HomeTabPage implements OnInit {
   // constructor() { }
   jobs: any[] = [];
   categories: any[] = [];
+   last_updated_on: String = "";
+  username: String = "";
+  user_email:String ="";
 
 
   constructor(private apiService: ApiService,private router:Router) {}
@@ -38,8 +41,38 @@ export class HomeTabPage implements OnInit {
         this.categories = [];
       }
     });
+
+    this.getprofileData();
     
   }
+   getprofileData() {
+    const userId = localStorage.getItem('userId');
+
+    if (userId) {
+      this.apiService.getFormData('aboutMeForm', userId).subscribe(
+        (response) => {
+          // console.log('Fetched data:', response); 
+
+          if (response && response.status) {
+            const data = response.data;
+
+            this.username = data.name;
+            this.last_updated_on = data.updated_on;
+            this.user_email=data.email;
+
+
+          } else {
+            console.log('No data found for the specified key.');
+
+          }
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+        }
+      );
+    }
+  }
+
 
 
   goToJobDetail(jobId: string) {

@@ -74,7 +74,8 @@ export class RegEducationPage {
       title_of_education: [''], 
       branch_of_study: [''], 
       university_name: [''], 
-      passing_year: [''] 
+      // passing_year: [''] 
+      passing_year: [null]
     });
     
     // const userId = localStorage.getItem('userId');

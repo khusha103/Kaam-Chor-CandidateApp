@@ -664,6 +664,7 @@ export class RegSkillsPage implements OnInit {
 
     // console.log("skill update is pending");
     console.log("updating value of fommmm", this.skillsForm.value);
+    console.log("form is valid",this.skillsForm);
     // Logic to update the existing form data
     if (this.skillsForm.valid) {
       // const userId = localStorage.getItem('userId');

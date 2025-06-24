@@ -29,13 +29,14 @@ export class ProfileTabPage implements OnInit {
     // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
     // Set the status bar style to dark (black text/icons)
     // StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    this.getResume();
+    // this.getResume();
     this.getprofileData();
   }
 
   async getprofileData() {
     // const userId = localStorage.getItem('userId');
         const userId= await this.storage.get('userId') || null;
+        console.log("userId",userId);
 
 
     if (userId) {
@@ -49,6 +50,7 @@ export class ProfileTabPage implements OnInit {
             this.username = data.name;
             this.last_updated_on = data.updated_on;
             this.user_email=data.email;
+    this.getResume();
 
 
           } else {
@@ -73,8 +75,10 @@ export class ProfileTabPage implements OnInit {
   }
 
 
-  getResume() {
-    this.apiService.getResume(this.userId).subscribe({
+  async getResume() {
+       const userId= await this.storage.get('userId') || null;
+        console.log("userId",userId);
+    this.apiService.getResume(userId).subscribe({
       next: (res) => {
         if (res.status && res.resume_url) {
           this.uploadedResumeUrl = res.resume_url;
@@ -184,7 +188,8 @@ export class ProfileTabPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.getResume();
+    // this.getResume();
+    this.getprofileData();
 
 
   }

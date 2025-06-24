@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-applied-jobs',
@@ -101,14 +103,23 @@ export class AppliedJobsPage implements OnInit {
   appliedJobs: any[] = [];
   savedJobs: any[] = [];
 
-  constructor(private api: ApiService,private router:Router) {}
+  constructor(private api: ApiService,private router:Router,private storage: Storage) {
+ this.initStorage();
+  }
+
+  
+  async initStorage() {
+    await this.storage.create();
+  }
 
   ngOnInit() {
     this.loadJobs();
   }
 
-  loadJobs() {
-    const userId = localStorage.getItem('userId');
+  async loadJobs() {
+    // const userId = localStorage.getItem('userId');
+     const userId= await this.storage.get('userId') || null;
+    console.log('Retrieved userId:', userId);
   
     if (userId) {
       this.api.getAppliedJobs(userId).subscribe((res: any) => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import lottie from 'lottie-web';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-splash-screen',
@@ -9,7 +10,13 @@ import lottie from 'lottie-web';
 })
 export class SplashScreenComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private storage: Storage) { 
+    this.initStorage();
+
+  }
+  async initStorage() {
+    await this.storage.create();
+  }
 
   ngOnInit() {
     lottie.loadAnimation({
@@ -26,8 +33,9 @@ export class SplashScreenComponent implements OnInit {
     }, 3000); 
   }
 
-  navigateToAppropriateRoute() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  async navigateToAppropriateRoute() {
+    // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isLoggedIn= await this.storage.get('isLoggedIn') || false;
     if (isLoggedIn) {
       this.router.navigate(['/tabs/home']);  
       // this.router.navigate(['/reg-skills']);  

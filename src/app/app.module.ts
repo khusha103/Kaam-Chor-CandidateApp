@@ -10,12 +10,13 @@ import { SplashScreenComponent } from './components/splash-screen/splash-screen.
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoadingInterceptor } from './interceptors/loading.service';
+import { IonicStorageModule } from '@ionic/storage-angular';
 // import { FormTabsComponent } from './components/form-tabs/form-tabs.component';
 
 
 @NgModule({
   declarations: [AppComponent,SplashScreenComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,HttpClientModule,FormsModule],
+  imports: [BrowserModule, IonicModule.forRoot(),IonicStorageModule.forRoot(), AppRoutingModule,HttpClientModule,FormsModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },{ provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA]

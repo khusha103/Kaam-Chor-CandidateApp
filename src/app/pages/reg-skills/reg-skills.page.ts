@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { StatusBar } from '@capacitor/status-bar';
 import { ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-reg-skills',
@@ -12,7 +14,9 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class RegSkillsPage implements OnInit {
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private apiService: ApiService, private toastController: ToastController) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private apiService: ApiService, private toastController: ToastController,private storage: Storage) {
+    this.initStorage();
+   }
   skillsForm!: FormGroup;
   languageForm!: FormGroup;
   showOtherState: boolean = false;
@@ -79,6 +83,10 @@ export class RegSkillsPage implements OnInit {
 
 
   }
+
+   async initStorage() {
+    await this.storage.create();
+  }
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#511168' }); // match form tab color
     this.initializeForm();
@@ -143,8 +151,10 @@ export class RegSkillsPage implements OnInit {
 
 
 
-  initialize_nextvisit() {
-    const userId = localStorage.getItem('userId');
+  async initialize_nextvisit() {
+    // const userId = localStorage.getItem('userId');
+    const userId= await this.storage.get('userId') || null;
+
     if (userId) {
       this.apiService.getFormData('skillsForm', userId).subscribe(
         (response) => {
@@ -158,8 +168,10 @@ export class RegSkillsPage implements OnInit {
     }
   }
 
-  getResume() {
-    const userId = localStorage.getItem('userId');
+  async getResume() {
+    // const userId = localStorage.getItem('userId');
+    const userId= await this.storage.get('userId') || null;
+
     if (userId) {
       this.apiService.getResume(+userId).subscribe({
         next: (res) => {
@@ -176,7 +188,7 @@ export class RegSkillsPage implements OnInit {
     }
   }
 
-  initializeForm() {
+  async initializeForm() {
     this.skillsForm = this.formBuilder.group({
       // skills: [["1","2"], Validators.required],
       skills: [[], Validators.required],
@@ -187,7 +199,9 @@ export class RegSkillsPage implements OnInit {
       job_states: [[]]
     });
 
-    const userId = localStorage.getItem('userId');
+    // const userId = localStorage.getItem('userId');
+    const userId= await this.storage.get('userId') || null;
+
     if (userId) {
       this.apiService.getFormData('skillsForm', userId).subscribe(
         (response) => {
@@ -378,8 +392,10 @@ export class RegSkillsPage implements OnInit {
     // Check if the skills form is valid
     if (this.skillsForm.valid) {
       // Retrieve user ID from localStorage and convert to number
-      const userIdString = localStorage.getItem('userId');
-      const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+      // const userIdString = localStorage.getItem('userId');
+      // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+    const userId= await this.storage.get('userId') || null;
+
 
       // Check if user ID is available
       if (userId === null) {
@@ -511,7 +527,7 @@ export class RegSkillsPage implements OnInit {
     }
   }
 
-  removeLanguage() {
+  async removeLanguage() {
     // if (this.languages.length > 1) {
     //   this.languages.removeAt(this.languages.length - 1);
     // }
@@ -519,7 +535,9 @@ export class RegSkillsPage implements OnInit {
     this.isdeleteLoading = true;
 
     if (this.languages.length > 1) {
-      const userId = localStorage.getItem('userId');
+      // const userId = localStorage.getItem('userId');
+    const userId= await this.storage.get('userId') || null;
+
       if (userId) {
         const languageToRemove = this.languages.at(this.languages.length - 1).value;
         const language_id = this.languages.length;
@@ -642,13 +660,15 @@ export class RegSkillsPage implements OnInit {
     return selectedStates && selectedStates.length >= this.maxStates;
   }
 
-  updateForm() {
+  async updateForm() {
 
     // console.log("skill update is pending");
     console.log("updating value of fommmm", this.skillsForm.value);
     // Logic to update the existing form data
     if (this.skillsForm.valid) {
-      const userId = localStorage.getItem('userId');
+      // const userId = localStorage.getItem('userId');
+    const userId= await this.storage.get('userId') || null;
+
       const formKey = 'skillsForm'; // The key for the form
       if (userId) {
         this.apiService.updateFormData(formKey, userId, this.skillsForm.value).subscribe(

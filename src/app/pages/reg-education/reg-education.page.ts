@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { ToastController } from '@ionic/angular';
 import { StatusBar } from '@capacitor/status-bar';
+import { Storage } from '@ionic/storage-angular';
+
 
 
 @Component({
@@ -19,7 +21,13 @@ export class RegEducationPage {
   educationForm!: FormGroup;
   dataExists: boolean = false; // Flag to track if data exists
 
-  constructor(private datePipe: DatePipe, private router:Router,private formBuilder: FormBuilder,private apiService: ApiService,private toastController: ToastController) {}
+  constructor(private datePipe: DatePipe, private router:Router,private formBuilder: FormBuilder,private apiService: ApiService,private toastController: ToastController,private storage: Storage) {
+        this.initStorage();
+  }
+
+  async initStorage() {
+    await this.storage.create();
+  }
   qualification!: string;
   educationTitle!: string;
   branchOfStudy!: string;
@@ -60,7 +68,7 @@ export class RegEducationPage {
   // ]; // Sample universities
 
 
-  initializeForm() {
+  async initializeForm() {
     this.educationForm = this.formBuilder.group({
       highest_qualification: ['', Validators.required], 
       title_of_education: [''], 
@@ -69,7 +77,9 @@ export class RegEducationPage {
       passing_year: [''] 
     });
     
-    const userId = localStorage.getItem('userId');
+    // const userId = localStorage.getItem('userId');
+         const userId= await this.storage.get('userId') || null;
+
     if (userId) {
       this.apiService.getFormData('educationForm', userId).subscribe(
         (response) => {
@@ -218,8 +228,10 @@ export class RegEducationPage {
     // Check if the education form is valid
     if (this.educationForm.valid) {
         // Retrieve user ID from localStorage and convert to number
-        const userIdString = localStorage.getItem('userId');
-        const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+        // const userIdString = localStorage.getItem('userId');
+        // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+             const userId= await this.storage.get('userId') || null;
+
 
         // Check if user ID is available
         if (userId === null) {
@@ -400,10 +412,12 @@ export class RegEducationPage {
  
 
   
-  updateForm() {
+  async updateForm() {
     // Logic to update the existing form data
     if (this.educationForm.valid) {
-      const userId = localStorage.getItem('userId');
+      // const userId = localStorage.getItem('userId');
+           const userId= await this.storage.get('userId') || null;
+
       const formKey = 'educationForm'; // The key for the form
     if(userId){
       this.apiService.updateFormData(formKey, userId, this.educationForm.value).subscribe(

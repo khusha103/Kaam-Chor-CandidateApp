@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import lottie from 'lottie-web';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-splash-screen',
@@ -9,7 +10,13 @@ import lottie from 'lottie-web';
 })
 export class SplashScreenPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private storage: Storage) { 
+    this.initStorage();
+  }
+
+  async initStorage() {
+    await this.storage.create();
+  }
 
   ngOnInit() {
   //  this.initial_nav();
@@ -21,8 +28,10 @@ export class SplashScreenPage implements OnInit {
   }
 
   initial_nav(){
-     setTimeout(() => {
-      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+     setTimeout(async () => {
+      // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+       const isLoggedIn= await this.storage.get('isLoggedIn') || false;
+    // console.log('Retrieved isLoggedIn:', isLoggedIn);
       if (isLoggedIn) {
         this.router.navigate(['/tabs/home']);  
        
@@ -37,8 +46,10 @@ export class SplashScreenPage implements OnInit {
 
 
 
-  navigateToAppropriateRoute() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  async navigateToAppropriateRoute() {
+    // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isLoggedIn= await this.storage.get('isLoggedIn') || false;
+    // console.log('Retrieved isLoggedIn:', isLoggedIn);
     if (isLoggedIn) {
       this.router.navigate(['/tabs/home']);  
       

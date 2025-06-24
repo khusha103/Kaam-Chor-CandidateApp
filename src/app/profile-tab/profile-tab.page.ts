@@ -5,6 +5,8 @@ import { ApiService } from '../services/api.service';
 import { finalize, Observable } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-profile-tab',
@@ -16,7 +18,12 @@ export class ProfileTabPage implements OnInit {
   username: String = "";
   user_email:String ="";
 
-  constructor(private router: Router, private apiService: ApiService, private toastCtrl: ToastController) { }
+  constructor(private router: Router, private apiService: ApiService, private toastCtrl: ToastController,private storage: Storage) { 
+    this.initStorage();
+  }
+  async initStorage() {
+    await this.storage.create();
+  }
 
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
@@ -26,8 +33,10 @@ export class ProfileTabPage implements OnInit {
     this.getprofileData();
   }
 
-  getprofileData() {
-    const userId = localStorage.getItem('userId');
+  async getprofileData() {
+    // const userId = localStorage.getItem('userId');
+        const userId= await this.storage.get('userId') || null;
+
 
     if (userId) {
       this.apiService.getFormData('aboutMeForm', userId).subscribe(
@@ -93,8 +102,16 @@ export class ProfileTabPage implements OnInit {
   //   this.router.navigate(['/login']);
   // }
 
-  logout() {
-    localStorage.clear(); // This removes all localStorage entries
+  // logout() {
+  //   localStorage.clear(); // This removes all localStorage entries
+  //   this.router.navigate(['/login']);
+  // }
+
+  async logout() {
+    // Clear all storage data
+    await this.storage.clear();
+
+    // Navigate to login page
     this.router.navigate(['/login']);
   }
 

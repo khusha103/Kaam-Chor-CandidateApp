@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-reg-review',
@@ -23,7 +25,12 @@ export class RegReviewPage implements OnInit {
   
   formPages: string[] = ['Education', 'Experience', 'preferences', 'Review'];
 
-  constructor(private router: Router, private apiService: ApiService, private toastController: ToastController) {}
+  constructor(private router: Router, private apiService: ApiService, private toastController: ToastController,private storage: Storage) {
+     this.initStorage();
+  }
+   async initStorage() {
+    await this.storage.create();
+  }
 
   ionViewWillEnter() {
     this.currentPage = 3;
@@ -234,9 +241,10 @@ export class RegReviewPage implements OnInit {
 
   // Repeat similar structure for loadLanguages, loadSkills, loadQualifications, loadBranches, loadTitles, loadUniversities...
 
-  getUserReviewData() {
-    const userIdString = localStorage.getItem('userId');
-    const userId = userIdString ? Number(userIdString) : null;
+  async getUserReviewData() {
+    // const userIdString = localStorage.getItem('userId');
+    // const userId = userIdString ? Number(userIdString) : null;
+     const userId= await this.storage.get('userId') || null;
 
     if (userId === null) {
       this.presentToast('User ID is not available. Please log in again.');

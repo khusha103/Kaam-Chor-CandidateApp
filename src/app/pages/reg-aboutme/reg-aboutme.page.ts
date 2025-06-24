@@ -6,6 +6,8 @@ import { ToastController } from '@ionic/angular';
 import { CalendarComponentOptions } from 'src/app/interfaces/calendar-options.interface';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-reg-aboutme',
@@ -33,7 +35,12 @@ export class RegAboutmePage implements OnInit {
     title: 'Select a Date'
   };
   
-  constructor(private router: Router,private formBuilder: FormBuilder,private apiService: ApiService,private authService:AuthService,private toastController: ToastController) { 
+  constructor(private router: Router,private formBuilder: FormBuilder,private apiService: ApiService,private authService:AuthService,private toastController: ToastController,private storage: Storage) { 
+      this.initStorage();
+  }
+
+   async initStorage() {
+    await this.storage.create();
   }
 
   ionViewWillEnter() {
@@ -74,8 +81,10 @@ export class RegAboutmePage implements OnInit {
      });
   }
 
-  initializeForm() {
-    const userId = localStorage.getItem('userId');
+  async initializeForm() {
+    // const userId = localStorage.getItem('userId');
+     const userId= await this.storage.get('userId') || null;
+    // console.log('Retrieved userId:', userId);
     let mobi_by_userid = "";
 if (userId !== null) {
   const userIdNumber = parseInt(userId, 10);
@@ -185,8 +194,10 @@ loadStates() {
   async onSubmit() {
     if (this.aboutMeForm.valid) {
         //user ID from localStorage
-        const userIdString = localStorage.getItem('userId');
-        const userId = userIdString ? Number(userIdString) : null; 
+        // const userIdString = localStorage.getItem('userId');
+        const userId= await this.storage.get('userId') || null;
+
+        // const userId = userIdString ? Number(userIdString) : null; 
 
         if (userId === null) {
             this.presentToast('User ID is not available. Please log in again.');
@@ -235,10 +246,12 @@ loadStates() {
   }
 
 
-  updateForm() {
+  async updateForm() {
     // Logic to update the existing form data
     if (this.aboutMeForm.valid) {
-      const userId = localStorage.getItem('userId');
+      // const userId = localStorage.getItem('userId');
+     const userId= await this.storage.get('userId') || null;
+
       const formKey = 'aboutMeForm'; // The key for the form
     if(userId){
       this.apiService.updateFormData(formKey, userId, this.aboutMeForm.value).subscribe(

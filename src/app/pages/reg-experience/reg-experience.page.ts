@@ -6,6 +6,8 @@ import { StatusBar } from '@capacitor/status-bar';
 // import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-reg-experience',
@@ -14,7 +16,15 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class RegExperiencePage implements OnInit {
 
-  constructor(private router: Router,private formBuilder: FormBuilder,private apiService: ApiService,private toastController:ToastController) { }
+  constructor(private router: Router,private formBuilder: FormBuilder,private apiService: ApiService,private toastController:ToastController,
+    private storage: Storage
+  ) { 
+    this.initStorage();
+  }
+  async initStorage() {
+    await this.storage.create();
+  }
+
   experienceForm!: FormGroup;
   dataExists: boolean = false; 
   
@@ -25,7 +35,7 @@ export class RegExperiencePage implements OnInit {
   // formPages: string[] = ['Aboutme', 'Education', 'Experience', 'Skills', 'Review'];
   formPages: string[] = ['Education', 'Experience', 'Skills', 'Review'];
 
-  initializeForm() {
+  async initializeForm() {
     this.experienceForm = this.formBuilder.group({
       have_experience: ['No', Validators.required], 
       year_of_experience: [''], 
@@ -35,7 +45,8 @@ export class RegExperiencePage implements OnInit {
       industry_type: [''] 
     });
     
-    const userId = localStorage.getItem('userId');
+    // const userId = localStorage.getItem('userId');
+     const userId= await this.storage.get('userId') || null;
     if (userId) {
       this.apiService.getFormData('experienceForm', userId).subscribe(
         (response) => {
@@ -149,9 +160,9 @@ export class RegExperiencePage implements OnInit {
 
   async onSubmit() {
     if (this.experienceForm.valid) {
-      const userIdString = localStorage.getItem('userId');
-      const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
-
+      // const userIdString = localStorage.getItem('userId');
+      // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+      const userId= await this.storage.get('userId') || null;
       if (userId === null) {
           this.presentToast('User ID is not available. Please log in again.');
           return; // Exit if userId is null
@@ -326,10 +337,11 @@ export class RegExperiencePage implements OnInit {
     }
 }
 
-  updateForm() {
+  async updateForm() {
     // Logic to update the existing form data
     if (this.experienceForm.valid) {
-      const userId = localStorage.getItem('userId');
+      // const userId = localStorage.getItem('userId');
+       const userId= await this.storage.get('userId') || null;
       const formKey = 'experienceForm'; // The key for the form
     if(userId){
       this.apiService.updateFormData(formKey, userId, this.experienceForm.value).subscribe(

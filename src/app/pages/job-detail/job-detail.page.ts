@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-job-detail',
@@ -18,11 +19,20 @@ export class JobDetailPage implements OnInit {
     private apiService: ApiService,
     private route: ActivatedRoute,
     private toastController: ToastController,
-    private alertController: AlertController
-  ) {}
+    private alertController: AlertController,
+    private storage: Storage
+  ) {
+     this.initStorage();
+  }
 
-  ngOnInit() {
-    this.userId = localStorage.getItem('userId') || '';
+   async initStorage() {
+    await this.storage.create();
+  }
+
+  async ngOnInit() {
+    // this.userId = localStorage.getItem('userId') || '';
+      this.userId= await this.storage.get('userId') || null;
+    console.log('Retrieved userId:', this.userId);
     this.jobId = this.route.snapshot.paramMap.get('id') || '';
     if (this.jobId) {
       this.fetchJobDetail();

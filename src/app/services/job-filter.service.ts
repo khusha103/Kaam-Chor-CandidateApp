@@ -5,11 +5,22 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class JobFilterService {
-  private filtersSubject = new BehaviorSubject<any>({});
+  private filtersSubject = new BehaviorSubject<any>({
+    category: [],
+    location: [],
+    skills: [],
+    jobType: '',
+    remote: false,
+    salary: 0,
+    experience: { min: null, max: null },
+    keyword: '',
+  });
   filters$ = this.filtersSubject.asObservable();
 
   setFilters(filters: any) {
-    this.filtersSubject.next(filters);
+    // Merge new filters with defaults to prevent undefined properties
+    const defaultFilters = this.getDefaultFilters();
+    this.filtersSubject.next({ ...defaultFilters, ...filters });
   }
 
   getFilters() {
@@ -17,7 +28,11 @@ export class JobFilterService {
   }
 
   clearFilters() {
-    this.filtersSubject.next({
+    this.filtersSubject.next(this.getDefaultFilters());
+  }
+
+  private getDefaultFilters() {
+    return {
       category: [],
       location: [],
       skills: [],
@@ -26,11 +41,10 @@ export class JobFilterService {
       salary: 0,
       experience: { min: null, max: null },
       keyword: '',
-    });
+    };
   }
 
   filterJobs(jobListings: any[], filters: any): any[] {
-    // ... existing filterJobs logic ...
     let filteredJobs = [...jobListings];
     if (filters.category?.length > 0) {
       filteredJobs = filteredJobs.filter((job) =>
@@ -75,17 +89,14 @@ export class JobFilterService {
     if (filters.remote === true) {
       filteredJobs = filteredJobs.filter((job) => job.remote === true);
     }
-
-    console.log("filters.jobType",filters.jobType);
-     // Filter by job type (new)
-   if (filters.jobType && filters.jobType !== '') {
-  filteredJobs = filteredJobs.filter((job) => {
-    const normalizedJobType = job.job_type
-      .toLowerCase()
-      .replace(/\s+/g, ''); // Remove spaces, e.g., "full time" -> "fulltime"
-    return normalizedJobType === filters.jobType.toLowerCase();
-  });
-}
+    if (filters.jobType && filters.jobType !== '') {
+      filteredJobs = filteredJobs.filter((job) => {
+        const normalizedJobType = job.job_type
+          .toLowerCase()
+          .replace(/\s+/g, '');
+        return normalizedJobType === filters.jobType.toLowerCase();
+      });
+    }
     return filteredJobs;
   }
 }

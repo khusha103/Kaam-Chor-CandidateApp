@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { StatusBar,Style as StatusBarStyle } from '@capacitor/status-bar';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-home-tab',
@@ -18,13 +20,13 @@ export class HomeTabPage implements OnInit {
   user_email:String ="";
 
 
-  constructor(private apiService: ApiService,private router:Router) {}
+  constructor(private apiService: ApiService,private router:Router,private storage: Storage) {
+    this.initStorage();
+  }
 
-  // ngOnInit() {
-  //   // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
-  //     // Set the status bar style to dark (black text/icons)
-  //     // StatusBar.setStyle({ style: StatusBarStyle.Dark });
-  // }
+  async initStorage() {
+    await this.storage.create();
+  }
 
   ngOnInit() {
     this.apiService.getJobs_forhomepage().subscribe((res) => {
@@ -36,6 +38,22 @@ export class HomeTabPage implements OnInit {
       if (res.status) {
         this.categories = res.categories;
         console.log(this.categories);
+
+//         0
+// : 
+// description
+// : 
+// "Explore job opportunities in software development."
+// icon
+// : 
+// "code-slash-outline"
+// id
+// : 
+// "8"
+// title
+// : 
+// "Software Development"
+
       } else {
         console.error('Failed to fetch job categories');
         this.categories = [];
@@ -45,8 +63,15 @@ export class HomeTabPage implements OnInit {
     this.getprofileData();
     
   }
-   getprofileData() {
-    const userId = localStorage.getItem('userId');
+   async getprofileData() {
+    // const userId = localStorage.getItem('userId');
+    // Retrieve userId from Preferences
+    // const { value } = await Preferences.get({ key: 'userId' });
+    // const userId = value;
+    // console.log('Retrieved userId:', userId);
+    const userId= await this.storage.get('userId') || null;
+    console.log('Retrieved userId:', userId);
+
 
     if (userId) {
       this.apiService.getFormData('aboutMeForm', userId).subscribe(
@@ -74,72 +99,12 @@ export class HomeTabPage implements OnInit {
   }
 
 
-
-  goToJobDetail(jobId: string) {
+goToJobDetail(jobId: string) {
     this.router.navigate(['/job-detail', jobId]);
-    
   }
-  // categories = [
-  //   {
-  //     title: 'Software Development',
-  //     description: 'Explore the latest jobs in software development.',
-  //     icon: 'code-slash-outline'
-  //   },
-  //   {
-  //     title: 'Marketing',
-  //     description: 'Find marketing roles that match your skills.',
-  //     icon: 'megaphone-outline'
-  //   },
-  //   {
-  //     title: 'Design',
-  //     description: 'Discover job opportunities in design.',
-  //     icon: 'color-palette-outline'
-  //   },
-  //   {
-  //     title: 'Finance',
-  //     description: 'Explore finance-related job listings.',
-  //     icon: 'cash-outline'
-  //   },
-  //   {
-  //     title: 'Human Resources',
-  //     description: 'Find HR roles suited to your expertise.',
-  //     icon: 'people-outline'
-  //   },
-  //   {
-  //     title: 'Healthcare',
-  //     description: 'Explore job opportunities in the healthcare industry.',
-  //     icon: 'medkit-outline'
-  //   },
-  //   {
-  //     title: 'Education',
-  //     description: 'Find teaching and education-related jobs.',
-  //     icon: 'school-outline'
-  //   },
-  //   {
-  //     title: 'Engineering',
-  //     description: 'Discover engineering job listings.',
-  //     icon: 'construct-outline'
-  //   },
-  //   {
-  //     title: 'Sales',
-  //     description: 'Explore sales and business development roles.',
-  //     icon: 'cart-outline'
-  //   },
-  //   {
-  //     title: 'Information Technology',
-  //     description: 'Find IT and technology-related job opportunities.',
-  //     icon: 'laptop-outline'
-  //   },
-  //   {
-  //     title: 'Accounting',
-  //     description: 'Explore accounting and finance-related jobs.',
-  //     icon: 'calculator-outline'
-  //   },
-  //   {
-  //     title: 'Administrative',
-  //     description: 'Find administrative and office support roles.',
-  //     icon: 'list-outline'
-  //   }
-  // ];
+
+ goToJobsPage(categoryId: string) {
+  this.router.navigate(['/jobs-tab'], { queryParams: { categoryId: categoryId } });
+}
 
 }

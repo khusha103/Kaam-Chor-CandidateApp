@@ -229,6 +229,15 @@ getResume(userId: number) {
   return this.http.get<any>(`${this.formapiUrl}/get_resume/${userId}`);
 }
 
+
+getEmailByUserId(userId: number): Observable<any> {
+    return this.http.get(`${this.formapiUrl}/emailbyuserid/${userId}`);
+  }
+
+  updateEmail(payload: { user_id: number; email: string }): Observable<any> {
+    return this.http.put(`${this.formapiUrl}/updateCandidateEmail`, payload);
+  }
+
   
   
 }

@@ -21,18 +21,25 @@
         </ion-item>
         <ion-item>
           <ion-label>Email</ion-label>
-          <ion-note slot="end">userkaam-chor.com</ion-note>
+          <ion-note slot="end">{{ currentEmail }}</ion-note>
         </ion-item>
         <ion-item>
-          <ion-label>Change Password</ion-label>
-          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+          <ion-label>Change Email</ion-label>
+          <ion-button slot="end" fill="clear" (click)="toggleEmailEdit()">
+            <ion-icon name="pencil-outline"></ion-icon>
+          </ion-button>
         </ion-item>
-        <ion-item>
-          <ion-label>Language</ion-label>
-          <ion-select placeholder="English" slot="end">
-            <ion-select-option value="en">English</ion-select-option>
-            <ion-select-option value="hi">Hindi</ion-select-option>
-          </ion-select>
+        <ion-item *ngIf="isEditingEmail">
+          <form [formGroup]="emailForm" (ngSubmit)="updateEmail()" class="full-width-form">
+            <ion-label position="stacked">New Email</ion-label>
+            <ion-input formControlName="email" type="email" placeholder="Enter new email" class="full-width-input"></ion-input>
+            <ion-button type="submit" expand="block" [disabled]="!emailForm.valid" class="ion-margin-top">
+              Save Email
+            </ion-button>
+            <ion-button fill="clear" expand="block" (click)="toggleEmailEdit()" class="ion-margin-top">
+              Cancel
+            </ion-button>
+          </form>
         </ion-item>
       </ion-list>
     </ion-card-content>
@@ -44,14 +51,6 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item>
-          <ion-label>Dark Mode</ion-label>
-          <ion-toggle slot="end"></ion-toggle>
-        </ion-item>
-        <ion-item>
-          <ion-label>Push Notifications</ion-label>
-          <ion-toggle slot="end" checked></ion-toggle>
-        </ion-item>
         <ion-item>
           <ion-label>App Version</ion-label>
           <ion-note slot="end">1.0.0</ion-note>

@@ -1,0 +1,26 @@
+.custom-card {
+  margin: 16px;
+  border-radius: 8px;
+}
+
+ion-card-header {
+  padding: 16px;
+}
+
+ion-card-content {
+  padding: 16px;
+}
+
+ion-button {
+  margin-top: 8px;
+}
+
+.full-width-form {
+  width: 100%;
+}
+
+.full-width-input {
+  width: 100%;
+  --padding-start: 0;
+  --padding-end: 0;
+}

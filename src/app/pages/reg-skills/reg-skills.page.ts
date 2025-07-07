@@ -57,8 +57,8 @@ export class RegSkillsPage implements OnInit {
     this.currentPage = 2;
     this.progress = 75;
 
-    console.log(this.currentPage);
-    console.log(this.progress);
+    // console.log(this.currentPage);
+    // console.log(this.progress);
 
     //  this.addLanguage(); // Add initial language form
 
@@ -76,7 +76,8 @@ export class RegSkillsPage implements OnInit {
     this.skillsForm.get('otherState')?.valueChanges.subscribe(value => {
       if (!value) {
         this.skillsForm.patchValue({
-          job_states: []
+          // job_states: []
+          job_states: [[], this.maxSelectionsValidator(this.maxStates)]
         });
       }
     });
@@ -100,8 +101,8 @@ export class RegSkillsPage implements OnInit {
     this.currentPage = 2;
     this.progress = 75;
 
-    console.log(this.currentPage);
-    console.log(this.progress);
+    // console.log(this.currentPage);
+    // console.log(this.progress);
 
     //  this.addLanguage(); // Add initial language form
 
@@ -127,8 +128,8 @@ export class RegSkillsPage implements OnInit {
     // Log form value changes
     this.skillsForm.valueChanges.subscribe(val => {
       this.logFormValidity();
-      console.log('Form value changed:', val);
-      console.log('Form valid:', this.skillsForm.valid);
+      // console.log('Form value changed:', val);
+      // console.log('Form valid:', this.skillsForm.valid);
       // this.logFormValidity();
     });
 
@@ -137,9 +138,10 @@ export class RegSkillsPage implements OnInit {
 
     // Filter out any empty entries of languages array 
     const languagesArray = this.skillsForm.get('languages') as FormArray;
+    // console.log(languagesArray);
     languagesArray.controls = languagesArray.controls.filter(control => {
       const langGroup = control.value;
-      console.log("lang group", ((langGroup.rws && langGroup.rws.length > 0))); // Log the entire langGroup for debugging
+      // console.log("lang group", ((langGroup.rws && langGroup.rws.length > 0))); // Log the entire langGroup for debugging
 
       // Check if language is a non-empty string, proficiency is non-empty, or rws has elements
       return (typeof langGroup.language === 'string' && langGroup.language.trim() !== '') ||
@@ -188,125 +190,213 @@ export class RegSkillsPage implements OnInit {
     }
   }
 
+  // async initializeForm() {
+  //   this.skillsForm = this.formBuilder.group({
+  //     // skills: [["1","2"], Validators.required],
+  //     skills: [[], Validators.required],
+  //     employment_type: ['', Validators.required],
+  //     upload_resume: [null],
+  //     languages: this.formBuilder.array([], Validators.required),
+  //     workLocation: [[], Validators.required],
+  //     job_states: [[]]
+  //   });
+
+  //   // const userId = localStorage.getItem('userId');
+  //   const userId= await this.storage.get('userId') || null;
+
+  //   if (userId) {
+  //     this.apiService.getFormData('skillsForm', userId).subscribe(
+  //       (response) => {
+  //         console.log('Fetched data:', response);
+
+  //         if (response && response.status) {
+  //           const data = response.data;
+  //           if (data && data.skills !== undefined) {
+  //             // loc_anywhere: "0"
+  //             // loc_mycity: "1"
+  //             // loc_states: "1,2,3,4,9"
+
+  //             // workLocation:
+  //             // 0
+  //             // : 
+  //             // "otherState"
+  //             // 1
+  //             // : 
+  //             // "withinCity"
+
+  //             //set value of worklocation on basic of above loc_anywhere, loc_mycity, loc_states
+  //             // if workLocation includes value otherstate, withincity,anywhere accroding to nonzero values of above three data i.e. loc_anywhere loc_mycity, loc_states
+
+
+  //             const loc_checkbox: string[] = [];
+
+  //             // Check conditions for workLocation
+  //             if (data.loc_anywhere === "1") {
+  //               loc_checkbox.push("anywhere");
+  //             }
+  //             if (data.loc_mycity === "1") {
+  //               loc_checkbox.push("withinCity");
+  //             }
+  //             if (data.loc_states && data.loc_states.length > 0) {
+  //               loc_checkbox.push("otherState");
+  //             }
+
+  //             // Check if 'otherState' is included in the loc_checkbox then change value of flag
+  //             this.showOtherState = loc_checkbox.includes('otherState');
+
+  //             this.skillsForm.patchValue({
+  //               skills: data.skills.split(',').map(String) || [],
+  //               workLocation: loc_checkbox,
+
+  //               employment_type: data.employment_type || '',
+  //               upload_resume: data.upload_resume || null,
+  //               job_states: data.loc_states.split(',').map(String) || []
+  //             });
+  //             // console.log('Form patched with data:', this.skillsForm.value);
+  //           } else {
+  //             console.warn('skills is not defined in the response data.');
+  //             this.skillsForm.patchValue({
+  //               skills: [],
+  //               employment_type: '',
+  //               upload_resume: null,
+  //               job_states: []
+  //             });
+  //           }
+
+  //           // Patch languages if they exist
+  //           if (data.languages && data.languages.length) {
+  //             const languagesArray = this.skillsForm.get('languages') as FormArray;
+
+  //             data.languages.forEach((lang: { language: any; proficiency: any; rws: any; }) => {
+  //               // Check if language entry has valid properties
+  //               if (lang.language && lang.proficiency) {
+  //                 // Convert rws to an array if it's a string
+  //                 const rwsArray = typeof lang.rws === 'string' ? lang.rws.split(',').map(item => item.trim()) : lang.rws;
+
+  //                 languagesArray.push(this.formBuilder.group({
+  //                   language: [lang.language || ''],
+  //                   proficiency: [lang.proficiency || ''],
+  //                   rws: [rwsArray || []]
+  //                 }));
+  //               }
+  //             });
+
+  //             // console.log('Form patched with lang data if exist:', this.skillsForm.value);
+  //             this.dataExists = true; // Set flag to true if data exists
+  //             // console.log('languagesArray', data.languages);
+  //           }
+
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching data:', error);
+  //         this.dataExists = false; // Set flag to false if data not exists
+  //       }
+  //     );
+  //   } else {
+  //     console.error('User ID is not available in local storage.');
+  //     // Handle the case where userId is null, e.g., redirect to login
+  //   }
+
+  //   // this.addLanguage(); // Initialize with one language field
+
+  //   // Add a listener to the job_states control
+  //   this.skillsForm.get('job_states')!.valueChanges.subscribe((selectedStates: string[]) => {
+  //     if (selectedStates && selectedStates.length > this.maxStates) {
+  //       const limitedStates = selectedStates.slice(0, this.maxStates);
+  //       this.skillsForm.get('job_states')!.setValue(limitedStates, { emitEvent: false });
+  //     }
+  //   });
+  //   // this.logFormValidity();
+  // }
+
+
   async initializeForm() {
-    this.skillsForm = this.formBuilder.group({
-      // skills: [["1","2"], Validators.required],
-      skills: [[], Validators.required],
-      employment_type: ['', Validators.required],
-      upload_resume: [null],
-      languages: this.formBuilder.array([], Validators.required),
-      workLocation: [[], Validators.required],
-      job_states: [[]]
-    });
+  this.skillsForm = this.formBuilder.group({
+    skills: [[], Validators.required],
+    employment_type: ['', Validators.required],
+    upload_resume: [null],
+    languages: this.formBuilder.array([], Validators.required),
+    workLocation: [[], Validators.required],
+    job_states: [[], this.maxSelectionsValidator(this.maxStates)],
+  });
 
-    // const userId = localStorage.getItem('userId');
-    const userId= await this.storage.get('userId') || null;
+  const userId = await this.storage.get('userId') || null;
+  if (userId) {
+    this.apiService.getFormData('skillsForm', userId).subscribe(
+      (response) => {
+        if (response && response.status) {
+          const data = response.data;
+          this.dataExists = true;
+          if (data && data.skills !== undefined) {
+            const loc_checkbox: string[] = [];
+            if (data.loc_anywhere === '1') loc_checkbox.push('anywhereInIndia');
+            if (data.loc_mycity === '1') loc_checkbox.push('withinCity');
+            if (data.loc_states && data.loc_states.length > 0) loc_checkbox.push('otherState');
 
-    if (userId) {
-      this.apiService.getFormData('skillsForm', userId).subscribe(
-        (response) => {
-          // console.log('Fetched data:', response);
-
-          if (response && response.status) {
-            const data = response.data;
-            if (data && data.skills !== undefined) {
-              // loc_anywhere: "0"
-              // loc_mycity: "1"
-              // loc_states: "1,2,3,4,9"
-
-              // workLocation:
-              // 0
-              // : 
-              // "otherState"
-              // 1
-              // : 
-              // "withinCity"
-
-              //set value of worklocation on basic of above loc_anywhere, loc_mycity, loc_states
-              // if workLocation includes value otherstate, withincity,anywhere accroding to nonzero values of above three data i.e. loc_anywhere loc_mycity, loc_states
-
-
-              const loc_checkbox: string[] = [];
-
-              // Check conditions for workLocation
-              if (data.loc_anywhere === "1") {
-                loc_checkbox.push("anywhere");
-              }
-              if (data.loc_mycity === "1") {
-                loc_checkbox.push("withinCity");
-              }
-              if (data.loc_states && data.loc_states.length > 0) {
-                loc_checkbox.push("otherState");
-              }
-
-              // Check if 'otherState' is included in the loc_checkbox then change value of flag
-              this.showOtherState = loc_checkbox.includes('otherState');
-
-              this.skillsForm.patchValue({
-                skills: data.skills.split(',').map(String) || [],
-                workLocation: loc_checkbox,
-
-                employment_type: data.employment_type || '',
-                upload_resume: data.upload_resume || null,
-                job_states: data.loc_states.split(',').map(String) || []
-              });
-              // console.log('Form patched with data:', this.skillsForm.value);
-            } else {
-              console.warn('skills is not defined in the response data.');
-              this.skillsForm.patchValue({
-                skills: [],
-                employment_type: '',
-                upload_resume: null,
-                job_states: []
-              });
-            }
-
-            // Patch languages if they exist
-            if (data.languages && data.languages.length) {
-              const languagesArray = this.skillsForm.get('languages') as FormArray;
-
-              data.languages.forEach((lang: { language: any; proficiency: any; rws: any; }) => {
-                // Check if language entry has valid properties
-                if (lang.language && lang.proficiency) {
-                  // Convert rws to an array if it's a string
-                  const rwsArray = typeof lang.rws === 'string' ? lang.rws.split(',').map(item => item.trim()) : lang.rws;
-
-                  languagesArray.push(this.formBuilder.group({
-                    language: [lang.language || ''],
-                    proficiency: [lang.proficiency || ''],
-                    rws: [rwsArray || []]
-                  }));
-                }
-              });
-
-              // console.log('Form patched with lang data if exist:', this.skillsForm.value);
-              this.dataExists = true; // Set flag to true if data exists
-              // console.log('languagesArray', data.languages);
-            }
-
+            this.showOtherState = loc_checkbox.includes('otherState');
+            this.skillsForm.patchValue({
+              skills: data.skills.split(',').map(String) || [],
+              workLocation: loc_checkbox,
+              employment_type: data.employment_type || '',
+              upload_resume: data.upload_resume || null,
+              job_states: data.loc_states.split(',').map(String) || [],
+            });
           }
-        },
-        (error) => {
-          console.error('Error fetching data:', error);
-          this.dataExists = false; // Set flag to false if data not exists
+
+          if (data.languages && data.languages.length) {
+            const languagesArray = this.skillsForm.get('languages') as FormArray;
+            data.languages.forEach((lang: { language: any; proficiency: any; rws: any }) => {
+              if (lang.language && lang.proficiency) {
+                const rwsArray = typeof lang.rws === 'string' ? lang.rws.split(',').map((item: string) => item.trim()) : lang.rws;
+                languagesArray.push(
+                  this.formBuilder.group({
+                    language: [lang.language || '', Validators.required],
+                    proficiency: [lang.proficiency || '', Validators.required],
+                    rws: [rwsArray || []],
+                  })
+                );
+              }
+            });
+          }
         }
-      );
-    } else {
-      console.error('User ID is not available in local storage.');
-      // Handle the case where userId is null, e.g., redirect to login
-    }
-
-    this.addLanguage(); // Initialize with one language field
-
-    // Add a listener to the job_states control
-    this.skillsForm.get('job_states')!.valueChanges.subscribe((selectedStates: string[]) => {
-      if (selectedStates && selectedStates.length > this.maxStates) {
-        const limitedStates = selectedStates.slice(0, this.maxStates);
-        this.skillsForm.get('job_states')!.setValue(limitedStates, { emitEvent: false });
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+        this.dataExists = false;
       }
-    });
-    // this.logFormValidity();
+    );
   }
+
+  // Enhanced workLocation subscription
+  this.skillsForm.get('workLocation')?.valueChanges.subscribe((values: string[]) => {
+    this.showOtherState = values.includes('otherState');
+    if (this.showOtherState) {
+      this.skillsForm.get('job_states')?.setValidators([Validators.required, this.maxSelectionsValidator(this.maxStates)]);
+    } else {
+      this.skillsForm.get('job_states')?.setValue([]);
+      this.skillsForm.get('job_states')?.clearValidators();
+    }
+    this.skillsForm.get('job_states')?.updateValueAndValidity();
+  });
+
+  // Subscribe to job_states changes
+  this.skillsForm.get('job_states')?.valueChanges.subscribe((selectedStates: string[]) => {
+    if (selectedStates && selectedStates.length > this.maxStates) {
+      this.skillsForm.get('job_states')?.setValue(selectedStates.slice(0, this.maxStates), { emitEvent: false });
+      this.presentToast('You can select up to 5 states only.');
+    }
+  });
+}
+
+async onStateChange(event: any) {
+  const selectedStates = event.detail.value as string[];
+  if (selectedStates.length > this.maxStates) {
+    this.skillsForm.get('job_states')?.setValue(selectedStates.slice(0, this.maxStates), { emitEvent: false });
+    await this.presentToast('You can select up to 5 states only.');
+  }
+}
+  
 
 
   // Method to remove empty language entries
@@ -336,13 +426,13 @@ export class RegSkillsPage implements OnInit {
     Object.keys(this.skillsForm.controls).forEach(key => {
       const control = this.skillsForm.get(key);
       if (control) {
-        console.log(`${key} valid:`, control.valid, 'errors:', control.errors);
+        // console.log(`${key} valid:`, control.valid, 'errors:', control.errors);
       } else {
-        console.log(`Control ${key} not found in form`);
+        // console.log(`Control ${key} not found in form`);
       }
     });
 
-    console.log(this.skillsForm.value);
+    // console.log(this.skillsForm.value);
   }
 
 
@@ -480,16 +570,36 @@ export class RegSkillsPage implements OnInit {
 
 
 
-  onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
+  // onFileChange(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length) {
+  //     const file = input.files[0];
+  //     this.skillsForm.patchValue({
+  //       upload_resume: file // Set the file in the form control
+  //     });
+  //   }
+  // }
+async onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length) {
+    const file = input.files[0];
+    // Check if the file is a PDF
+    if (file.type === 'application/pdf') {
       this.skillsForm.patchValue({
         upload_resume: file // Set the file in the form control
       });
+      this.selectedFile = file; // Update selectedFile for upload
+      this.uploadedResumeName = file.name; // Optionally update resume name for display
+    } else {
+      // Reset the input and form control
+      input.value = ''; // Clear the file input
+      this.skillsForm.patchValue({ upload_resume: null });
+      this.selectedFile = null;
+      this.uploadedResumeName = null;
+      await this.presentToast('Only PDF files are allowed.');
     }
   }
-
+}
 
 
   async uploadFile() {
@@ -541,11 +651,11 @@ export class RegSkillsPage implements OnInit {
       if (userId) {
         const languageToRemove = this.languages.at(this.languages.length - 1).value;
         const language_id = this.languages.length;
-        console.log("languageToRemove", languageToRemove);
-        console.log("language id", language_id);
+        // console.log("languageToRemove", languageToRemove);
+        // console.log("language id", language_id);
         this.apiService.deleteLanguage(language_id, userId).subscribe(
           response => {
-            console.log('Language deleted successfully', response);
+            // console.log('Language deleted successfully', response);
             this.languages.removeAt(this.languages.length - 1);
             this.isdeleteLoading = false;
 
@@ -565,7 +675,7 @@ export class RegSkillsPage implements OnInit {
       const languageForm = this.languages.at(index) as FormGroup;
       const rwsControl = languageForm.get('rws') as FormArray;
 
-      console.log(typeof rwsControl, rwsControl instanceof FormArray);
+      // console.log(typeof rwsControl, rwsControl instanceof FormArray);
 
       if (event.detail.checked) {
         rwsControl.push(this.formBuilder.control(skill));
@@ -655,16 +765,28 @@ export class RegSkillsPage implements OnInit {
   }
 
 
-  isStateSelectionDisabled(): boolean {
-    const selectedStates = this.skillsForm.get('job_states')!.value as string[];
-    return selectedStates && selectedStates.length >= this.maxStates;
-  }
+  // isStateSelectionDisabled(): boolean {
+  //   const selectedStates = this.skillsForm.get('job_states')!.value as string[];
+  //   return selectedStates && selectedStates.length >= this.maxStates;
+  // }
+
+  isStateSelectionDisabled(stateId: string): boolean {
+  const selectedStates = this.skillsForm.get('job_states')?.value || [];
+  return selectedStates.length >= this.maxStates && !selectedStates.includes(stateId);
+}
+
+maxSelectionsValidator(max: number) {
+  return (control: any) => {
+    const value = control.value || [];
+    return value.length > max ? { maxSelections: true } : null;
+  };
+}
 
   async updateForm() {
 
     // console.log("skill update is pending");
-    console.log("updating value of fommmm", this.skillsForm.value);
-    console.log("form is valid",this.skillsForm);
+    // console.log("updating value of fommmm", this.skillsForm.value);
+    // console.log("form is valid",this.skillsForm);
     // Logic to update the existing form data
     if (this.skillsForm.valid) {
       // const userId = localStorage.getItem('userId');

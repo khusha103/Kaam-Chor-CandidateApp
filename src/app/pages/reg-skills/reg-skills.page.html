@@ -60,7 +60,7 @@
     </ion-item>
 
     <!-- Add this for state selection -->
-    <ion-item *ngIf="showOtherState" class="custom-input-item" lines="none">
+    <!-- <ion-item *ngIf="showOtherState" class="custom-input-item" lines="none">
       <ion-label position="stacked">Select States (Max 5)</ion-label>
       <ion-select multiple formControlName="job_states" class="custom-select" toggleIcon="assets/dropdown_toggle.svg">
         <ion-select-option value="" disabled>Select State</ion-select-option>
@@ -69,9 +69,22 @@
           {{ state.name }}
         </ion-select-option>
       </ion-select>
+    </ion-item> -->
+
+    <ion-item *ngIf="showOtherState" class="custom-input-item" lines="none">
+      <ion-label position="stacked">Select States (Max 5)</ion-label>
+      <ion-select multiple formControlName="job_states" class="custom-select" toggleIcon="assets/dropdown_toggle.svg"
+        (ionChange)="onStateChange($event)">
+        <ion-select-option value="" disabled>Select State</ion-select-option>
+        <ion-select-option *ngFor="let state of states" [value]="state.id"
+          [disabled]="isStateSelectionDisabled(state.id)">
+          {{ state.name }}
+        </ion-select-option>
+      </ion-select>
+      <ion-text color="danger" *ngIf="skillsForm.get('job_states')?.hasError('maxSelections')">
+        You can select up to 5 states only.
+      </ion-text>
     </ion-item>
-
-
 
 
     <ion-radio-group formControlName="employment_type" lines="none">

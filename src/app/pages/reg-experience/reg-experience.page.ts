@@ -158,43 +158,78 @@ export class RegExperiencePage implements OnInit {
  }
  
 
-  async onSubmit() {
-    if (this.experienceForm.valid) {
-      // const userIdString = localStorage.getItem('userId');
-      // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
-      const userId= await this.storage.get('userId') || null;
-      if (userId === null) {
-          this.presentToast('User ID is not available. Please log in again.');
-          return; // Exit if userId is null
-      }
+  // async onSubmit() {
+  //   if (this.experienceForm.valid) {
+  //     // const userIdString = localStorage.getItem('userId');
+  //     // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+  //     const userId= await this.storage.get('userId') || null;
+  //     if (userId === null) {
+  //         this.presentToast('User ID is not available. Please log in again.');
+  //         return; // Exit if userId is null
+  //     }
       
-      try {
+  //     try {
 
-          const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-          const mobileNumber = mobileResponse.mobile_number; 
-          const form_key = "experienceForm";
+  //         const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+  //         const mobileNumber = mobileResponse.mobile_number; 
+  //         const form_key = "experienceForm";
 
-          // Prepare the data to be submitted, including user_id and mobile_number
-          const experienceData = {
-              ...this.experienceForm.value,
-              user_id: userId,
-              mobile_number: mobileNumber,
-              form_key: form_key
-          };
-        const response = await this.apiService.submitExperience(experienceData).toPromise();
-        this.presentToast('Data saved successfully!');
-        // console.log(response);
-        // Navigate to the next page
-        this.router.navigate(['/reg-skills']);
-      } catch (error) {
-        console.error('Error:', error);
+  //         // Prepare the data to be submitted, including user_id and mobile_number
+  //         const experienceData = {
+  //             ...this.experienceForm.value,
+  //             user_id: userId,
+  //             mobile_number: mobileNumber,
+  //             form_key: form_key
+  //         };
+  //       const response = await this.apiService.submitExperience(experienceData).toPromise();
+  //       this.presentToast('Data saved successfully!');
+  //       // console.log(response);
+  //       // Navigate to the next page
+  //       this.router.navigate(['/reg-skills']);
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //       this.presentToast('Failed to submit data. Please try again.');
+  //     }
+  //   } else {
+  //     this.presentToast('Please fill in all required fields correctly.');
+  //   }
+  // }
+async onSubmit() {
+  if (this.experienceForm.valid) {
+    const userId = await this.storage.get('userId') || null;
+
+    if (userId === null) {
+      this.presentToast('User ID is not available. Please log in again.');
+      return;
+    }
+
+    try {
+      const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+      const mobileNumber = mobileResponse.mobile_number;
+      const form_key = 'experienceForm';
+
+      const experienceData = {
+        ...this.experienceForm.value,
+        user_id: userId,
+        mobile_number: mobileNumber,
+        form_key: form_key,
+      };
+
+      const response = await this.apiService.submitExperience(experienceData).toPromise();
+      this.presentToast('Data saved successfully!');
+      this.router.navigate(['/reg-skills']);
+    } catch (error: any) {
+      console.error('Error submitting data:', error);
+      if (error?.error?.status === 'error' && error?.error?.message) {
+        this.presentToast(error.error.message); // e.g., "Email already exists."
+      } else {
         this.presentToast('Failed to submit data. Please try again.');
       }
-    } else {
-      this.presentToast('Please fill in all required fields correctly.');
     }
+  } else {
+    this.presentToast('Please fill in all required fields correctly.');
   }
-
+}
 
   async presentToast(message: string) {
     const toast = await this.toastController.create({

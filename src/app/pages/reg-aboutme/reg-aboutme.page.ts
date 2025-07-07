@@ -410,36 +410,71 @@ export class RegAboutmePage implements OnInit {
     });
   }
 
-  async onSubmit() {
-    if (this.aboutMeForm.valid) {
-      const userId = await this.storage.get('userId');
-      if (!userId) {
-        this.presentToast('User ID is not available. Please log in again.');
-        return;
-      }
+  // async onSubmit() {
+  //   if (this.aboutMeForm.valid) {
+  //     const userId = await this.storage.get('userId');
+  //     if (!userId) {
+  //       this.presentToast('User ID is not available. Please log in again.');
+  //       return;
+  //     }
 
-      try {
-        const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-        const mobileNumber = mobileResponse.mobile_number;
-        const aboutMeData = {
-          ...this.aboutMeForm.value,
-          user_id: userId,
-          mobile_number: mobileNumber,
-          form_progress: '20%',
-          form_key: 'aboutMeForm',
-        };
+  //     try {
+  //       const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+  //       const mobileNumber = mobileResponse.mobile_number;
+  //       const aboutMeData = {
+  //         ...this.aboutMeForm.value,
+  //         user_id: userId,
+  //         mobile_number: mobileNumber,
+  //         form_progress: '20%',
+  //         form_key: 'aboutMeForm',
+  //       };
 
-        await this.apiService.submitAboutMe(aboutMeData).toPromise();
-        this.presentToast('Data saved successfully!');
-        this.router.navigate(['/reg-education']);
-      } catch (error) {
-        console.error('Error submitting data:', error);
+  //       await this.apiService.submitAboutMe(aboutMeData).toPromise();
+  //       this.presentToast('Data saved successfully!');
+  //       this.router.navigate(['/reg-education']);
+  //     } catch (error) {
+  //       console.error('Error submitting data:', error);
+  //       this.presentToast('Failed to submit data. Please try again.');
+  //     }
+  //   } else {
+  //     this.presentToast('Please fill in all required fields correctly.');
+  //   }
+  // }
+
+ async onSubmit() {
+  if (this.aboutMeForm.valid) {
+    const userId = await this.storage.get('userId');
+    if (!userId) {
+      this.presentToast('User ID is not available. Please log in again.');
+      return;
+    }
+
+    try {
+      const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+      const mobileNumber = mobileResponse.mobile_number;
+      const aboutMeData = {
+        ...this.aboutMeForm.value,
+        user_id: userId,
+        mobile_number: mobileNumber,
+        form_progress: '20%',
+        form_key: 'aboutMeForm',
+      };
+
+      const response = await this.apiService.submitAboutMe(aboutMeData).toPromise();
+      this.presentToast('Data saved successfully!');
+      this.router.navigate(['/reg-education']);
+    } catch (error: any) {
+      console.error('Error submitting data:', error);
+      if (error?.error?.status === 'error' && error?.error?.message) {
+        this.presentToast(error.error.message); // e.g., "Email already exists."
+      } else {
         this.presentToast('Failed to submit data. Please try again.');
       }
-    } else {
-      this.presentToast('Please fill in all required fields correctly.');
     }
+  } else {
+    this.presentToast('Please fill in all required fields correctly.');
   }
+}
 
   async updateForm() {
     if (this.aboutMeForm.valid) {

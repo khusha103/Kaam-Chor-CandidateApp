@@ -223,52 +223,89 @@ export class RegEducationPage {
   }
 
 
-  async onSubmit() {
-    // console.log(this.educationForm.value); // Log the form values for debugging
+//   async onSubmit() {
+//     // console.log(this.educationForm.value); // Log the form values for debugging
 
-    // Check if the education form is valid
-    if (this.educationForm.valid) {
-        // Retrieve user ID from localStorage and convert to number
-        // const userIdString = localStorage.getItem('userId');
-        // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
-             const userId= await this.storage.get('userId') || null;
+//     // Check if the education form is valid
+//     if (this.educationForm.valid) {
+//         // Retrieve user ID from localStorage and convert to number
+//         // const userIdString = localStorage.getItem('userId');
+//         // const userId = userIdString ? Number(userIdString) : null; // Convert to number or set to null
+//              const userId= await this.storage.get('userId') || null;
 
 
-        // Check if user ID is available
-        if (userId === null) {
-            this.presentToast('User ID is not available. Please log in again.');
-            return; // Exit if userId is null
-        }
+//         // Check if user ID is available
+//         if (userId === null) {
+//             this.presentToast('User ID is not available. Please log in again.');
+//             return; // Exit if userId is null
+//         }
 
-        try {
-            // Fetch mobile number from the database using the user ID
-            const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-            const mobileNumber = mobileResponse.mobile_number; // Extract mobile number from response
-            const form_key = "educationForm";
+//         try {
+//             // Fetch mobile number from the database using the user ID
+//             const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+//             const mobileNumber = mobileResponse.mobile_number; // Extract mobile number from response
+//             const form_key = "educationForm";
 
-            // Prepare the data to be submitted, including user_id and mobile_number
-            const educationData = {
-                ...this.educationForm.value,
-                user_id: userId,
-                mobile_number: mobileNumber,
-                form_key: form_key
+//             // Prepare the data to be submitted, including user_id and mobile_number
+//             const educationData = {
+//                 ...this.educationForm.value,
+//                 user_id: userId,
+//                 mobile_number: mobileNumber,
+//                 form_key: form_key
                 
-            };
+//             };
 
-            // Submit the education data to the API
-            const response = await this.apiService.submitEducation(educationData).toPromise();
-            this.presentToast('Data saved successfully!'); // Show success message
-            // console.log(response); // Log the response for debugging
-            this.router.navigate(['/reg-experience']); // Navigate to the experience page
-        } catch (error) {
-            // Handle any errors during the API calls
-            console.error('Error:', error);
-            this.presentToast('Failed to submit data. Please try again.'); // Show error message
-        }
-    } else {
-        // Handle case where the form is invalid
-        this.presentToast('Please fill in all required fields correctly.'); // Prompt user to fix the form
+//             // Submit the education data to the API
+//             const response = await this.apiService.submitEducation(educationData).toPromise();
+//             this.presentToast('Data saved successfully!'); // Show success message
+//             // console.log(response); // Log the response for debugging
+//             this.router.navigate(['/reg-experience']); // Navigate to the experience page
+//         } catch (error) {
+//             // Handle any errors during the API calls
+//             console.error('Error:', error);
+//             this.presentToast('Failed to submit data. Please try again.'); // Show error message
+//         }
+//     } else {
+//         // Handle case where the form is invalid
+//         this.presentToast('Please fill in all required fields correctly.'); // Prompt user to fix the form
+//     }
+// }
+
+async onSubmit() {
+  if (this.educationForm.valid) {
+    const userId = await this.storage.get('userId') || null;
+
+    if (userId === null) {
+      this.presentToast('User ID is not available. Please log in again.');
+      return;
     }
+
+    try {
+      const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+      const mobileNumber = mobileResponse.mobile_number;
+      const form_key = 'educationForm';
+
+      const educationData = {
+        ...this.educationForm.value,
+        user_id: userId,
+        mobile_number: mobileNumber,
+        form_key: form_key,
+      };
+
+      const response = await this.apiService.submitEducation(educationData).toPromise();
+      this.presentToast('Data saved successfully!');
+      this.router.navigate(['/reg-experience']);
+    } catch (error: any) {
+      console.error('Error submitting data:', error);
+      if (error?.error?.status === 'error' && error?.error?.message) {
+        this.presentToast(error.error.message); // e.g., "Email already exists."
+      } else {
+        this.presentToast('Failed to submit data. Please try again.');
+      }
+    }
+  } else {
+    this.presentToast('Please fill in all required fields correctly.');
+  }
 }
 
 

@@ -14,20 +14,22 @@
     <ion-radio-group formControlName="have_experience" (ionChange)="onselect($event)">
       <ion-list lines="none">
         <ion-item>
-          <ion-row class="radio-row">
-            <ion-col size="6">
-              <ion-item>
-                <ion-radio slot="start" value="Yes"></ion-radio>
-                <ion-label class="cust_label">Yes</ion-label>
-              </ion-item>
-            </ion-col>
-            <ion-col size="6">
-              <ion-item>
-                <ion-radio slot="start" value="No"></ion-radio>
-                <ion-label class="cust_label">No</ion-label>
-              </ion-item>
-            </ion-col>
-          </ion-row>
+      <ion-row class="radio-row">
+  <ion-col size="6">
+    <ion-item lines="none" class="ion-align-items-center radio-item">
+      <ion-radio slot="start" value="Yes"></ion-radio>
+      <ion-label class="cust_label">Yes</ion-label>
+    </ion-item>
+  </ion-col>
+  <ion-col size="6">
+    <ion-item lines="none" class="ion-align-items-center radio-item">
+      <ion-radio slot="start" value="No"></ion-radio>
+      <ion-label class="cust_label">No</ion-label>
+    </ion-item>
+  </ion-col>
+</ion-row>
+
+
         </ion-item>
       </ion-list>
     </ion-radio-group>

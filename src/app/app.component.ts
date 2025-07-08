@@ -84,6 +84,7 @@ import { Platform, NavController, AlertController } from '@ionic/angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Router, NavigationStart } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
+import { NotificationService } from './services/notification.service';
 
 register();
 
@@ -102,7 +103,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private navCtrl: NavController,
     private alertCtrl: AlertController,
-    private storage: Storage // Inject Storage
+    private storage: Storage,
+    private notificationService: NotificationService
   ) {
     this.initializeApp();
     this.handleBackButton();
@@ -111,6 +113,9 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     // Initialize Ionic Storage
     await this.storage.create();
+    await this.notificationService.initPush();
+ 
+
 
     // Subscribe to router events to check login status
     this.router.events.subscribe((event: any) => {

@@ -5,6 +5,7 @@ import { StatusBar, Style as StatusBarStyle } from '@capacitor/status-bar';
 import { NavController, Platform } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Storage } from '@ionic/storage-angular'; // Import Ionic Storage
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-otp-verf',
@@ -24,7 +25,8 @@ export class OtpVerfPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private storage: Storage // Inject Ionic Storage
+    private storage: Storage,
+    private notificationService:NotificationService
   ) {
     // Initialize Ionic Storage
     this.initStorage();
@@ -80,6 +82,8 @@ export class OtpVerfPage implements OnInit {
           } else {
             this.router.navigate(['/tabs/home'], navigationExtras);
           }
+
+           await this.notificationService.initPush();
         },
         error: (error) => {
           console.error('Error verifying OTP', error);

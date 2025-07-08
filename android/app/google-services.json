@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "745729644081",
+    "project_id": "kaam-chor-bdd32",
+    "storage_bucket": "kaam-chor-bdd32.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745729644081:android:a81ae9be3dc525b7a36710",
+        "android_client_info": {
+          "package_name": "com.ekarigar.kaamchor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe4St-qSZdY7H_U47F97Xodk1i6UdFkY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745729644081:android:787ef103c2341f2da36710",
+        "android_client_info": {
+          "package_name": "com.pushexample.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe4St-qSZdY7H_U47F97Xodk1i6UdFkY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

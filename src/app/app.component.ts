@@ -97,6 +97,8 @@ export class AppComponent implements OnInit {
   private restrictedRoutes = ['/tabs/profile', '/tabs/explore', '/tabs/jobs', '/tabs/home'];
   private confirmRoutes = ['/reg-aboutme', '/reg-education', '/reg-experience', '/reg-skills', '/reg-review'];
   private publicRoutes = ['/login', '/splash', '/otp-verf'];
+showOfflineOverlay: any;
+menuItems: any;
 
   constructor(
     private platform: Platform,

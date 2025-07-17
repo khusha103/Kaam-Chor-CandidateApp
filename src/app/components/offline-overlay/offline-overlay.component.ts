@@ -25,9 +25,11 @@ export class OfflineOverlayComponent {
   }
 
   async retryConnection() {
-    this.isChecking = true;
-    const status = await this.networkService.checkCurrentStatus();
+  this.isChecking = true;
+  this.networkService.checkCurrentStatus().then((status) => {
     this.isOnline = status;
     this.isChecking = false;
-  }
+  });
+}
+
 }

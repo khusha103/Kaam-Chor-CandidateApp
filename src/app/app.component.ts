@@ -78,13 +78,15 @@
 //   }
 // }
 
-import { Component, OnInit } from '@angular/core';
+ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { register } from 'swiper/element/bundle';
-import { Platform, NavController, AlertController } from '@ionic/angular';
+import { Platform, NavController, AlertController, ToastController } from '@ionic/angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Router, NavigationStart } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { NotificationService } from './services/notification.service';
+import { NetworkService } from './services/network.service';
+import { Subscription } from 'rxjs';
 
 register();
 
@@ -93,12 +95,15 @@ register();
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private restrictedRoutes = ['/tabs/profile', '/tabs/explore', '/tabs/jobs', '/tabs/home'];
   private confirmRoutes = ['/reg-aboutme', '/reg-education', '/reg-experience', '/reg-skills', '/reg-review'];
   private publicRoutes = ['/login', '/splash', '/otp-verf'];
-showOfflineOverlay: any;
-menuItems: any;
+
+  showOfflineOverlay: boolean = false;
+  menuItems: any;
+  private wasOffline = false;
+  private networkSub!: Subscription;
 
   constructor(
     private platform: Platform,
@@ -106,32 +111,29 @@ menuItems: any;
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private storage: Storage,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private networkService: NetworkService,
+    private toastCtrl: ToastController
   ) {
     this.initializeApp();
     this.handleBackButton();
+    this.handleNetworkEvents(); // 👈 internet watch
   }
 
   async ngOnInit() {
-    // Initialize Ionic Storage
     await this.storage.create();
     await this.notificationService.initPush();
- 
 
-
-    // Subscribe to router events to check login status
+    // 🔒 Login guard on route change
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationStart) {
-        const url = event.url.split('?')[0]; // Remove query params
+        const url = event.url.split('?')[0];
         const isPublicRoute = this.publicRoutes.includes(url);
 
-        // Check login status and redirect if necessary
         this.checkLoginStatus().then(isLoggedIn => {
           if (!isLoggedIn && !isPublicRoute) {
-            // Not logged in and trying to access a private page
             this.router.navigate(['/login'], { replaceUrl: true });
           } else if (isLoggedIn && isPublicRoute) {
-            // Logged in and trying to access a public page (optional)
             this.router.navigate(['/tabs/home'], { replaceUrl: true });
           }
         });
@@ -139,21 +141,57 @@ menuItems: any;
     });
   }
 
+  // ✅ Init app, set status bar
   async initializeApp() {
     await this.platform.ready();
     if (this.platform.is('capacitor')) {
       await StatusBar.setBackgroundColor({ color: '#ffffff' });
       await StatusBar.setStyle({ style: Style.Light });
     }
+
+    // 🚨 Initial internet status check on launch
+    const online = await this.networkService.checkCurrentStatus();
+    if (!online) {
+      this.wasOffline = true;
+      const toast = await this.toastCtrl.create({
+        message: "You're offline",
+        duration: 2000,
+        color: 'warning',
+        position: 'bottom',
+      });
+      toast.present();
+      this.showOfflineOverlay = true;
+    }
+  }
+
+  // ✅ Handle internet status change
+  handleNetworkEvents() {
+    this.networkSub = this.networkService.isOnline$.subscribe(async (isOnline) => {
+      if (!isOnline) {
+        this.wasOffline = true;
+        this.showOfflineOverlay = true;
+      } else {
+        if (this.wasOffline) {
+          const toast = await this.toastCtrl.create({
+            message: '✅ Back online',
+            duration: 2000,
+            color: 'success',
+            position: 'bottom',
+          });
+          toast.present();
+          this.wasOffline = false;
+        }
+        this.showOfflineOverlay = false;
+      }
+    });
   }
 
   async checkLoginStatus(): Promise<boolean> {
     try {
-      // Retrieve isLoggedIn from Ionic Storage
       return (await this.storage.get('isLoggedIn')) || false;
     } catch (error) {
-      console.error('Error checking login status', error);
-      return false; // Default to false if there's an error
+      console.error('Login check failed', error);
+      return false;
     }
   }
 
@@ -161,12 +199,8 @@ menuItems: any;
     this.platform.backButton.subscribeWithPriority(9999, async () => {
       const currentUrl = this.router.url.split('?')[0];
 
-      // Prevent back navigation on restricted routes
-      if (this.restrictedRoutes.includes(currentUrl)) {
-        return;
-      }
+      if (this.restrictedRoutes.includes(currentUrl)) return;
 
-      // Show confirmation alert for specified routes
       if (this.confirmRoutes.includes(currentUrl)) {
         const alert = await this.alertCtrl.create({
           header: 'Confirm',
@@ -183,9 +217,15 @@ menuItems: any;
         });
         await alert.present();
       } else {
-        // Allow normal back navigation
         this.navCtrl.back();
       }
     });
+  }
+
+  // ✅ Clean up observable
+  ngOnDestroy() {
+    if (this.networkSub) {
+      this.networkSub.unsubscribe();
+    }
   }
 }

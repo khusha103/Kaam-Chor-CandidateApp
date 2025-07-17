@@ -1,0 +1,13 @@
+<div class="offline-container">
+  <img src="assets/no-internet.jpg" alt="No Internet" />
+  <h2>You are offline</h2>
+  <p>Please check your internet connection and try again.</p>
+  <ul>
+    <li>Ensure your Wi-Fi is turned on.</li>
+    <li>Connect to a different network.</li>
+    <li>Restart your router or modem.</li>
+  </ul>
+  <button (click)="retryConnection()">
+    {{ isChecking ? 'Retrying...' : 'RETRY' }}
+  </button>
+</div>

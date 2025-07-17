@@ -1,94 +1,96 @@
 <ion-content class="ion-padding">
-  <!-- <div class="page-content"> -->
-    <!-- heading  -->
+  <!-- 📸 Profile Photo Upload -->
+ <div class="profile-picture-section">
+    <img *ngIf="profileImageUrl; else placeholder"
+         [src]="profileImageUrl"
+         style="width: 100px; height: 100px; border-radius: 50%;" />
+    <ng-template #placeholder>
+      <ion-icon name="person-circle-outline" style="font-size: 100px; color: lightgray;"></ion-icon>
+    </ng-template>
 
-    <form *ngIf="aboutMeForm" [formGroup]="aboutMeForm" (ngSubmit)="onSubmit()">
-      <ion-text color="primary" class="ion-text-center">
-        <h2 class="bold-text">Let's build your resume !</h2>
-      </ion-text>
-      <!-- <ion-list> -->
-        <ion-item class="custom-input-item" lines="none">
-          <ion-label position="stacked">Name</ion-label>
-          <ion-input formControlName="name" type="text"></ion-input>
+    <div style="margin-top: 8px;">
+      <ion-button size="small" fill="clear" (click)="fileInput.click()">
+        <ion-icon name="camera-outline" slot="start"></ion-icon>
+         {{ profileImageUrl ? 'Edit Photo' : '+ Add Photo' }}
+      </ion-button>
+      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+  </div>
+
+  <!-- 👇 Existing Resume Form -->
+  <form *ngIf="aboutMeForm" [formGroup]="aboutMeForm" (ngSubmit)="onSubmit()">
+    <ion-text color="primary" class="ion-text-center">
+      <h2 class="bold-text">Let's build your resume !</h2>
+    </ion-text>
+
+    <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">Name</ion-label>
+      <ion-input formControlName="name" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input formControlName="email" type="email"></ion-input>
+    </ion-item>
+
+    <ion-accordion-group>
+      <ion-accordion value="first" toggleIcon="calendar" toggleIconSlot="end">
+        <ion-item slot="header">
+          <ion-label>DOB</ion-label>
+          <ion-note slot="end" id="datetimeValue"></ion-note>
         </ion-item>
-
-        <ion-item class="custom-input-item" lines="none">
-          <ion-label position="stacked">Email</ion-label>
-          <ion-input formControlName="email" type="email"></ion-input>
-        </ion-item>
-
-        <ion-accordion-group>
-          <ion-accordion value="first" toggleIcon="calendar" toggleIconSlot="end">
-            <ion-item slot="header" >
-              <ion-label>DOB</ion-label>
-              <ion-note slot="end" id="datetimeValue"></ion-note>
-            </ion-item>
-            <div slot="content">
-              <ion-datetime formControlName="dob" displayFormat="YYYY-MM-DD" min="1989-06-04" max="2004-08-23"
-                presentation="date"></ion-datetime>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-
-        <!-- <div class="gender-section"> -->
-        <ion-item class="gender-section" lines="none">
-          <ion-label position="stacked">Gender</ion-label>
-          <ion-radio-group formControlName="gender" mode="md">
-            <ion-item lines="none">
-              <ion-label>Male</ion-label>
-              <ion-radio slot="start" value="male"></ion-radio>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label>Female</ion-label>
-              <ion-radio slot="start" value="female"></ion-radio>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label>Other</ion-label>
-              <ion-radio slot="start" value="other"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-item>
-        <!-- </div> -->
-
-        <!-- <ion-label>Location</ion-label> -->
-        <!-- <ion-item-divider class="custom-divider">
-          <ion-label>Location</ion-label>
-        </ion-item-divider> -->
-
-        <div class="divider">
-          <span class="divider-text">Location</span>
+        <div slot="content">
+          <ion-datetime formControlName="dob" displayFormat="YYYY-MM-DD" min="1989-06-04" max="2004-08-23"
+            presentation="date"></ion-datetime>
         </div>
+      </ion-accordion>
+    </ion-accordion-group>
 
-        <ion-item class="custom-input-item" lines="none">
-          <ion-label position="stacked">State</ion-label>
-          <ion-select formControlName="state"  toggleIcon="assets/dropdown_toggle.svg" class="custom-select">
-            <ion-select-option value="" disabled>Select State</ion-select-option>
-            <ion-select-option *ngFor="let state of states" [value]="state.id">{{ state.name }}</ion-select-option>
-          </ion-select>
+    <ion-item class="gender-section" lines="none">
+      <ion-label position="stacked">Gender</ion-label>
+      <ion-radio-group formControlName="gender" mode="md">
+        <ion-item lines="none">
+          <ion-label>Male</ion-label>
+          <ion-radio slot="start" value="male"></ion-radio>
         </ion-item>
-
-        <ion-item class="custom-input-item" lines="none">
-          <ion-label position="stacked">City</ion-label>
-          <ion-select formControlName="city"  toggleIcon="assets/dropdown_toggle.svg" class="custom-select">
-            <ion-select-option value="" disabled>Select City</ion-select-option>
-            <ion-select-option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</ion-select-option>
-          </ion-select>
+        <ion-item lines="none">
+          <ion-label>Female</ion-label>
+          <ion-radio slot="start" value="female"></ion-radio>
         </ion-item>
+        <ion-item lines="none">
+          <ion-label>Other</ion-label>
+          <ion-radio slot="start" value="other"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item>
 
+    <div class="divider">
+      <span class="divider-text">Location</span>
+    </div>
 
-      <!-- </ion-list> -->
+    <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">State</ion-label>
+      <ion-select formControlName="state" toggleIcon="assets/dropdown_toggle.svg" class="custom-select">
+        <ion-select-option value="" disabled>Select State</ion-select-option>
+        <ion-select-option *ngFor="let state of states" [value]="state.id">{{ state.name }}</ion-select-option>
+      </ion-select>
+    </ion-item>
 
+    <ion-item class="custom-input-item" lines="none">
+      <ion-label position="stacked">City</ion-label>
+      <ion-select formControlName="city" toggleIcon="assets/dropdown_toggle.svg" class="custom-select">
+        <ion-select-option value="" disabled>Select City</ion-select-option>
+        <ion-select-option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</ion-select-option>
+      </ion-select>
+    </ion-item>
 
-      <div class="button-container">
-        <ion-button *ngIf="!dataExists" type="submit" expand="block" class="next_btn" [disabled]="aboutMeForm.invalid">
-          Save and Continue
-        </ion-button>
-        <ion-button *ngIf="dataExists" (click)="updateForm()" expand="block" class="next_btn">
-          Next
-        </ion-button>
-      </div>
-
-
-    </form>
-  <!-- </div> -->
+    <div class="button-container">
+      <ion-button *ngIf="!dataExists" type="submit" expand="block" class="next_btn" [disabled]="aboutMeForm.invalid">
+        Save and Continue
+      </ion-button>
+      <ion-button *ngIf="dataExists" (click)="updateForm()" expand="block" class="next_btn">
+        Next
+      </ion-button>
+    </div>
+  </form>
 </ion-content>

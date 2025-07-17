@@ -31,3 +31,25 @@
     font-size: 14px;
     color: #666;
   }
+
+  .skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.skill-chip {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  border: 1px solid #8B2BF1; /* KaamChor Purple */
+  color: #8B2BF1;
+  background-color: transparent;
+  transition: 0.3s;
+}
+
+.skill-chip:hover {
+  background-color: #f3e8fd; /* light purple bg on hover */
+}
+

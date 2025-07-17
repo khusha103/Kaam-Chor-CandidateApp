@@ -1,3 +1,18 @@
+.profile-picture {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.profile-picture img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #6c3483; /* Kaamchor Purple */
+}
+
+
 ion-content {
     --background: #ffffff;
   }
@@ -80,3 +95,11 @@ ion-content {
     // font-size: 12px;
     font-size: 1.2rem;
   }
+
+  .section-heading {
+  background: transparent;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding-left: 12px;
+  color: #333;
+}

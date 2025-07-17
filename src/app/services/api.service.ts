@@ -238,6 +238,20 @@ getEmailByUserId(userId: number): Observable<any> {
     return this.http.put(`${this.formapiUrl}/updateCandidateEmail`, payload);
   }
 
+  getprofileByUserId(userId: number): Observable<any> {
+    return this.http.get(`${this.formapiUrl}/profilepic?user_id=${userId}`);
+  }
+
+  uploadProfileImage(userId: number, file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('user_id', userId.toString());
+  formData.append('profile_pic', file);
+
+  const url = `${this.formapiUrl}/profilepic`;
+  return this.http.post<any>(url, formData);
+}
+
+
   
   
 }

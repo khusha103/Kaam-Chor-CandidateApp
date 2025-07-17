@@ -18,6 +18,9 @@ export class ProfileTabPage implements OnInit {
   username: String = "";
   user_email:String ="";
 
+  profileImageUrl: string | null = null;
+
+
   constructor(private router: Router, private apiService: ApiService, private toastCtrl: ToastController,private storage: Storage) { 
     this.initStorage();
   }
@@ -25,12 +28,32 @@ export class ProfileTabPage implements OnInit {
     await this.storage.create();
   }
 
+  async loadProfileImage() {
+  const userId = await this.storage.get('userId');
+  if (!userId) return;
+
+  this.apiService.getprofileByUserId(userId).subscribe({
+    next: (res) => {
+      if (res?.file_url) {
+        this.profileImageUrl = res.file_url;
+      } else {
+        console.warn('No profile image found');
+      }
+    },
+    error: (err) => {
+      console.error('Failed to load profile image:', err);
+    },
+  });
+}
+
+
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
     // Set the status bar style to dark (black text/icons)
     // StatusBar.setStyle({ style: StatusBarStyle.Dark });
     // this.getResume();
     this.getprofileData();
+     this.loadProfileImage(); 
   }
 
   async getprofileData() {

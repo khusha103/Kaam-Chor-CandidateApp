@@ -277,7 +277,7 @@
 
 
 // }
-import { Component, OnInit } from '@angular/core';
+  import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StatusBar } from '@capacitor/status-bar';
@@ -286,6 +286,7 @@ import { CalendarComponentOptions } from 'src/app/interfaces/calendar-options.in
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Storage } from '@ionic/storage-angular';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-reg-aboutme',
@@ -298,6 +299,9 @@ export class RegAboutmePage implements OnInit {
   states: any[] = [];
   cities: any[] = [];
   selectedGender!: string;
+  profileImageUrl: string | null = null;
+
+  @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
 
   calendarOptions: CalendarComponentOptions = {
     pickMode: 'single',
@@ -310,17 +314,18 @@ export class RegAboutmePage implements OnInit {
     private apiService: ApiService,
     private authService: AuthService,
     private toastController: ToastController,
-    private storage: Storage
+    private storage: Storage,
+    private http: HttpClient
   ) {
-    this.storage.create(); // Initialize storage in constructor
-    this.initializeForm(); // Initialize form synchronously
+    this.storage.create();
+    this.initializeForm();
   }
 
   async ngOnInit() {
-    // Load states and set up state change listener
     this.loadStates();
     this.setupStateChangeListener();
     await this.loadUserData();
+    await this.loadProfileImage();
   }
 
   initializeForm() {
@@ -343,7 +348,6 @@ export class RegAboutmePage implements OnInit {
       return;
     }
 
-    // Fetch mobile number
     this.authService.getmb_byuserid(Number(userId)).subscribe({
       next: (response) => {
         const mobileNumber = response.data[0]?.mobile_number
@@ -356,7 +360,6 @@ export class RegAboutmePage implements OnInit {
       },
     });
 
-    // Fetch existing form data
     this.apiService.getFormData('aboutMeForm', userId).subscribe({
       next: (response) => {
         if (response && response.status && response.data) {
@@ -410,71 +413,40 @@ export class RegAboutmePage implements OnInit {
     });
   }
 
-  // async onSubmit() {
-  //   if (this.aboutMeForm.valid) {
-  //     const userId = await this.storage.get('userId');
-  //     if (!userId) {
-  //       this.presentToast('User ID is not available. Please log in again.');
-  //       return;
-  //     }
-
-  //     try {
-  //       const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-  //       const mobileNumber = mobileResponse.mobile_number;
-  //       const aboutMeData = {
-  //         ...this.aboutMeForm.value,
-  //         user_id: userId,
-  //         mobile_number: mobileNumber,
-  //         form_progress: '20%',
-  //         form_key: 'aboutMeForm',
-  //       };
-
-  //       await this.apiService.submitAboutMe(aboutMeData).toPromise();
-  //       this.presentToast('Data saved successfully!');
-  //       this.router.navigate(['/reg-education']);
-  //     } catch (error) {
-  //       console.error('Error submitting data:', error);
-  //       this.presentToast('Failed to submit data. Please try again.');
-  //     }
-  //   } else {
-  //     this.presentToast('Please fill in all required fields correctly.');
-  //   }
-  // }
-
- async onSubmit() {
-  if (this.aboutMeForm.valid) {
-    const userId = await this.storage.get('userId');
-    if (!userId) {
-      this.presentToast('User ID is not available. Please log in again.');
-      return;
-    }
-
-    try {
-      const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
-      const mobileNumber = mobileResponse.mobile_number;
-      const aboutMeData = {
-        ...this.aboutMeForm.value,
-        user_id: userId,
-        mobile_number: mobileNumber,
-        form_progress: '20%',
-        form_key: 'aboutMeForm',
-      };
-
-      const response = await this.apiService.submitAboutMe(aboutMeData).toPromise();
-      this.presentToast('Data saved successfully!');
-      this.router.navigate(['/reg-education']);
-    } catch (error: any) {
-      console.error('Error submitting data:', error);
-      if (error?.error?.status === 'error' && error?.error?.message) {
-        this.presentToast(error.error.message); // e.g., "Email already exists."
-      } else {
-        this.presentToast('Failed to submit data. Please try again.');
+  async onSubmit() {
+    if (this.aboutMeForm.valid) {
+      const userId = await this.storage.get('userId');
+      if (!userId) {
+        this.presentToast('User ID is not available. Please log in again.');
+        return;
       }
+
+      try {
+        const mobileResponse = await this.apiService.getMobileNumberByUserId(userId).toPromise();
+        const mobileNumber = mobileResponse.mobile_number;
+        const aboutMeData = {
+          ...this.aboutMeForm.value,
+          user_id: userId,
+          mobile_number: mobileNumber,
+          form_progress: '20%',
+          form_key: 'aboutMeForm',
+        };
+
+        const response = await this.apiService.submitAboutMe(aboutMeData).toPromise();
+        this.presentToast('Data saved successfully!');
+        this.router.navigate(['/reg-education']);
+      } catch (error: any) {
+        console.error('Error submitting data:', error);
+        if (error?.error?.status === 'error' && error?.error?.message) {
+          this.presentToast(error.error.message);
+        } else {
+          this.presentToast('Failed to submit data. Please try again.');
+        }
+      }
+    } else {
+      this.presentToast('Please fill in all required fields correctly.');
     }
-  } else {
-    this.presentToast('Please fill in all required fields correctly.');
   }
-}
 
   async updateForm() {
     if (this.aboutMeForm.valid) {
@@ -507,4 +479,82 @@ export class RegAboutmePage implements OnInit {
     });
     await toast.present();
   }
+
+  async loadProfileImage() {
+  const userId = await this.storage.get('userId');
+  if (!userId) return;
+
+  this.apiService.getprofileByUserId(userId).subscribe({
+    next: (res) => {
+      if (res?.file_url) {
+        this.profileImageUrl = res.file_url;
+      } else {
+        console.warn('No profile image found');
+      }
+    },
+    error: (err) => {
+      console.error('Failed to load profile image:', err);
+    },
+  });
+}
+
+  // async onFileSelected(event: any) {
+  //   const file: File = event.target.files[0];
+  //   if (!file) return;
+
+  //   const userId = await this.storage.get('userId');
+  //   const formData = new FormData();
+  //   formData.append('user_id', userId);
+  //   formData.append('profile_pic', file);
+
+  //   const url = `https://staging.ekarigar.com/kaam-chor/FormApi/profilepic`;
+  //   this.http.post<any>(url, formData).subscribe({
+  //     next: (res) => {
+  //       if (res.status && res.file_url) {
+  //         this.profileImageUrl = res.file_url;
+  //         this.presentToast('Profile picture uploaded!');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Upload failed', err);
+  //       this.presentToast('Failed to upload image.');
+  //     },
+  //   });
+  // }
+
+  // openFileChooser() {
+  //   this.fileInputRef.nativeElement.click();
+  // }
+
+  async onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (!file) return;
+
+  const userId = await this.storage.get('userId');
+  if (!userId) {
+    this.presentToast('User ID not found.');
+    return;
+  }
+
+  this.apiService.uploadProfileImage(userId, file).subscribe({
+    next: (res) => {
+      if (res.status && res.file_url) {
+        this.profileImageUrl = res.file_url;
+        this.presentToast('Profile picture uploaded!');
+      } else {
+        this.presentToast('Unexpected server response.');
+      }
+    },
+    error: (err) => {
+      console.error('Upload failed', err);
+      this.presentToast('Failed to upload image.');
+    },
+  });
+}
+
+
+openFileChooser() {
+  this.fileInputRef.nativeElement.click();
+}
+
 }

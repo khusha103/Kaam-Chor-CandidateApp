@@ -13,6 +13,14 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+     <!-- Profile Image Section -->
+<div class="profile-picture">
+  <img *ngIf="profileImageUrl; else defaultImage" [src]="profileImageUrl" />
+  <ng-template #defaultImage>
+    <ion-icon name="person-circle-outline" style="font-size: 100px; color: lightgray;"></ion-icon>
+  </ng-template>
+</div>
+
 
 
   <div style="text-align: center;">

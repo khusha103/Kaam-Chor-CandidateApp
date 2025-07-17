@@ -4,7 +4,6 @@ import { ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Storage } from '@ionic/storage-angular';
 
-
 @Component({
   selector: 'app-reg-review',
   templateUrl: './reg-review.page.html',
@@ -22,13 +21,18 @@ export class RegReviewPage implements OnInit {
   branches: { [key: string]: string } = {};
   titles: { [key: string]: string } = {};
   universities: { [key: string]: string } = {};
-  
+
   formPages: string[] = ['Education', 'Experience', 'preferences', 'Review'];
 
-  constructor(private router: Router, private apiService: ApiService, private toastController: ToastController,private storage: Storage) {
-     this.initStorage();
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private toastController: ToastController,
+    private storage: Storage
+  ) {
+    this.initStorage();
   }
-   async initStorage() {
+  async initStorage() {
     await this.storage.create();
   }
 
@@ -47,13 +51,15 @@ export class RegReviewPage implements OnInit {
       this.loadQualifications(),
       this.loadBranches(),
       this.loadTitles(),
-      this.loadUniversities()
-    ]).then(() => {
-      this.getUserReviewData(); // Call after all data is loaded
-    }).catch(error => {
-      console.error('Error loading data:', error);
-      this.presentToast('Error loading necessary data. Please try again.');
-    });
+      this.loadUniversities(),
+    ])
+      .then(() => {
+        this.getUserReviewData(); // Call after all data is loaded
+      })
+      .catch((error) => {
+        console.error('Error loading data:', error);
+        this.presentToast('Error loading necessary data. Please try again.');
+      });
   }
   ngOnInit() {
     this.currentPage = 3;
@@ -70,13 +76,15 @@ export class RegReviewPage implements OnInit {
       this.loadQualifications(),
       this.loadBranches(),
       this.loadTitles(),
-      this.loadUniversities()
-    ]).then(() => {
-      this.getUserReviewData(); // Call after all data is loaded
-    }).catch(error => {
-      console.error('Error loading data:', error);
-      this.presentToast('Error loading necessary data. Please try again.');
-    });
+      this.loadUniversities(),
+    ])
+      .then(() => {
+        this.getUserReviewData(); // Call after all data is loaded
+      })
+      .catch((error) => {
+        console.error('Error loading data:', error);
+        this.presentToast('Error loading necessary data. Please try again.');
+      });
   }
 
   loadStates(): Promise<void> {
@@ -244,7 +252,7 @@ export class RegReviewPage implements OnInit {
   async getUserReviewData() {
     // const userIdString = localStorage.getItem('userId');
     // const userId = userIdString ? Number(userIdString) : null;
-     const userId= await this.storage.get('userId') || null;
+    const userId = (await this.storage.get('userId')) || null;
 
     if (userId === null) {
       this.presentToast('User ID is not available. Please log in again.');
@@ -266,7 +274,7 @@ export class RegReviewPage implements OnInit {
     const toast = await this.toastController.create({
       message: message,
       duration: 2000,
-      position: 'top'
+      position: 'top',
     });
     toast.present();
   }
@@ -274,41 +282,49 @@ export class RegReviewPage implements OnInit {
   private mapUserData() {
     // Map state
     this.userData.state = this.states[this.userData.state] || 'Unknown';
-    
+
     // Map city
     this.userData.city = this.cities[this.userData.city] || 'Unknown';
 
     // Map languages
-    this.userData.languages.forEach((lang: { language: string; }) => {
+    this.userData.languages.forEach((lang: { language: string }) => {
       lang.language = this.languages[lang.language] || 'Unknown';
     });
 
     // Map skills
-    this.userData.skills = this.userData.skills.split(',').map((skillId: string | number) => this.skills[skillId] || 'Unknown').join(', ');
+    const skillsArray = this.userData.skills
+      .split(',')
+      .map((skillId: string | number) => this.skills[skillId] || 'Unknown');
+    this.userData.skillsList = skillsArray; // for UI
+    this.userData.skills = skillsArray.join(', '); // for backup
 
     // Map location states
-    this.userData.loc_states = this.userData.loc_states.split(',').map((stateId: string | number) => this.states[stateId] || 'Unknown').join(', ');
+    this.userData.loc_states = this.userData.loc_states
+      .split(',')
+      .map((stateId: string | number) => this.states[stateId] || 'Unknown')
+      .join(', ');
 
     // Map highest qualification
-    this.userData.highest_qualification = this.qualifications[this.userData.highest_qualification] || 'Unknown';
+    this.userData.highest_qualification =
+      this.qualifications[this.userData.highest_qualification] || 'Unknown';
 
     // Map branch of study
-    this.userData.branch_of_study = this.branches[this.userData.branch_of_study] || 'Unknown';
+    this.userData.branch_of_study =
+      this.branches[this.userData.branch_of_study] || 'Unknown';
 
     // Map title of education
-    this.userData.title_of_education = this.titles[this.userData.title_of_education] || 'Unknown';
+    this.userData.title_of_education =
+      this.titles[this.userData.title_of_education] || 'Unknown';
 
     // Map university name
-    this.userData.university_name = this.universities[this.userData.university_name] || 'Unknown';
+    this.userData.university_name =
+      this.universities[this.userData.university_name] || 'Unknown';
 
     // Log the mapped user data for debugging
     // console.log('Mapped user data:', this.userData);
   }
 
-
-
-  nextPage() {
-  }
+  nextPage() {}
 
   previousPage() {
     this.router.navigate(['/reg-skills']);

@@ -99,9 +99,16 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item>
-          <ion-label>Skills: {{ userData.skills }}</ion-label>
-        </ion-item>
+        <ion-item lines="none">
+  <ion-label>
+    <div class="skills-container">
+      <div class="skill-chip" *ngFor="let skill of userData.skillsList">
+        {{ skill }}
+      </div>
+    </div>
+  </ion-label>
+</ion-item>
+
         <ion-item>
           <ion-label>Location (My City): {{ userData.loc_mycity }}</ion-label>
         </ion-item>

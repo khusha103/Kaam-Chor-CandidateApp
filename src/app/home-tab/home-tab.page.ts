@@ -16,6 +16,7 @@ export class HomeTabPage implements OnInit {
   last_updated_on: String = "";
   username: String = "";
   user_email: String = "";
+  profileImageUrl: string | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -30,6 +31,21 @@ export class HomeTabPage implements OnInit {
     await this.storage.create();
   }
 
+    async loadProfileImage() {
+  const userId = await this.storage.get('userId');
+  if (!userId) return;
+
+  this.apiService.getprofileByUserId(userId).subscribe({
+    next: (res) => {
+      if (res?.file_url) this.profileImageUrl = res.file_url;
+      if (res?.name) this.username = res.name;
+    },
+    error: (err) => {
+      console.error('Error loading profile data:', err);
+    }
+  });
+}
+
   ngOnInit() {
     this.apiService.getJobs_forhomepage().subscribe((res) => {
       this.jobs = res;
@@ -41,7 +57,10 @@ export class HomeTabPage implements OnInit {
 
     this.getprofileData();
     this.sendLocationSilently(); // ✅ silently send location on app load
+     this.loadProfileImage();
   }
+
+
 
   async getprofileData() {
     const userId = await this.storage.get('userId') || null;

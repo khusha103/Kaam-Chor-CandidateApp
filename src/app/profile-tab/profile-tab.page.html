@@ -13,163 +13,107 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-     <!-- Profile Image Section -->
-<div class="profile-picture">
-  <img *ngIf="profileImageUrl; else defaultImage" [src]="profileImageUrl" />
-  <ng-template #defaultImage>
-    <ion-icon name="person-circle-outline" style="font-size: 100px; color: lightgray;"></ion-icon>
-  </ng-template>
-</div>
+  <!-- New Profile Section (Side by Side Layout) -->
+  <div style="display: flex; align-items: center; padding: 16px;">
+    <!-- Left: Profile Image -->
+    <div>
+      <img *ngIf="profileImageUrl; else defaultImage" [src]="profileImageUrl" class="profile-img-left" />
+      <ng-template #defaultImage>
+        <div class="default-icon-circle">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+      </ng-template>
+    </div>
 
-
-
-  <div style="text-align: center;">
-    <ion-text color="primary">{{username}}</ion-text><br>
-    <ion-text color="medium" class="ion-text-wrap">
-      <small>kaam-chor.com</small>
-    </ion-text>
+    <!-- Right: User Info -->
+    <div style="margin-left: 16px;">
+      <ion-text color="primary"><strong>{{ username }}</strong></ion-text><br>
+      <ion-text color="medium"><small>kaam-chor.com</small></ion-text><br>
+      <ion-text color="dark"><small>{{ user_email }}</small></ion-text><br>
+      <ion-text color="dark"><small>Updated: {{ last_updated_on }}</small></ion-text>
+    </div>
   </div>
 
-  <ion-card class="ion-margin-top">
+  <!-- Highlight Card -->
+  <!-- <ion-card class="ion-margin-top">
     <ion-card-header color="primary">
       <ion-card-title color="light">Find jobs faster</ion-card-title>
       <ion-card-subtitle color="light">Attract more attention to your resume</ion-card-subtitle>
     </ion-card-header>
-  </ion-card>
-  <div class="divider1-container">
+  </ion-card> -->
 
+  <!-- Summary Section Removed Upload Buttons -->
 
-    <ion-item-divider>
-      <ion-label color="dark" lines="none">Summary</ion-label>
+        <!-- Removed resume buttons here -->
 
-      <ion-button class="ion-text-capitalize" slot="end" fill="outline" color="primary" size="small"
-        (click)="triggerFileUpload()">
-        Upload Resume
-        <ion-icon name="add-outline"></ion-icon>
-      </ion-button>
-
-      <!-- Hidden file input -->
-      <input type="file" id="resumeUpload" (change)="onFileSelected($event)" accept="application/pdf"
-        style="display: none;" />
-    </ion-item-divider>
-
-    <!-- <div *ngIf="uploadedResumeUrl" class="resume-section">
-      <a [href]="uploadedResumeUrl" target="_blank" class="resume-link">
-        <ion-icon name="document-attach-outline" class="resume-icon"></ion-icon>
-        View Resume
-      </a>
-    </div> -->
-
-    <ion-button expand="block" fill="outline" color="primary" (click)="openResume()">
-      <ion-icon slot="start" name="eye-outline"></ion-icon>
-      Preview Resume
-    </ion-button>
-
-
-
-    <div *ngIf="uploadedResumeName" style="margin-top: 10px; padding-left: 16px;">
-      <p *ngIf="uploadedResumeUrl">
-        <strong>Uploaded Resume:</strong>
-        <a (click)="openResume()" style="color: var(--ion-color-primary); text-decoration: underline; cursor: pointer;">
-          {{ uploadedResumeName }}
-        </a>
-      </p>
-    </div>
-
-
-
-
-  </div>
-  <ion-card class="custom-card">
-    <ion-card-content>
-      <ion-item-group class="ion-margin-top">
-        <ion-item lines="none">
-          <ion-label color="primary">
-            <!-- <h2>Graphic Designer</h2> -->
-            <h2>{{user_email}}</h2>
-
-            <p color="primary">Updated: {{ last_updated_on }}</p>
-          </ion-label>
-        </ion-item>
-
-        <ion-grid>
-          <ion-row class="custom-row">
-
-            <ion-button expand="block" color="primary" class="px-6 py-3" (click)="goToAppliedSavedJobs()">
-              View Applied & Saved Jobs
-            </ion-button>
-
-
-          </ion-row>
-        </ion-grid>
-
-
-
+        <!-- Commented out Raise in Search / Vacancies -->
+        <!--
         <div>
           <ion-row>
-            <ion-col size="6"> <ion-button class="ion-text-capitalize" expand="block" fill="solid" color="primary">
+            <ion-col size="6">
+              <ion-button class="ion-text-capitalize" expand="block" fill="solid" color="primary">
                 Raise in Search
-              </ion-button></ion-col>
-            <ion-col size="6"><ion-button class="ion-text-capitalize" expand="block" fill="outline" color="primary">
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button class="ion-text-capitalize" expand="block" fill="outline" color="primary">
                 Vacancies
               </ion-button>
             </ion-col>
           </ion-row>
         </div>
-      </ion-item-group>
+        -->
+      <!-- </ion-item-group>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
+  <!-- Bottom Menu Card -->
   <ion-card class="custom-card">
-    <!-- <ion-card-content>
+    <ion-card-content>
       <ion-list>
+        <ion-item (click)="triggerFileUpload()">
+          <ion-label>Upload Resume</ion-label>
+          <ion-icon name="cloud-upload-outline" slot="end"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="openResume()">
+          <ion-label>Preview Resume</ion-label>
+          <ion-icon name="eye-outline" slot="end"></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="goToAppliedSavedJobs()">
+          <ion-label>View Applied & Saved Jobs</ion-label>
+          <ion-icon name="briefcase-outline" slot="end"></ion-icon>
+        </ion-item>
+
         <ion-item>
           <ion-label>Country</ion-label>
           <ion-note slot="end">India</ion-note>
         </ion-item>
-        <ion-item>
+        <ion-item routerLink="/notification">
           <ion-label>Notifications</ion-label>
           <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item>
+        <ion-item routerLink="/settings">
           <ion-label>Settings</ion-label>
           <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item>
+        <ion-item routerLink="/help">
           <ion-label>Help</ion-label>
           <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item>
+        <ion-item routerLink="/privacy">
           <ion-label>Privacy</ion-label>
           <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
         </ion-item>
       </ion-list>
-    </ion-card-content> -->
-    <ion-card-content>
-  <ion-list>
-    <ion-item>
-      <ion-label>Country</ion-label>
-      <ion-note slot="end">India</ion-note>
-    </ion-item>
-    <ion-item routerLink="/notification">
-      <ion-label>Notifications</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item routerLink="/settings">
-      <ion-label>Settings</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item routerLink="/help">
-      <ion-label>Help</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item routerLink="/privacy">
-      <ion-label>Privacy</ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-item>
-  </ion-list>
-</ion-card-content>
+    </ion-card-content>
   </ion-card>
+
+  <!-- Hidden file input (Upload Resume) -->
+  <input type="file" id="resumeUpload" (change)="onFileSelected($event)" accept="application/pdf" style="display: none;" />
+
+  <!-- Logout -->
   <div class="divider-container">
     <ion-item-divider>
       <ion-label color="dark" lines="none">Log out of your account</ion-label>
@@ -178,5 +122,4 @@
       </ion-button>
     </ion-item-divider>
   </div>
-
 </ion-content>

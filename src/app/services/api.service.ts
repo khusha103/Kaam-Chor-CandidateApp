@@ -213,15 +213,15 @@ uploadResume(formData: FormData): Observable<any> {
   }
 
 
-updateResume(userId: number, file: File): Observable<HttpEvent<any>> {
+updateResume(userId: string, file: File): Observable<HttpEvent<any>> {
   const formData = new FormData();
-  formData.append('user_id', userId.toString());
+  formData.append('user_id', userId);
   formData.append('resume', file);
-
+ 
   const req = new HttpRequest('POST', `${this.formapiUrl}/upload_resume`, formData, {
     reportProgress: true,
   });
-
+ 
   return this.http.request(req);
 }
 

@@ -15,21 +15,31 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { ServerErrorInterceptor } from './interceptors/http-error.interceptor';
 import { OfflineOverlayComponent } from './components/offline-overlay/offline-overlay.component';
 
-
 @NgModule({
-  declarations: [AppComponent,SplashScreenComponent, OfflineOverlayComponent],
-  imports: [BrowserModule, IonicModule.forRoot(),IonicStorageModule.forRoot(), AppRoutingModule,HttpClientModule,FormsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },  {
+  declarations: [AppComponent, SplashScreenComponent, OfflineOverlayComponent],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+  ],
+
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: ServerErrorInterceptor,
       multi: true,
     },
     {
-    provide: HTTP_INTERCEPTORS,
-    useClass: LoadingInterceptor,
-    multi: true,
-  },],
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

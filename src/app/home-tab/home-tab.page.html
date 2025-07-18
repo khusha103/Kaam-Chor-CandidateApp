@@ -1,31 +1,32 @@
 <ion-content [fullscreen]="true">
   <ion-content [fullscreen]="true" class="ion-padding">
     <!-- Header -->
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <!-- <ion-avatar slot="start" class="avatar">
-          <img src="assets/avatar.png" alt="User avatar" class="avatar_img">
-        </ion-avatar> -->
+      <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="auto">
+            <img *ngIf="profileImageUrl; else defaultImage"
+              [src]="profileImageUrl"
+              class="profile-img" />
+            <ng-template #defaultImage>
+              <ion-icon name="person-circle-outline" class="profile-img"></ion-icon>
+            </ng-template>
+          </ion-col>
 
-        <ion-avatar slot="start">
-          <img alt="Silhouette of a person's head" src="assets/avatar.png" />
-        </ion-avatar>
+          <ion-col>
+            <h2 class="user-name">Good Morning, {{ username }}</h2>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-        <ion-title class="ion-padding-top" slot="start">
-          <div class="user-info">
-            <div class="user-greeting">
-              <p>Good morning<br><span class="highlight">{{username}}</span></p>
-              <!-- <h6>Andrew Ainsley</h6> -->
-            </div>
-          </div>
-        </ion-title>
-        <ion-buttons slot="end">
-          <ion-button>
-            <ion-icon name="notifications-circle-outline" size="large" color="primary"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon name="notifications-circle-outline" size="large" color="primary"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
     <!-- Search Bar -->
     <ion-searchbar placeholder="Search For A Job Or Company"></ion-searchbar>

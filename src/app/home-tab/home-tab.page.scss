@@ -1,6 +1,30 @@
+/* Remove border and use white background for header */
 ion-header,
 ion-toolbar {
-    background-color: var(--ion-color-white);
+  background-color: var(--ion-color-white);
+  border: none;
+}
+
+/* Profile image or icon style */
+.profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 12px;
+}
+
+/* Username and greeting text */
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 12px 0 0;
+}
+
+/* Notification icon style */
+ion-buttons {
+  margin-top: 4px;
 }
 
 img.banner_img{
@@ -8,11 +32,7 @@ img.banner_img{
   width: 337px;
   height: 162px;
 }
-.avatar_img{
-  height: 50px !important;
-  width: 50px !important;
-  margin-top: 12px;
-}
+
 .highlight {
     color: var(--ion-color-primary);
 }

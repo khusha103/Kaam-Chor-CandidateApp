@@ -7,21 +7,24 @@ import { HttpEventType } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
-
 @Component({
   selector: 'app-profile-tab',
   templateUrl: './profile-tab.page.html',
   styleUrls: ['./profile-tab.page.scss'],
 })
 export class ProfileTabPage implements OnInit {
-  last_updated_on: String = "";
-  username: String = "";
-  user_email:String ="";
+  last_updated_on: String = '';
+  username: String = '';
+  user_email: String = '';
 
   profileImageUrl: string | null = null;
 
-
-  constructor(private router: Router, private apiService: ApiService, private toastCtrl: ToastController,private storage: Storage) { 
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private toastCtrl: ToastController,
+    private storage: Storage
+  ) {
     this.initStorage();
   }
   async initStorage() {
@@ -29,23 +32,22 @@ export class ProfileTabPage implements OnInit {
   }
 
   async loadProfileImage() {
-  const userId = await this.storage.get('userId');
-  if (!userId) return;
+    const userId = await this.storage.get('userId');
+    if (!userId) return;
 
-  this.apiService.getprofileByUserId(userId).subscribe({
-    next: (res) => {
-      if (res?.file_url) {
-        this.profileImageUrl = res.file_url;
-      } else {
-        console.warn('No profile image found');
-      }
-    },
-    error: (err) => {
-      console.error('Failed to load profile image:', err);
-    },
-  });
-}
-
+    this.apiService.getprofileByUserId(userId).subscribe({
+      next: (res) => {
+        if (res?.file_url) {
+          this.profileImageUrl = res.file_url;
+        } else {
+          console.warn('No profile image found');
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load profile image:', err);
+      },
+    });
+  }
 
   ngOnInit() {
     // StatusBar.setBackgroundColor({ color: '#ffffff' }); // white
@@ -53,32 +55,27 @@ export class ProfileTabPage implements OnInit {
     // StatusBar.setStyle({ style: StatusBarStyle.Dark });
     // this.getResume();
     this.getprofileData();
-     this.loadProfileImage(); 
+    this.loadProfileImage();
   }
 
   async getprofileData() {
     // const userId = localStorage.getItem('userId');
-        const userId= await this.storage.get('userId') || null;
-        console.log("userId",userId);
-
+    const userId = (await this.storage.get('userId')) || null;
+    console.log('userId', userId);
 
     if (userId) {
       this.apiService.getFormData('aboutMeForm', userId).subscribe(
         (response) => {
-          // console.log('Fetched data:', response); 
+          // console.log('Fetched data:', response);
 
           if (response && response.status) {
             const data = response.data;
-
             this.username = data.name;
             this.last_updated_on = data.updated_on;
-            this.user_email=data.email;
-    this.getResume();
-
-
+            this.user_email = data.email;
+            this.getResume();
           } else {
             console.log('No data found for the specified key.');
-
           }
         },
         (error) => {
@@ -97,10 +94,9 @@ export class ProfileTabPage implements OnInit {
     }
   }
 
-
   async getResume() {
-       const userId= await this.storage.get('userId') || null;
-        console.log("userId",userId);
+    const userId = (await this.storage.get('userId')) || null;
+    console.log('userId', userId);
     this.apiService.getResume(userId).subscribe({
       next: (res) => {
         if (res.status && res.resume_url) {
@@ -111,10 +107,9 @@ export class ProfileTabPage implements OnInit {
       },
       error: () => {
         this.uploadedResumeUrl = null;
-      }
+      },
     });
   }
-
 
   navigateToSavesPage() {
     this.router.navigate(['/saved-jobs']);
@@ -142,12 +137,9 @@ export class ProfileTabPage implements OnInit {
     this.router.navigate(['/login']);
   }
 
-
   edit() {
     this.router.navigate(['/reg-aboutme']);
   }
-
-
 
   //upload resume functionality
 
@@ -155,7 +147,9 @@ export class ProfileTabPage implements OnInit {
   uploadedResumeUrl: string | null = null;
 
   triggerFileUpload() {
-    const fileInput = document.getElementById('resumeUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'resumeUpload'
+    ) as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
     }
@@ -184,17 +178,23 @@ export class ProfileTabPage implements OnInit {
   uploadProgress: number | null = null;
   userId: any = localStorage.getItem('userId'); // or get dynamically from service/auth
 
-  onFileSelected(event: Event) {
+  async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.uploadResume(input.files[0]).subscribe({
+    const userId = (await this.storage.get('userId')) || null;
+
+    if (input.files && input.files[0] && userId) {
+      this.uploadResume(input.files[0], userId).subscribe({
         next: (event) => {
           if (event.type === HttpEventType.UploadProgress) {
-            this.uploadProgress = Math.round((100 * event.loaded) / (event.total || 1));
-            this.getResume();
-
+            this.uploadProgress = Math.round(
+              (100 * event.loaded) / (event.total || 1)
+            );
+            this.getResume(); // Consider moving this to final response
           } else if (event.type === HttpEventType.Response) {
-            this.showToast(event.body?.message || 'Upload completed', 'success');
+            this.showToast(
+              event.body?.message || 'Upload completed',
+              'success'
+            );
           }
         },
         error: () => this.showToast('Upload failed', 'danger'),
@@ -202,21 +202,18 @@ export class ProfileTabPage implements OnInit {
     }
   }
 
-  uploadResume(file: File): Observable<any> {
-    return this.apiService.updateResume(this.userId, file).pipe(
-      finalize(() => (this.uploadProgress = null))
-
+  uploadResume(file: File, userId: string): Observable<any> {
+    return this.apiService.updateResume(userId, file).pipe(
+      finalize(() => {
+        this.uploadProgress = null;
+      })
     );
-
   }
 
   ionViewWillEnter() {
     // this.getResume();
     this.getprofileData();
-
-
   }
-
 
   async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastCtrl.create({
@@ -228,21 +225,13 @@ export class ProfileTabPage implements OnInit {
     toast.present();
   }
 
-
-
-
-
   // openResume() {
   //   if (this.uploadedResumeUrl) {
   //     window.open(this.uploadedResumeUrl, '_blank');
   //   }
   // }
 
-
   goToAppliedSavedJobs() {
     this.router.navigate(['/applied-saved-jobs']);
   }
-
-
-
 }

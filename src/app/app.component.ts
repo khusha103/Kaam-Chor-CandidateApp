@@ -87,6 +87,7 @@ import { Storage } from '@ionic/storage-angular';
 import { NotificationService } from './services/notification.service';
 import { NetworkService } from './services/network.service';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 register();
 
@@ -100,9 +101,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private confirmRoutes = ['/reg-aboutme', '/reg-education', '/reg-experience', '/reg-skills', '/reg-review'];
   private publicRoutes = ['/login', '/splash', '/otp-verf'];
 
-  showOfflineOverlay: boolean = false;
-  menuItems: any;
   private wasOffline = false;
+  showOfflineOverlay = false;
+  menuItems!: any[];
   private networkSub!: Subscription;
 
   constructor(
@@ -113,17 +114,23 @@ export class AppComponent implements OnInit, OnDestroy {
     private storage: Storage,
     private notificationService: NotificationService,
     private networkService: NetworkService,
-    private toastCtrl: ToastController
+    private toastController: ToastController
   ) {
-    this.initializeApp();
-    this.handleBackButton();
-    this.handleNetworkEvents(); // 👈 internet watch
+    // this.initializeApp();
+    // this.handleBackButton();
+   
   }
 
   async ngOnInit() {
     await this.storage.create();
     await this.notificationService.initPush();
 
+     const initialStatus = await this.networkService.checkCurrentStatus();
+    this.showOfflineOverlay = !initialStatus;
+
+    this.listenToNetworkChanges();
+    
+      this.handleBackButton();
     // 🔒 Login guard on route change
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationStart) {
@@ -141,50 +148,82 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ Init app, set status bar
-  async initializeApp() {
-    await this.platform.ready();
-    if (this.platform.is('capacitor')) {
-      await StatusBar.setBackgroundColor({ color: '#ffffff' });
-      await StatusBar.setStyle({ style: Style.Light });
-    }
+   listenToNetworkChanges() {
+    this.networkService.isOnline$
+      .pipe(distinctUntilChanged())
+      .subscribe(async (isOnline) => {
+        this.showOfflineOverlay = !isOnline;
 
-    // 🚨 Initial internet status check on launch
-    const online = await this.networkService.checkCurrentStatus();
-    if (!online) {
-      this.wasOffline = true;
-      const toast = await this.toastCtrl.create({
-        message: "You're offline",
-        duration: 2000,
-        color: 'warning',
-        position: 'bottom',
-      });
-      toast.present();
-      this.showOfflineOverlay = true;
-    }
-  }
+        if (!isOnline) {
+          this.wasOffline = true;
 
-  // ✅ Handle internet status change
-  handleNetworkEvents() {
-    this.networkSub = this.networkService.isOnline$.subscribe(async (isOnline) => {
-      if (!isOnline) {
-        this.wasOffline = true;
-        this.showOfflineOverlay = true;
-      } else {
-        if (this.wasOffline) {
-          const toast = await this.toastCtrl.create({
-            message: '✅ Back online',
-            duration: 2000,
+          const toast = await this.toastController.create({
+            message: '❌ No Internet Connection',
+            duration: 3000,
+            color: 'danger',
+            position: 'bottom',
+          });
+          toast.present();
+        } else if (this.wasOffline) {
+          const toast = await this.toastController.create({
+            message: '✅ Back Online',
+            duration: 3000,
             color: 'success',
             position: 'bottom',
           });
           toast.present();
           this.wasOffline = false;
+
+          window.dispatchEvent(new Event('network-reconnected'));
         }
-        this.showOfflineOverlay = false;
-      }
-    });
+      });
   }
+
+  // // ✅ Init app, set status bar
+  // async initializeApp() {
+  //   await this.platform.ready();
+  //   if (this.platform.is('capacitor')) {
+  //     await StatusBar.setBackgroundColor({ color: '#ffffff' });
+  //     await StatusBar.setStyle({ style: Style.Light });
+  //   }
+
+  //   // 🚨 Initial internet status check on launch
+  //   const online = await this.networkService.checkCurrentStatus();
+  //   if (!online) {
+  //     this.wasOffline = true;
+  //     const toast = await this.toastCtrl.create({
+  //       message: "You're offline",
+  //       duration: 2000,
+  //       color: 'warning',
+  //       position: 'bottom',
+  //     });
+  //     toast.present();
+  //     this.showOfflineOverlay = true;
+  //   }
+  // }
+
+//   // ✅ Handle internet status change
+//   handleNetworkEvents() {
+//    this.networkSub = this.networkService.isOnline$.subscribe(async (isOnline) => {
+//   if (!isOnline) {
+//     this.wasOffline = true;
+//     this.showOfflineOverlay = true;
+//   } else {
+//     if (this.wasOffline && this.showOfflineOverlay) {
+//       const toast = await this.toastCtrl.create({
+//         message: '✅ Back online',
+//         duration: 2000,
+//         color: 'success',
+//         position: 'bottom',
+//       });
+//       toast.present();
+//       this.wasOffline = false;
+//     }
+//     this.showOfflineOverlay = false;
+//   }
+// });
+
+//   }
 
   async checkLoginStatus(): Promise<boolean> {
     try {

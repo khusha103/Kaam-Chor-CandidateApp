@@ -1,4 +1,14 @@
-<div *ngIf="showOfflineOverlay" class="offline-overlay-wrapper">
-  <app-offline-overlay></app-offline-overlay>
-</div>
-<ion-router-outlet id="main-content"></ion-router-outlet>
+<ion-app>
+  <app-sidebar 
+    menuId="main-menu" 
+    contentId="main-content"
+    [menuItems]="menuItems">
+  </app-sidebar>
+
+  <!-- ✅ Updated: wrapper added to force overlay full-screen -->
+  <div *ngIf="showOfflineOverlay" class="offline-overlay-wrapper">
+    <app-offline-overlay></app-offline-overlay>
+  </div>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>

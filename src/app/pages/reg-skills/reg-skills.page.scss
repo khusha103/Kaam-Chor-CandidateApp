@@ -1,10 +1,73 @@
-ion-label.rws_label {
-  font-size: 14px;
+/* Row group flex settings */
+.rws-group {
+  display: flex;
+  flex-wrap: wrap;
+  // gap: 9px;
+  justify-content: space-between;
+  // margin-right: 3px;
 }
 
-ion-checkbox.rws_checkbox {
-  --size: 10px;
+/* Default for all screen sizes */
+.rws-col {
+  // flex: 1 1 calc(33.33% - 8px); /* 3 in a row */
+  // min-width: 90px;
+  // max-width: 33.33%;
+padding-right: 0px;
+padding-left: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
 }
+
+/* Read, Write, Speak Labels */
+.rws_label {
+  font-size: 10px;
+  white-space: nowrap;
+  margin-top: 4px;
+  // margin-right: 8px;
+}
+
+/* Checkbox size */
+.rws_checkbox {
+  --size: 10px;
+  margin-bottom: 4px;
+  // margin-left: 0px;
+  // margin-top: 0px;
+
+}
+
+/* Flex align item center */
+.rws-item {
+  display: flex;
+  align-items: center;
+  padding: 0px;
+}
+
+/* Responsive adjustments for small screens */
+// @media (max-width: 600px) {
+//   .rws-col {
+//     flex: 1 1 30%;
+//     max-width: 30%;
+//   }
+
+//   .rws_label {
+//     font-size: 14px;
+//   }
+
+//   .rws_checkbox {
+//     --size: 20px;
+//   }
+// }
+
+
+
+
+// ion-label.rws_label {
+//   font-size: 10px;
+// }
+
+// ion-checkbox.rws_checkbox {
+//   --size: 10px;
+// }
 
 ion-button.addlang_btn, ion-button.removelang_btn {
   --border-radius: 8px; 
